@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduvani Dashboard</title>
+    <!-- Use Tailwind CSS for rapid, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* A soft, calming background */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>') 12 12, auto;
+        }
+        .card {
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease-in-out;
+            border-radius: 9999px;
+        }
+        .badge-icon {
+            font-size: 2.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+        .badge-icon:hover {
+            transform: scale(1.1);
+        }
+        .btn-start {
+            background-image: linear-gradient(to right, #6EE7B7, #34D399);
+            transition: all 0.3s ease-in-out;
+        }
+        .btn-start:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        .btn-generate {
+            background-image: linear-gradient(to right, #8B5CF6, #EC4899);
+            transition: all 0.3s ease-in-out;
+        }
+        .btn-generate:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(109, 40, 217, 0.4);
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-indigo-100 text-gray-800 p-4 md:p-10">
+
+    <div id="message-container" class="fixed top-5 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg z-50 transform scale-0 opacity-0 transition-all duration-300">
+        <span id="message-text"></span>
+    </div>
+
+    <!-- Role Selection UI -->
+    <div id="role-selection-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl text-center">
+            <h2 class="text-3xl font-bold mb-6 text-indigo-800">Select Your Role</h2>
+            <div class="flex space-x-6">
+                <button id="student-role-btn" class="px-8 py-4 rounded-full font-bold text-xl text-white bg-blue-500 hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-user-graduate mr-2"></i> Student
+                </button>
+                <button id="teacher-role-btn" class="px-8 py-4 rounded-full font-bold text-xl text-white bg-indigo-500 hover:bg-indigo-600 transition-colors">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i> Teacher
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <button id="role-switch-btn" class="fixed bottom-5 right-5 z-40 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-700 transition-colors hidden">
+        Switch Role
+    </button>
+    
+    <!-- Login Module UI -->
+    <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl text-center w-full max-w-md">
+            <h2 class="text-3xl font-bold mb-6 text-indigo-800">Login with Phone</h2>
+            <form id="login-form" class="space-y-4">
+                <input type="tel" id="phone-number" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="Enter Phone Number (e.g., 919876543210)">
+                <button type="submit" id="request-otp-btn" class="w-full bg-blue-500 text-white py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors duration-200">Request OTP</button>
+            </form>
+            <div id="otp-section" class="space-y-4 mt-6 hidden">
+                <p class="text-gray-600">Enter the mock OTP to log in.</p>
+                <input type="text" id="otp-input" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="Enter OTP (e.g., 123456)">
+                <button id="verify-otp-btn" class="w-full bg-indigo-500 text-white py-3 rounded-xl font-bold hover:bg-indigo-600 transition-colors duration-200">Verify OTP</button>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Student Dashboard Content -->
+    <div id="student-dashboard" class="hidden">
+        <div class="container mx-auto p-4 md:p-10">
+            <div class="flex justify-end mb-4">
+                <select id="language-selector" class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="as">Assamese</option>
+                    <option value="bn">Bengali</option>
+                    <option value="brx">Bodo</option>
+                    <option value="doi">Dogri</option>
+                    <option value="gu">Gujarati</option>
+                    <option value="kn">Kannada</option>
+                    <option value="ks">Kashmiri</option>
+                    <option value="kok">Konkani</option>
+                    <option value="mai">Maithili</option>
+                    <option value="ml">Malayalam</option>
+                    <option value="mni">Manipuri</option>
+                    <option value="mr">Marathi</option>
+                    <option value="ne">Nepali</option>
+                    <option value="or">Odia</option>
+                    <option value="pa">Punjabi</option>
+                    <option value="sa">Sanskrit</option>
+                    <option value="sat">Santali</option>
+                    <option value="sd">Sindhi</option>
+                    <option value="ta">Tamil</option>
+                    <option value="te">Telugu</option>
+                    <option value="ur">Urdu</option>
+                </select>
+            </div>
+    
+            <!-- Welcome & User Profile Section -->
+            <div class="card bg-white p-10 mb-10 flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-16 animate-bounce-in">
+                <div class="flex items-center space-x-8">
+                    <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center overflow-hidden shadow-xl">
+                        <span id="student-user-avatar" class="text-white text-6xl font-extrabold"></span>
+                    </div>
+                    <div>
+                        <h1 id="student-welcome-message" class="text-5xl font-black text-gray-900 leading-tight"></h1>
+                        <p id="student-learning-message" class="text-xl text-gray-600 font-medium"></p>
+                    </div>
+                </div>
+    
+                <!-- Level and XP Progress -->
+                <div class="flex-grow flex flex-col md:flex-row items-end md:items-center space-y-5 md:space-y-0 md:space-x-8">
+                    <div class="flex items-center space-x-4 bg-yellow-200 px-8 py-4 rounded-full shadow-inner">
+                        <i class="fas fa-star text-yellow-600 text-3xl"></i>
+                        <span id="student-level-text" class="font-bold text-xl text-yellow-700"></span>
+                        <span id="student-xp-text" class="font-extrabold text-3xl text-yellow-800"></span>
+                    </div>
+                    <div class="w-full md:w-80">
+                        <div class="progress-bar">
+                            <div id="student-xp-progress-fill" class="progress-fill bg-gradient-to-r from-yellow-400 to-orange-400"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    
+                <!-- Daily Quests Section -->
+                <div class="lg:col-span-2 card bg-white p-8">
+                    <h2 id="student-daily-quests-title" class="text-3xl font-bold mb-8 flex items-center space-x-4 text-gray-800">
+                        <i class="fas fa-tasks text-emerald-600 text-3xl"></i>
+                        <span>Daily Quests</span>
+                    </h2>
+                    <div id="student-quest-list" class="space-y-8">
+                        <!-- Dynamic quests will be inserted here -->
+                    </div>
+                    <div class="mt-10 text-center">
+                        <button id="student-generate-quest-btn" class="btn-generate text-white px-10 py-5 rounded-full font-bold text-xl shadow-xl">
+                             <div class="flex items-center justify-center space-x-2">
+                                 <span data-translation-key="generate-quest-button">✨ Generate New Quest</span>
+                                 <span id="student-generate-loading" class="hidden loading-spinner"></span>
+                             </div>
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Leaderboard Section -->
+                <div class="card bg-white p-8">
+                    <h2 id="student-leaderboard-title" class="text-3xl font-bold mb-8 flex items-center space-x-4 text-gray-800">
+                        <i class="fas fa-trophy text-amber-500 text-3xl"></i>
+                        <span>Leaderboard</span>
+                    </h2>
+                    <ul id="student-leaderboard-list" class="space-y-6">
+                        <!-- Dynamic leaderboard items will be inserted here -->
+                        <li id="student-my-leaderboard-entry" class="hidden"></li>
+                    </ul>
+                </div>
+            </div>
+    
+            <!-- Achievement Badges & Module Progress Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-10">
+                <!-- Achievement Badges Section -->
+                <div class="card bg-white p-8">
+                    <h2 id="student-badges-title" class="text-3xl font-bold mb-8 flex items-center space-x-4 text-indigo-500">
+                        <i class="fas fa-certificate text-indigo-500 text-3xl"></i>
+                        <span>Achievement Badges</span>
+                    </h2>
+                    <div id="student-badges-grid" class="grid grid-cols-3 md:grid-cols-4 gap-8">
+                        <!-- Static badges will be rendered here -->
+                    </div>
+                </div>
+    
+                <!-- Module Progress Section -->
+                <div class="card bg-white p-8">
+                    <h2 id="student-progress-title" class="text-3xl font-bold mb-8 flex items-center space-x-4 text-purple-600">
+                        <i class="fas fa-chart-line text-purple-600 text-3xl"></i>
+                        <span>Module Progress</span>
+                    </h2>
+                    <div id="student-module-progress-list" class="space-y-8">
+                        <!-- Static modules will be rendered here -->
+                    </div>
+                    <div class="mt-8">
+                        <label for="voice-input" class="block font-bold text-gray-800 mb-2">Speak your question:</label>
+                        <div class="flex space-x-4">
+                            <input type="text" id="voice-input" class="flex-grow p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="Click mic to speak...">
+                            <button id="mic-btn" class="bg-purple-500 text-white px-5 py-2 rounded-full font-bold hover:bg-purple-600 transition-colors">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Teacher Dashboard Content -->
+    <div id="teacher-dashboard" class="hidden">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl font-extrabold text-indigo-800">Eduvani</h1>
+            <p class="text-2xl font-semibold text-gray-600 mt-2">Teacher Dashboard</p>
+        </header>
+    
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+            <!-- Student Progress Section -->
+            <section class="lg:col-span-2 card bg-white p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-indigo-700">
+                    <i class="fas fa-users"></i>
+                    <span>Student Progress</span>
+                </h2>
+                <div class="mb-4 flex items-center space-x-4">
+                    <label for="teacher-progress-view" class="block text-lg font-semibold mb-0">View:</label>
+                    <select id="teacher-progress-view" class="p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                        <option value="class-summary">Class Summary</option>
+                        <option value="all-students">All Students</option>
+                    </select>
+                    <button id="generate-report-btn" class="px-6 py-2 bg-purple-500 text-white rounded-full font-bold hover:bg-purple-600 transition-colors">
+                        ✨ Generate Report
+                    </button>
+                </div>
+                <div id="teacher-progress-summary" class="hidden p-4 bg-indigo-50 rounded-lg">
+                    <h3 class="text-xl font-bold text-indigo-700 mb-2">Class Overall Performance</h3>
+                    <p class="text-lg text-gray-700">Average XP: <span id="teacher-avg-xp" class="font-semibold">0</span></p>
+                    <p class="text-lg text-gray-700">Average Level: <span id="teacher-avg-level" class="font-semibold">0</span></p>
+                    <p class="text-lg text-gray-700">Total Students: <span id="teacher-total-students" class="font-semibold">0</span></p>
+                    <div id="teacher-report-text" class="mt-4 text-gray-800 italic"></div>
+                </div>
+                <div id="teacher-student-progress-list" class="space-y-6">
+                    <!-- Dynamic student cards will be rendered here -->
+                </div>
+            </section>
+    
+            <!-- Leaderboard Section -->
+            <section class="card bg-white p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-amber-600">
+                    <i class="fas fa-trophy"></i>
+                    <span>Class Leaderboard</span>
+                </h2>
+                <ul id="teacher-leaderboard-list" class="space-y-4">
+                    <!-- Dynamic leaderboard items will be inserted here -->
+                </ul>
+            </section>
+    
+        </div>
+    
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+    
+            <!-- Reward & Recognition Section -->
+            <section class="card bg-white p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-emerald-600">
+                    <i class="fas fa-award"></i>
+                    <span>Reward & Recognition</span>
+                </h2>
+                <div class="space-y-4">
+                    <select id="teacher-reward-student-selector" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                        <option value="" disabled selected>Select a student</option>
+                        <!-- Student options populated by JS -->
+                    </select>
+                    <div id="teacher-badge-grid" class="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 rounded-xl bg-gray-50">
+                        <!-- Badges will be rendered here -->
+                    </div>
+                    <button id="teacher-award-badge-btn" class="w-full bg-emerald-500 text-white py-3 rounded-xl font-bold hover:bg-emerald-600 transition-colors duration-200" disabled>Award Badge</button>
+                </div>
+            </section>
+    
+            <!-- Assignment Management Section -->
+            <section class="card bg-white p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-red-500">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Assignment Management</span>
+                </h2>
+                <form id="teacher-assignment-form" class="space-y-4">
+                    <div>
+                        <label for="teacher-assignment-title" class="block font-semibold mb-2">Module Title</label>
+                        <input type="text" id="teacher-assignment-title" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-400 focus:outline-none" placeholder="e.g., Water Conservation Module">
+                    </div>
+                    <div>
+                        <label for="teacher-assignment-desc" class="block font-semibold mb-2">Description</label>
+                        <textarea id="teacher-assignment-desc" rows="3" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-400 focus:outline-none" placeholder="Explain the key tasks for this module..."></textarea>
+                    </div>
+                    <div>
+                        <label for="teacher-assignment-group" class="block font-semibold mb-2">Assign to:</label>
+                        <select id="teacher-assignment-group" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-400 focus:outline-none">
+                            <option value="all">All Students</option>
+                            <option value="groupA">Group A</option>
+                            <option value="groupB">Group B</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600 transition-colors duration-200">
+                        Create Assignment
+                    </button>
+                </form>
+            </section>
+    
+            <!-- Notifications Section -->
+            <section class="lg:col-span-2 card bg-white p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-cyan-600">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications & Alerts</span>
+                </h2>
+                <div id="teacher-notification-list" class="space-y-4">
+                    <div class="p-4 bg-gray-100 rounded-xl font-medium">New module 'Water Conservation' assigned to all students!</div>
+                    <div class="p-4 bg-gray-100 rounded-xl font-medium">Rajesh achieved the 'Water Warrior' badge.</div>
+                    <div class="p-4 bg-gray-100 rounded-xl font-medium">Meena has completed the 'Village Star' quest.</div>
+                </div>
+            </section>
+    
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        setLogLevel('debug');
+
+        // --- Firebase Configuration & Initialization (MANDATORY) ---
+        const isGeminiPlatform = typeof __firebase_config !== 'undefined';
+        const appId = isGeminiPlatform ? __app_id : 'default-app-id';
+        const firebaseConfig = isGeminiPlatform ? JSON.parse(__firebase_config) : {
+            apiKey: "dummy-api-key",
+            authDomain: "dummy-auth-domain",
+            projectId: "dummy-project-id",
+            storageBucket: "dummy-storage-bucket",
+            messagingSenderId: "dummy-messaging-id",
+            appId: "dummy-app-id"
+        };
+        const authToken = isGeminiPlatform ? __initial_auth_token : null;
+        let app, auth, db;
+        let userId;
+
+        // --- Global State & Data Management ---
+        let currentRole = localStorage.getItem('userRole'); // Persist role across sessions
+        let studentData = {
+            name: 'Priyanka',
+            level: 3,
+            xp: 550,
+            nextLevelXp: 800,
+            quests: [
+                { id: 'seeds', xp: 75 },
+                { id: 'water_conservation', xp: 90 }
+            ],
+            lastQuestGenerated: null
+        };
+        let students = []; // For teacher dashboard
+        const defaultLeaderboard = [
+            { id: '1', name: 'Rajesh', xp: 2100 },
+            { id: '2', name: 'Anita', xp: 1950 },
+            { id: '3', name: 'Vikram', xp: 1800 },
+            { id: '4', name: 'Suman', xp: 1750 },
+        ];
+        const studentBadges = [
+            { id: 'star', name: 'Village Star', icon: 'fas fa-seedling', color: 'green', earned: true },
+            { id: 'water', name: 'Water Warrior', icon: 'fas fa-faucet', color: 'blue', earned: true },
+            { id: 'bookworm', name: 'Bookworm', icon: 'fas fa-book-reader', color: 'pink', earned: true },
+            { id: 'locked', name: 'Locked', icon: 'fas fa-lock', color: 'gray', earned: false }
+        ];
+        const studentModules = [
+            { id: 'math', progress: 75, color: 'purple' },
+            { id: 'science', progress: 50, color: 'blue' },
+            { id: 'history', progress: 20, color: 'emerald' }
+        ];
+        
+        const teacherBadges = [
+            { id: 'star-performer', name: 'Star Performer', icon: 'fas fa-star', color: 'text-yellow-500' },
+            { id: 'helping-hand', name: 'Helping Hand', icon: 'fas fa-hand-holding-heart', color: 'text-pink-500' },
+            { id: 'problem-solver', name: 'Problem Solver', icon: 'fas fa-lightbulb', color: 'text-blue-500' },
+            { id: 'water-warrior', name: 'Water Warrior', icon: 'fas fa-water', color: 'text-cyan-500' },
+            { id: 'master-farmer', name: 'Master Farmer', icon: 'fas fa-seedling', color: 'text-green-500' }
+        ];
+
+        // --- Internationalization (i18n) Data ---
+        const translations = {
+            en: {
+                welcome_message: 'Hello, Priyanka!',
+                learning_message: "Let's learn something new today!",
+                level_text: 'Level',
+                daily_quests_title: 'Daily Quests',
+                leaderboard_title: 'Leaderboard',
+                badges_title: 'Achievement Badges',
+                progress_title: 'Module Progress',
+                generate_quest_button: '✨ Generate New Quest',
+                read_aloud_button: '✨ Read Aloud',
+                explain_concept_button: '✨ Explain Concept',
+                generate_report_button: '✨ Generate Report',
+                badge_star: 'Village Star',
+                badge_water: 'Water Warrior',
+                badge_bookworm: 'Bookworm',
+                badge_locked: 'Locked',
+                start_button_text: 'Start',
+                seeds_title: 'Learn About Seed Types',
+                seeds_desc: 'Watch a video on local crops and their seeds.',
+                water_conservation_title: 'Water Our Village Fields',
+                water_conservation_desc: 'Simulate watering crops to learn about conservation.',
+                math_quest_title: 'Math: The Field Calculator',
+                math_quest_desc: 'The Math module teaches you how to calculate crop yields, measure water usage, and manage your budget for farming. It focuses on practical applications of arithmetic and geometry to solve real-world problems.',
+                science_quest_title: 'Science: Our Water Sources',
+                science_quest_desc: 'In this Science module, you will learn about the water cycle, different types of water sources in your village, and how to keep them clean. The lessons cover basic chemistry and environmental science to help you understand and protect this precious resource.',
+                history_quest_title: 'Local History: Our Village Elders',
+                history_quest_desc: 'The Local History module explores the stories and traditions passed down from your village elders. You will learn about key historical events, the evolution of your community, and the importance of preserving your cultural heritage.',
+                not_yet_earned: 'Not Yet Earned',
+                loading_quests: 'Generating new quest...',
+                loading_audio: 'Loading audio...',
+                loading_explanation: 'Generating explanation...',
+                loading_report: 'Generating class report...',
+                quest_generated_success: 'New quest generated!',
+                quest_already_generated: 'You can only generate one quest per day.',
+                no_text_to_read: 'No text to read.',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'No quests available. Generate one to start!'
+            },
+            hi: {
+                welcome_message: 'नमस्ते, प्रियंका!',
+                learning_message: 'आइए, आज कुछ नया सीखें!',
+                level_text: 'स्तर',
+                daily_quests_title: 'दैनिक कार्य',
+                leaderboard_title: 'लीडरबोर्ड',
+                badges_title: 'उपलब्धि बैज',
+                progress_title: 'मॉड्यूल प्रगति',
+                generate_quest_button: '✨ नया कार्य बनाएँ',
+                read_aloud_button: '✨ पढ़कर सुनाएं',
+                explain_concept_button: '✨ अवधारणा समझाएं',
+                generate_report_button: '✨ रिपोर्ट बनाएं',
+                badge_star: 'ग्राम सितारा',
+                badge_water: 'जल योद्धा',
+                badge_bookworm: 'किताबी कीड़ा',
+                badge_locked: 'बंद',
+                start_button_text: 'शुरू करें',
+                seeds_title: 'बीज के प्रकार के बारे में जानें',
+                seeds_desc: 'स्थानीय फसलों और उनके बीजों पर एक वीडियो देखें।',
+                water_conservation_title: 'हमारे गाँव के खेतों को पानी दें',
+                water_conservation_desc: 'संरक्षण के बारे में जानने के लिए फसलों को पानी देने का अनुकरण करें।',
+                math_quest_title: 'गणित: क्षेत्र कैलकुलेटर',
+                math_quest_desc: 'गणित मॉड्यूल आपको फसल की पैदावार की गणना करना, पानी का उपयोग मापना और खेती के लिए अपना बजट प्रबंधित करना सिखाता है। यह वास्तविक दुनिया की समस्याओं को हल करने के लिए अंकगणित और ज्यामिति के व्यावहारिक अनुप्रयोगों पर केंद्रित है।',
+                science_quest_title: 'विज्ञान: हमारे जल स्रोत',
+                science_quest_desc: 'इस विज्ञान मॉड्यूल में, आप जल चक्र, अपने गांव में विभिन्न प्रकार के जल स्रोतों और उन्हें कैसे साफ रखें, इसके बारे में जानेंगे। पाठ आपको इस अनमोल संसाधन को समझने और उसकी रक्षा करने में मदद करने के लिए बुनियादी रसायन विज्ञान और पर्यावरण विज्ञान को कवर करते हैं।',
+                history_quest_title: 'स्थानीय इतिहास: हमारे ग्राम बुजुर्ग',
+                history_quest_desc: 'स्थानीय इतिहास मॉड्यूल आपके गांव के बुजुर्गों द्वारा बताई गई कहानियों और परंपराओं की पड़ताल करता है। आप प्रमुख ऐतिहासिक घटनाओं, अपने समुदाय के विकास और अपनी सांस्कृतिक विरासत को संरक्षित करने के महत्व के बारे में जानेंगे।',
+                not_yet_earned: 'अभी तक अर्जित नहीं किया गया',
+                loading_quests: 'नया कार्य बना रहा है...',
+                loading_audio: 'ऑडियो लोड हो रहा है...',
+                loading_explanation: 'व्याख्या उत्पन्न हो रही है...',
+                loading_report: 'कक्षा रिपोर्ट उत्पन्न हो रही है...',
+                quest_generated_success: 'नया कार्य बनाया गया!',
+                quest_already_generated: 'आप एक दिन में केवल एक ही कार्य बना सकते हैं।',
+                no_text_to_read: 'पढ़ने के लिए कोई पाठ नहीं है।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कोई कार्य उपलब्ध नहीं है। शुरू करने के लिए एक बनाएं!'
+            },
+            as: {
+                welcome_message: 'নমস্কাৰ, প্ৰিয়ংকা!',
+                learning_message: 'আহক, আজি কিবা নতুন শিকোঁ!',
+                level_text: 'স্তৰ',
+                daily_quests_title: 'দৈনিক কুইষ্ট',
+                leaderboard_title: 'লিডাৰবৰ্ড',
+                badges_title: 'কৃতিত্ব বেজ',
+                progress_title: 'মডিউল অগ্ৰগতি',
+                generate_quest_button: '✨ নতুন কুইষ্ট সৃষ্টি কৰক',
+                read_aloud_button: '✨ পঢ়ি শুনাওক',
+                explain_concept_button: '✨ ধাৰণা ব্যাখ্যা কৰক',
+                generate_report_button: '✨ প্ৰতিবেদন সৃষ্টি কৰক',
+                badge_star: 'গাওঁৰ তৰা',
+                badge_water: 'জল যোদ্ধা',
+                badge_bookworm: 'কিতাপৰ পোক',
+                badge_locked: 'লক কৰা',
+                start_button_text: 'আৰম্ভ কৰক',
+                math_quest_title: 'গণিত: পথাৰৰ কেলকুলেটৰ',
+                math_quest_desc: 'গণিত মডিউলে আপোনাক শস্যৰ উৎপাদন গণনা কৰা, পানীৰ ব্যৱহাৰ জুখি লোৱা, আৰু খেতিৰ বাবে আপোনাৰ বাজেট পৰিচালনা কৰিবলৈ শিকায়। ই বাস্তৱ জগতৰ সমস্যা সমাধানৰ বাবে аৰিথমেটিক আৰু জ্যামিতিৰ ব্যৱহাৰিক প্ৰয়োগৰ ওপৰত গুৰুত্ব দিয়ে।',
+                science_quest_title: 'বিজ্ঞান: আমাৰ জল উৎস',
+                science_quest_desc: 'এই বিজ্ঞান মডিউলত, আপুনি জলচক্ৰ, আপোনাৰ গাঁৱৰ বিভিন্ন জল উৎস, আৰু সেইবোৰ কেনেকৈ পৰিষ্কাৰ ৰাখিব লাগে সেই বিষয়ে শিকিব। পাঠবোৰে আপোনাক এই মূল্যৱান সম্পদ বুজিবলৈ আৰু সুৰক্ষিত কৰাত সহায় কৰিবলৈ মৌলিক ৰসায়ন বিজ্ঞান আৰু পৰিৱেশ বিজ্ঞান সামৰি লয়।',
+                history_quest_title: 'স্থানীয় ইতিহাস: আমাৰ গাঁওৰ বয়োজ্যেষ্ঠ',
+                history_quest_desc: 'স্থানীয় ইতিহাস মডিউলে আপোনাৰ গাঁৱৰ বয়োজ্যেষ্ঠসকলৰ পৰা অহা সাধু আৰু পৰম্পৰা অন্বেষণ কৰে। আপুনি মুখ্য ঐতিহাসিক ঘটনা, আপোনাৰ সম্প্ৰদায়ৰ বিৱৰ্তন, আৰু আপোনাৰ সাংস্কৃতিক ঐতিহ্য সংৰক্ষণৰ গুৰুত্ব বিষয়ে শিকিব।',
+                not_yet_earned: 'এতিয়ালৈকে অৰ্জন কৰা হোৱা নাই',
+                loading_quests: 'নতুন কুইষ্ট সৃষ্টি হৈ আছে...',
+                loading_audio: 'অডিঅ’ লোড হৈ আছে...',
+                loading_explanation: 'ব্যাখ্যা সৃষ্টি হৈ আছে...',
+                loading_report: 'শ্ৰেণী প্ৰতিবেদন সৃষ্টি হৈ আছে...',
+                quest_generated_success: 'নতুন কুইষ্ট সৃষ্টি কৰা হ\'ল!',
+                quest_already_generated: 'আপুনি এদিনত কেৱল এটা কুইষ্ট সৃষ্টি কৰিব পাৰে।',
+                no_text_to_read: 'পঢ়িবলৈ কোনো পাঠ নাই।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'কোনো কুইষ্ট উপলব্ধ নাই। এটা সৃষ্টি কৰক!'
+            },
+            bn: {
+                welcome_message: 'নমস্কার, প্রিয়াঙ্কা!',
+                learning_message: 'চলুন আজ নতুন কিছু শিখি!',
+                level_text: 'স্তর',
+                daily_quests_title: 'দৈনিক কুইস্ট',
+                leaderboard_title: 'লিডারবোর্ড',
+                badges_title: 'অ্যাচিভমেন্ট ব্যাজ',
+                progress_title: 'মডিউল অগ্রগতি',
+                generate_quest_button: '✨ নতুন কুইস্ট তৈরি করুন',
+                read_aloud_button: '✨ পড়ে শোনান',
+                explain_concept_button: '✨ ধারণা ব্যাখ্যা করুন',
+                generate_report_button: '✨ রিপোর্ট তৈরি করুন',
+                badge_star: 'গ্রামের তারকা',
+                badge_water: 'জল যোদ্ধা',
+                badge_bookworm: 'বইয়ের পোকা',
+                badge_locked: 'লক করা',
+                start_button_text: 'শুরু করুন',
+                math_quest_title: 'গণিত: ক্ষেত্রের ক্যালকুলেটর',
+                math_quest_desc: 'গণিত মডিউল আপনাকে ফসলের ফলন গণনা করতে, জলের ব্যবহার পরিমাপ করতে এবং কৃষিকাজের জন্য আপনার বাজেট পরিচালনা করতে শেখায়। এটি বাস্তব-বিশ্বের সমস্যা সমাধানের জন্য পাটিগণিত এবং জ্যামিতির ব্যবহারিক প্রয়োগের উপর দৃষ্টি নিবদ্ধ করে।',
+                science_quest_title: 'বিজ্ঞান: আমাদের জল উৎস',
+                science_quest_desc: 'এই বিজ্ঞান মডিউলে, আপনি জলচক্র, আপনার গ্রামের বিভিন্ন জল উৎস এবং কীভাবে সেগুলোকে পরিষ্কার রাখতে হয় সে সম্পর্কে শিখবেন। পাঠগুলো এই মূল্যবান সম্পদকে বুঝতে এবং রক্ষা করতে আপনাকে সাহায্য করার জন্য মৌলিক রসায়ন এবং পরিবেশ বিজ্ঞানকে কভার করে।',
+                history_quest_title: 'স্থানীয় ইতিহাস: আমাদের গ্রামের প্রবীণরা',
+                history_quest_desc: 'স্থানীয় ইতিহাস মডিউলটি আপনার গ্রামের প্রবীণদের কাছ থেকে চলে আসা গল্প এবং ঐতিহ্য নিয়ে আলোচনা করে। আপনি প্রধান ঐতিহাসিক ঘটনা, আপনার সম্প্রদায়ের বিবর্তন এবং আপনার সাংস্কৃতিক ঐতিহ্য সংরক্ষণের গুরুত্ব সম্পর্কে শিখবেন।',
+                not_yet_earned: 'এখনও অর্জন করা হয়নি',
+                loading_quests: 'নতুন কুইস্ট তৈরি হচ্ছে...',
+                loading_audio: 'অডিও লোড হচ্ছে...',
+                loading_explanation: 'ব্যাখ্যা তৈরি হচ্ছে...',
+                loading_report: 'শ্রেণী রিপোর্ট তৈরি হচ্ছে...',
+                quest_generated_success: 'নতুন কুইস্ট তৈরি হয়েছে!',
+                quest_already_generated: 'আপনি দিনে শুধুমাত্র একটি কুইস্ট তৈরি করতে পারেন।',
+                no_text_to_read: 'পড়ার জন্য কোনো লেখা নেই।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'কোনো কুইস্ট উপলব্ধ নেই। একটি তৈরি করুন!'
+            },
+            brx: { // Bodo
+                welcome_message: 'फुनसे, प्रियंका!',
+                learning_message: 'दिनै जों गाग्लोबनायनि सोलोंनो हागोन!',
+                level_text: 'थाखो',
+                daily_quests_title: 'सानावारी खामानि',
+                leaderboard_title: 'लिडारबर्ड',
+                badges_title: 'साफल्य बेज',
+                progress_title: 'पाठ्यबाहायाव जौगानाय',
+                generate_quest_button: '✨ गदान खामानि दैखांनो',
+                read_aloud_button: '✨ फांदै',
+                explain_concept_button: '✨ फांदै खामानि',
+                generate_report_button: '✨ रिपोर्ट दैखांनो',
+                badge_star: 'गामिनि उदै',
+                badge_water: 'उदै जौगानाय',
+                badge_bookworm: 'बिजां फांदै',
+                badge_locked: 'गिग्रि',
+                start_button_text: 'आगा',
+                seeds_title: 'बिफांनि बिफां थाखो थाखोनि सोलों',
+                seeds_desc: 'गामिनि खामानि आरो बिफांनि खोथाखौ नायलाय।',
+                water_conservation_title: 'जोंनि गामिनि फांदिखौ फांदै',
+                water_conservation_desc: 'फांदिखौ फांदै आरो फांदिनि खामानि दैखांनो।',
+                math_quest_title: 'गणित: फांदै खामानि',
+                math_quest_desc: 'गणित मड्युलआ थांनानै खामानि दैखांनो, फांदैनि खामानि दैखांनो, गनि खामानि दैखांनो।',
+                science_quest_title: 'विज्ञान: जोंनि दाव',
+                science_quest_desc: 'विज्ञान मड्युलआव जोंनि दाव, बिलायनि खामानि, दावनि गथनि खामानि दैखांनो।',
+                history_quest_title: 'इतिहास: जोंनि गामि',
+                history_quest_desc: 'इतिहास मड्युलआव जोंनि गामि, खामानि, जौगानायनि खामानि दैखांनो।',
+                not_yet_earned: 'एन्थुयाव जोंनायाव',
+                loading_quests: 'गदान खामानि दैखांनो...',
+                loading_audio: 'अदियो दैखांनो...',
+                loading_explanation: 'फांदैनि खामानि दैखांनो...',
+                loading_report: 'रिपोर्ट दैखांनो...',
+                quest_generated_success: 'गदान खामानि दैखांनो!',
+                quest_already_generated: 'दिनै जों गदान खामानि दैखांनो।',
+                no_text_to_read: 'फांदैनि खामानि गैयै।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कोई खामानि गैयै। दैखांनो!'
+            },
+            doi: { // Dogri
+                welcome_message: 'नमस्ते, प्रियंका!',
+                learning_message: 'चल्ल, अजै कुछ नमें सिख्खदे अहां!',
+                level_text: 'स्तर',
+                daily_quests_title: 'रोजादा कम',
+                leaderboard_title: 'लीडरबोर्ड',
+                badges_title: 'उपलब्धि बैज',
+                progress_title: 'माड्यूल प्रगती',
+                generate_quest_button: '✨ नमा कम बनाओ',
+                read_aloud_button: '✨ पढ़ै',
+                explain_concept_button: '✨ समझैं',
+                generate_report_button: '✨ रिपोर्ट बनाओ',
+                badge_star: 'गां दा तार',
+                badge_water: 'पानी दा योद्धा',
+                badge_bookworm: 'किताब दा पोख',
+                badge_locked: 'बंद',
+                start_button_text: 'शुरू',
+                seeds_title: 'बीज दे किस्में दे बारे च जानो',
+                seeds_desc: 'स्थानीय फसलें अते उंदे बीआं पर इक वीडियो दिक्खो।',
+                water_conservation_title: 'साडे गांव दे खेतें गी पानी दित्ता',
+                water_conservation_desc: 'पानी दे संरक्षण दे बारे च सिखने आस्तै फसलें गी पानी देने दा अनुकरण करो।',
+                math_quest_title: 'गणित: क्षेत्र कैलकुलेटर',
+                math_quest_desc: 'गणित माड्यूल तुसें गी फसलें दी उपज, पानी दी बरतून गी मापने, अते खेड़ी करने आस्तै अपना बजट प्रबंधत करने दा तरीका सिखांदा ऐ।',
+                science_quest_title: 'विज्ञान: साडे पानी दे स्रोत',
+                science_quest_desc: 'इस विज्ञान माड्यूल च तुसें गी पानी दे चक्र, तुंदे गांव दे पानी दे अलग-अलग स्रोतें, अते उंदी साफ-सफाई दे बारे च सिखाया जाग।',
+                history_quest_title: 'स्थानीय इतिहास: साडे गांव दे बुजुर्ग',
+                history_quest_desc: 'स्थानीय इतिहास माड्यूल च तुंदे गांव दे बुजुर्गें दी कहानियां अते परंपराएं दा पता लाया जाग। तुसें गी मुख्य ऐतिहासिक घटनाएं, तुंदे समुदाय दे विकास, अते अपनी संस्कृति गी बचाने दे महत्व दे बारे च सिखाया जाग।',
+                not_yet_earned: 'अजें नेईं कमिया',
+                loading_quests: 'नमा कम बनाइयै...',
+                loading_audio: 'ऑडियो लोडिंग...',
+                loading_explanation: 'समझैं',
+                loading_report: 'रिपोर्ट बनाइयै...',
+                quest_generated_success: 'नमा कम बनै!',
+                quest_already_generated: 'तूँ अजै इक ही कम बना सकदा ऐ।',
+                no_text_to_read: 'पढ़ने लेई कोई पाठ नेईं ऐ।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कोई कम उपलब्ध नेईं ऐ। इक बनाओ!'
+            },
+            gu: {
+                welcome_message: 'નમસ્કાર, પ્રિયંકા!',
+                learning_message: 'ચાલો, આજે કંઈક નવું શીખીએ!',
+                level_text: 'સ્તર',
+                daily_quests_title: 'રોજિંદા ક્વેસ્ટ',
+                leaderboard_title: 'લીડરબોર્ડ',
+                badges_title: 'સિદ્ધિ બેજ',
+                progress_title: 'મોડ્યુલ પ્રગતિ',
+                generate_quest_button: '✨ નવી ક્વેસ્ટ જનરેટ કરો',
+                read_aloud_button: '✨ મોટેથી વાંચો',
+                explain_concept_button: '✨ ખ્યાલ સમજાવો',
+                generate_report_button: '✨ રિપોર્ટ જનરેટ કરો',
+                badge_star: 'ગામનો સિતારો',
+                badge_water: 'જળ યોદ્ધા',
+                badge_bookworm: 'પુસ્તક પ્રેમી',
+                badge_locked: 'લૉક કરેલ',
+                start_button_text: 'શરૂ કરો',
+                seeds_title: 'બીજના પ્રકાર વિશે જાણો',
+                seeds_desc: 'સ્થાનિક પાક અને તેમના બીજ પરનો વિડીયો જુઓ.',
+                water_conservation_title: 'આપણા ગામના ખેતરોને પાણી આપો',
+                water_conservation_desc: 'સંરક્ષણ વિશે જાણવા માટે પાકોને પાણી આપવાનું અનુકરણ કરો.',
+                math_quest_title: 'ગણિત: ક્ષેત્ર કેલ્ક્યુલેટર',
+                math_quest_desc: 'ગણિત મોડ્યુલ તમને પાકની ઉપજની ગણતરી કેવી રીતે કરવી, પાણીનો વપરાશ માપવા અને ખેતી માટે તમારા બજેટનું સંચાલન કેવી રીતે કરવું તે શીખવે છે.',
+                science_quest_title: 'વિજ્ઞાન: આપણા પાણીના સ્ત્રોત',
+                science_quest_desc: 'આ વિજ્ઞાન મોડ્યુલમાં, તમે જળચક્ર, તમારા ગામમાં વિવિધ પ્રકારના પાણીના સ્ત્રોતો અને તેને કેવી રીતે સ્વચ્છ રાખવા તે વિશે શીખી શકશો.',
+                history_quest_title: 'સ્થાનિક ઇતિહાસ: આપણા ગામના વડીલો',
+                history_quest_desc: 'સ્થાનિક ઇતિહાસ મોડ્યુલ તમારા ગામના વડીલો દ્વારા આપવામાં આવેલી વાર્તાઓ અને પરંપરાઓનું અન્વેષણ કરે છે.',
+                not_yet_earned: 'હજુ સુધી કમાયું નથી',
+                loading_quests: 'નવી ક્વેસ્ટ જનરેટ થઈ રહી છે...',
+                loading_audio: 'ઓડિયો લોડ થઈ રહ્યો છે...',
+                loading_explanation: 'સમજૂતી જનરેટ થઈ રહી છે...',
+                loading_report: 'વર્ગ રિપોર્ટ જનરેટ થઈ રહ્યો છે...',
+                quest_generated_success: 'નવી ક્વેસ્ટ જનરેટ થઈ!',
+                quest_already_generated: 'તમે દિવસમાં ફક્ત એક જ ક્વેસ્ટ જનરેટ કરી શકો છો.',
+                no_text_to_read: 'વાંચવા માટે કોઈ લખાણ નથી.',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'કોઈ ક્વેસ્ટ ઉપલબ્ધ નથી. એક જનરેટ કરો!'
+            },
+            kn: {
+                welcome_message: 'ನಮಸ್ಕಾರ, ಪ್ರಿಯಾಂಕಾ!',
+                learning_message: 'ಇಂದು ಹೊಸದನ್ನು ಕಲಿಯೋಣ!',
+                level_text: 'ಮಟ್ಟ',
+                daily_quests_title: 'ದೈನಂದಿನ ಕಾರ್ಯಗಳು',
+                leaderboard_title: 'ಲೀಡರ್‌ಬೋರ್ಡ್',
+                badges_title: 'ಸಾಧನೆ ಬ್ಯಾಡ್ಜ್‌ಗಳು',
+                progress_title: 'ಮಾಡ್ಯೂಲ್ ಪ್ರಗತಿ',
+                generate_quest_button: '✨ ಹೊಸ ಕಾರ್ಯವನ್ನು ರಚಿಸಿ',
+                read_aloud_button: '✨ ಗಟ್ಟಿಯಾಗಿ ಓದಿ',
+                explain_concept_button: '✨ ಪರಿಕಲ್ಪನೆ ವಿವರಿಸಿ',
+                generate_report_button: '✨ ವರದಿ ರಚಿಸಿ',
+                badge_star: 'ಗ್ರಾಮದ ತಾರೆ',
+                badge_water: 'ಜಲ ಯೋಧ',
+                badge_bookworm: 'ಪುಸ್ತಕ ಪ್ರೇಮಿ',
+                badge_locked: 'ಲಾಕ್ ಆಗಿದೆ',
+                start_button_text: 'ಪ್ರಾರಂಭಿಸಿ',
+                seeds_title: 'ಬೀಜದ ವಿಧಗಳ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ',
+                seeds_desc: 'ಸ್ಥಳೀಯ ಬೆಳೆಗಳು ಮತ್ತು ಅವುಗಳ ಬೀಜಗಳ ಬಗ್ಗೆ ವೀಡಿಯೊ ನೋಡಿ.',
+                water_conservation_title: 'ನಮ್ಮ ಹಳ್ಳಿಯ ಗದ್ದೆಗಳಿಗೆ ನೀರು ಹಾಕಿ',
+                water_conservation_desc: 'ನೀರಿನ ಸಂರಕ್ಷಣೆ ಬಗ್ಗೆ ತಿಳಿಯಲು ಬೆಳೆಗಳಿಗೆ ನೀರು ಹಾಕುವುದನ್ನು ಅನುಕರಿಸು.',
+                math_quest_title: 'ಗಣಿತ: ಫೀಲ್ಡ್ ಕ್ಯಾಲ್ಕುಲೇಟರ್',
+                math_quest_desc: 'ಗಣಿತದ ಮಾಡ್ಯೂಲ್ ನಿಮಗೆ ಬೆಳೆ ಇಳುವರಿಗಳನ್ನು ಲೆಕ್ಕಾಚಾರ ಮಾಡುವುದು, ನೀರಿನ ಬಳಕೆಯನ್ನು ಅಳೆಯುವುದು ಮತ್ತು ಕೃಷಿಗಾಗಿ ನಿಮ್ಮ ಬಜೆಟ್ ಅನ್ನು ನಿರ್ವಹಿಸುವುದು ಹೇಗೆ ಎಂದು ಕಲಿಸುತ್ತದೆ।',
+                science_quest_title: 'ವಿಜ್ಞಾನ: ನಮ್ಮ ನೀರಿನ ಮೂಲಗಳು',
+                science_quest_desc: 'ಈ ವಿಜ್ಞಾನ ಮಾಡ್ಯೂಲ್‌ನಲ್ಲಿ, ನೀವು ಜಲಚಕ್ರ, ನಿಮ್ಮ ಗ್ರಾಮದಲ್ಲಿನ ವಿವಿಧ ರೀತಿಯ ನೀರಿನ ಮೂಲಗಳು ಮತ್ತು ಅವುಗಳನ್ನು ಹೇಗೆ ಸ್ವಚ್ಛವಾಗಿ ಇಡುವುದು ಎಂಬುದರ ಕುರಿತು ಕಲಿಯುವಿರಿ।',
+                history_quest_title: 'ಸ್ಥಳೀಯ ಇತಿಹಾಸ: ನಮ್ಮ ಗ್ರಾಮದ ಹಿರಿಯರು',
+                history_quest_desc: 'ಸ್ಥಳೀಯ ಇತಿಹಾಸ ಮಾಡ್ಯೂಲ್ ನಿಮ್ಮ ಗ್ರಾಮದ ಹಿರಿಯರಿಂದ ಬಂದಿರುವ ಕಥೆಗಳು ಮತ್ತು ಸಂಪ್ರದಾಯಗಳನ್ನು ಪರಿಶೀಲಿಸುತ್ತದೆ।',
+                not_yet_earned: 'ಇನ್ನೂ ಗಳಿಸಿಲ್ಲ',
+                loading_quests: 'ಹೊಸ ಕಾರ್ಯವನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ...',
+                loading_audio: 'ಆಡಿಯೋ ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+                loading_explanation: 'ವಿವರಣೆ ರಚಿಸಲಾಗುತ್ತಿದೆ...',
+                loading_report: 'ತರಗತಿ ವರದಿ ರಚಿಸಲಾಗುತ್ತಿದೆ...',
+                quest_generated_success: 'ಹೊಸ ಕಾರ್ಯ ರಚಿಸಲಾಗಿದೆ!',
+                quest_already_generated: 'ನೀವು ದಿನಕ್ಕೆ ಒಂದು ಕಾರ್ಯವನ್ನು ಮಾತ್ರ ರಚಿಸಬಹುದು।',
+                no_text_to_read: 'ಓದಲು ಯಾವುದೇ ಪಠ್ಯವಿಲ್ಲ।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'ಯಾವುದೇ ಕಾರ್ಯಗಳು ಲಭ್ಯವಿಲ್ಲ। ಒಂದನ್ನು ರಚಿಸಿ!'
+            },
+            ks: { // Kashmiri
+                welcome_message: 'سٲری سٲر، پرینکا!',
+                learning_message: 'آسہِ چھُکھ نٲو اَز کِہِش سٲرِنس!',
+                level_text: 'سطح',
+                daily_quests_title: 'روزٲنؠ کامہٕ',
+                leaderboard_title: 'لیڈربورڈ',
+                badges_title: 'کامیابی ہیِچ',
+                progress_title: 'ماڈیول ترقی',
+                generate_quest_button: '✨ نٔوِ کامہٕ بناو',
+                read_aloud_button: '✨ پڑھو',
+                explain_concept_button: '✨ خیال سمجھاوو',
+                generate_report_button: '✨ رپورٹ بناو',
+                badge_star: 'گامِچِ پٲٹھی',
+                badge_water: 'آبہِ وُہُت',
+                badge_bookworm: 'کتابٕنِ ہُنٛد کُوٹھ',
+                badge_locked: 'تالا',
+                start_button_text: 'شُروٗع',
+                seeds_title: 'بیجٕن ہُنٛد قسمہٕ ہُنٛد بارے سٲرِس',
+                seeds_desc: 'مقامی فصلَن تہٕ تِمَن ہُنٛد بیجَن پؠٹھ اَکھ وڈیو پَژٕو۔',
+                water_conservation_title: 'آسہِ چُھکھ گامٕچِ پَڈَس آب دِیو',
+                water_conservation_desc: 'آبٕچ وُہُتٕچ کٔرؠو پریکٹِس کرنہٕ خٲطرٕ فصلَن آب دِیو۔',
+                math_quest_title: 'حساب: فیلڈ کیلکولیٹر',
+                math_quest_desc: 'حساب ماڈل چُھکھ تُہندِ فصلٕچ پیداوار حساب کرٕن، آبُک وُہُت کَرٕن، تہٕ کھیت کرنہٕ خٲطرٕ تُہندِ بجٹ پربند کَرٕن۔',
+                science_quest_title: 'سائنس: آسہِ چُھکھ آبُک سٲرِس',
+                science_quest_desc: 'اِس سائنس ماڈلَس منٛز، تُہندِ چُھکھ آبُک چَکَر، تُہندِ گامَس منٛز آبُک مُختلف سٲرِس، تہٕ یِم چھُکھ صاف کَرٕن۔',
+                history_quest_title: 'مقامی تاریخ: آسہِ چُھکھ گامِچِ بٲنؠ',
+                history_quest_desc: 'مقامی تاریخ ماڈل چُھکھ تُہندِ گامِچِ بٲنؠن ہُنٛد قصہٕ تہٕ روایتَن چھُکھ نأوِن۔',
+                not_yet_earned: 'نہٕ کمٲویمِتی',
+                loading_quests: 'نٔوِ کامہٕ بناونہٕ چھِ یِوان...',
+                loading_audio: 'آڈیو لوڈ گژھان...',
+                loading_explanation: 'بیان تیار کران...',
+                loading_report: 'کلاس رپورٹ تیار کران...',
+                quest_generated_success: 'نٔوِ کامہٕ بنیِی!',
+                quest_already_generated: 'تُہندِ چھِ اَکٕی دۄہَس اَکٕی کامہٕ بناونُک اجازت۔',
+                no_text_to_read: 'پڑھنُک کُنہٕ پأٹُھ کُنیہٕ۔',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'کوئی کامہٕ دستیاب نٔہ۔ اَکھ بناو!'
+            },
+            kok: { // Konkani
+                welcome_message: 'नमस्कार, प्रियांका!',
+                learning_message: 'चल, आजुंय कांय न्हवें शिकूया!',
+                level_text: 'पातळी',
+                daily_quests_title: 'रोजाच्यो कार्यां',
+                leaderboard_title: 'लीडरबॉर्ड',
+                badges_title: 'येस बेज',
+                progress_title: 'माड्यूल प्रगती',
+                generate_quest_button: '✨ नवें कार्य तयार करा',
+                read_aloud_button: '✨ आवाज कर',
+                explain_concept_button: '✨ संकल्पना समजाव',
+                generate_report_button: '✨ अहवाल तयार करा',
+                badge_star: 'गांवचो तारा',
+                badge_water: 'उदक झुजार',
+                badge_bookworm: 'पुस्तक भुकेन',
+                badge_locked: 'बंद',
+                start_button_text: 'सुरवात कर',
+                seeds_title: 'बियाणें प्रकारां बद्दल जाणून घेयात',
+                seeds_desc: 'स्थानिक पीक आणि त्यांच्या बियांबद्दल एक व्हिडीओ पळयात.',
+                water_conservation_title: 'आमच्या गांवातील शेतांना उदक कर',
+                water_conservation_desc: 'पाण्याच्या संरक्षणाबद्दल शिकण्यासाठी पिकांना पाणी देण्याचे अनुकरण करा.',
+                math_quest_title: 'गणित: म्हाका फाळ कैलकुलेटर',
+                math_quest_desc: 'गणित मड्युल तुमी शेताच्या वाटेची गणना करूंक, उदक वापरून, आनी शेताच्या वखदाची किंमत कमी करूंक शिकता।',
+                science_quest_title: 'विज्ञान: आमचे उदक स्रोत',
+                science_quest_desc: 'या विज्ञान मड्युलान तुमी उदकाची चक्र, तुमच्या गावांत उदकाचे प्रकार, आनी तांकां कसले राखप आनी संरक्षण करूंक शिकता।',
+                history_quest_title: 'थळवे इतिहास: आमचे गांवचे बुजुर्ग',
+                history_quest_desc: 'थळवे इतिहास मड्युल तुमच्या गावांतल्या बुजुर्गानी सांगल्यो कथा आनी परंपरां पळयता।',
+                not_yet_earned: 'आजून मेळोवंक ना',
+                loading_quests: 'नवें कार्य तयार करपा...',
+                loading_audio: 'ऑडियो लोडिंग...',
+                loading_explanation: 'स्पष्टीकरण तयार करपा...',
+                loading_report: 'वर्ग अहवाल तयार करपा...',
+                quest_generated_success: 'नवें कार्य तयार केला!',
+                quest_already_generated: 'तुमी एका दिसांत एकूच कार्य तयार करू शकता.',
+                no_text_to_read: 'वाचपाक कांय ना.',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कोणतेय कार्य उपलब्ध ना. एक तयार कर!'
+            },
+            mai: { // Maithili
+                welcome_message: 'नमस्ते, प्रियंका!',
+                learning_message: 'आउ, आई किछु नव सिखैत छी!',
+                level_text: 'स्तर',
+                daily_quests_title: 'दैनिक कार्य',
+                leaderboard_title: 'लीडरबोर्ड',
+                badges_title: 'उपलब्धि बैज',
+                progress_title: 'मोड्यूल प्रगति',
+                generate_quest_button: '✨ नया कार्य बनाऊ',
+                read_aloud_button: '✨ पढ़ब',
+                explain_concept_button: '✨ अवधारणा बुझाउ',
+                generate_report_button: '✨ रिपोर्ट बनाउ',
+                badge_star: 'गाम क तारा',
+                badge_water: 'जल योद्धा',
+                badge_bookworm: 'किताब पोका',
+                badge_locked: 'बंद',
+                start_button_text: 'शुरू करू',
+                seeds_title: 'बीज के प्रकार के बारे में जानू',
+                seeds_desc: 'स्थानीय फसल और उनके बीजों पर एक वीडियो देखू।',
+                water_conservation_title: 'हमर गामक खेत केँ पानी देब',
+                water_conservation_desc: 'संरक्षण के बारे में जाने के लिए फसलों केँ पानी देने का अनुकरण करू।',
+                math_quest_title: 'गणित: क्षेत्र कैलकुलेटर',
+                math_quest_desc: 'गणित मॉड्यूल अहाँ केँ फसलक उपजक गणना, जलक उपयोगक मापक, आ खेतीक लेल अपन बजटक प्रबंधन करब सिखाबैत अछि।',
+                science_quest_title: 'विज्ञान: हमर जलक स्रोत',
+                science_quest_desc: 'एहि विज्ञान मॉड्यूल मे, अहाँ जल चक्र, अपन गाम मे जलक विभिन्न स्रोत आ हुनका स्वच्छ केनाय रखब से बुझि सकय छी।',
+                history_quest_title: 'स्थानीय इतिहास: हमर गामक बुजुर्ग',
+                history_quest_desc: 'स्थानीय इतिहास मॉड्यूल अहाँक गामक बुजुर्ग द्वारा कहल गेल कहानी आ परंपरा कें खोज करैत अछि।',
+                not_yet_earned: 'एखन धरि नहिं अर्जित कैल गेल अछि',
+                loading_quests: 'नया कार्य बनैत अछि...',
+                loading_audio: 'ऑडियो लोड भ रहल अछि...',
+                loading_explanation: 'व्याख्या बनैत अछि...',
+                loading_report: 'वर्ग रिपोर्ट बनैत अछि...',
+                quest_generated_success: 'नया कार्य बनल!',
+                quest_already_generated: 'अहाँ एक दिन मे एकटा कार्य बना सकय छी।',
+                no_text_to_read: 'पढ़बा लेल कोनो पाठ नहिं अछि।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कोई कार्य उपलब्ध नहिं अछि। एकटा बनाउ!'
+            },
+            ml: {
+                welcome_message: 'നമസ്കാരം, പ്രിയങ്ക!',
+                learning_message: 'നമുക്ക് ഇന്ന് പുതിയത് എന്തെങ്കിലും പഠിക്കാം!',
+                level_text: 'നില',
+                daily_quests_title: 'ദൈനംദിന ദൗത്യങ്ങൾ',
+                leaderboard_title: 'ലീഡർബോർഡ്',
+                badges_title: 'നേട്ടങ്ങൾ',
+                progress_title: 'മൊഡ്യൂൾ പുരോഗതി',
+                generate_quest_button: '✨ പുതിയ ദൗത്യം സൃഷ്ടിക്കുക',
+                read_aloud_button: '✨ ഉച്ചത്തിൽ വായിക്കുക',
+                explain_concept_button: '✨ ആശയം വിശദീകരിക്കുക',
+                generate_report_button: '✨ റിപ്പോർട്ട് സൃഷ്ടിക്കുക',
+                badge_star: 'ഗ്രാമത്തിന്റെ നക്ഷത്രം',
+                badge_water: 'ജല യോദ്ധാവ്',
+                badge_bookworm: 'പുസ്തകപ്പുഴു',
+                badge_locked: 'പൂട്ടിയത്',
+                start_button_text: 'തുടങ്ങുക',
+                seeds_title: 'വിത്തുകളെക്കുറിച്ച് അറിയുക',
+                seeds_desc: 'പ്രാദേശിക വിളകളെയും അവയുടെ വിത്തുകളെയും കുറിച്ചുള്ള ഒരു വീഡിയോ കാണുക.',
+                water_conservation_title: 'നമ്മുടെ ഗ്രാമത്തിലെ വയലുകൾക്ക് വെള്ളം നൽകുക',
+                water_conservation_desc: 'സംരക്ഷണം അറിയാൻ വിളകൾക്ക് വെള്ളം നൽകുന്നത് അനുകരിക്കുക.',
+                math_quest_title: 'ഗണിതം: ഫീൽഡ് കാൽക്കുലേറ്റർ',
+                math_quest_desc: 'ഗണിത മൊഡ്യൂൾ വിളവ് കണക്കാക്കാനും, വെള്ളത്തിന്റെ ഉപയോഗം അളക്കാനും, കൃഷിക്ക് നിങ്ങളുടെ ബജറ്റ് കൈകാര്യം ചെയ്യാനും നിങ്ങളെ പഠിപ്പിക്കുന്നു.',
+                science_quest_title: 'ശാസ്ത്രം: നമ്മുടെ ജല സ്രോതസ്സുകൾ',
+                science_quest_desc: 'ഈ ശാസ്ത്ര മൊഡ്യൂളിൽ, നിങ്ങൾ ജലചക്രം, നിങ്ങളുടെ ഗ്രാമത്തിലെ വിവിധതരം ജലസ്രോതസ്സുകൾ, അവ എങ്ങനെ വൃത്തിയായി സൂക്ഷിക്കാം എന്നിവയെക്കുറിച്ച് പഠിക്കും.',
+                history_quest_title: 'പ്രാദേശിക ചരിത്രം: നമ്മുടെ ഗ്രാമത്തിലെ കാരണവന്മാർ',
+                history_quest_desc: 'പ്രാദേശിക ചരിത്ര മൊഡ്യൂൾ നിങ്ങളുടെ ഗ്രാമത്തിലെ കാരണവന്മാർ പകർന്നുനൽകിയ കഥകളെയും പാരമ്പര്യങ്ങളെയും കുറിച്ച് പഠിക്കുന്നു.',
+                not_yet_earned: 'ഇതുവരെ നേടിയിട്ടില്ല',
+                loading_quests: 'പുതിയ ദൗത്യം സൃഷ്ടിക്കുന്നു...',
+                loading_audio: 'ഓഡിയോ ലോഡ് ചെയ്യുന്നു...',
+                loading_explanation: 'വിശദീകരണം സൃഷ്ടിക്കുന്നു...',
+                loading_report: 'ക്ലാസ് റിപ്പോർട്ട് സൃഷ്ടിക്കുന്നു...',
+                quest_generated_success: 'പുതിയ ദൗത്യം സൃഷ്ടിച്ചു!',
+                quest_already_generated: 'ഒരു ദിവസം ഒരു ദൗത്യം മാത്രമേ സൃഷ്ടിക്കാൻ കഴിയൂ.',
+                no_text_to_read: 'വായിക്കാൻ ഉള്ളടക്കം ഇല്ല.',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'ദൗത്യങ്ങൾ ലഭ്യമല്ല. ഒന്ന് സൃഷ്ടിക്കുക!'
+            },
+            mni: { // Manipuri
+                welcome_message: 'নিংথৌনা, প্রিয়ংকা!',
+                learning_message: 'ঙসি ঐখোয়না অনৌবা করিগুম্বা অমত্তবু লৈকয়!',
+                level_text: 'থাক',
+                daily_quests_title: 'নুমিৎ শিং',
+                leaderboard_title: 'লিডারবোর্ড',
+                badges_title: 'লাইনা',
+                progress_title: 'পাঠ্যচহগী থবক',
+                generate_quest_button: '✨ অঙৌবা ফংনরি',
+                read_aloud_button: '✨ থোকল',
+                explain_concept_button: '✨ ৱাখলশিং',
+                generate_report_button: '✨ রিপোর্ট',
+                badge_star: 'খোরল',
+                badge_water: 'ঈশিং য়াও',
+                badge_bookworm: 'লাইরীক',
+                badge_locked: 'খং',
+                start_button_text: 'হৌরক',
+                seeds_title: 'মমিং লৈবা থবকশিং',
+                seeds_desc: 'মমিং লৈবা থবকশিংগী মতাংদা তম্লগনি।',
+                water_conservation_title: 'ঐখোয়গী লমচৎ',
+                water_conservation_desc: 'লোকলগী মতাংদা তম্লগনি।',
+                math_quest_title: 'গণিত: ফিল্ড ক্যালকুলেটর',
+                math_quest_desc: 'গণিত মডিউলনা লাইফুইশিং অঙৌবা কুনমগনী, অঙৌবা কুনমগনী।',
+                science_quest_title: 'বিজ্ঞান: ঐখোয়গী ইশিং মফম',
+                science_quest_desc: 'বিজ্ঞান মডিউল অসিদা, মমিং লৈবা থবকশিংগী মতাংদা তম্লগনি।',
+                history_quest_title: 'লোকল ইতিহাস: ঐখোয়গী লমচৎ',
+                history_quest_desc: 'লোকল ইতিহাস মডিউলনা লোকলগী মতাংদা তম্লগনি।',
+                not_yet_earned: 'হৌজিক ফাওবা ফংদ্রি',
+                loading_quests: 'অঙৌবা ফংনরি...',
+                loading_audio: 'অডিও ফংনরি...',
+                loading_explanation: 'ৱাখলশিং...',
+                loading_report: 'রিপোর্ট...',
+                quest_generated_success: 'অঙৌবা ফংনরি!',
+                quest_already_generated: 'নুমিৎ অমদা অঙৌবা ফংনরি',
+                no_text_to_read: 'অঙৌবা ফংদ্রি',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'নুমিৎ শিং ফংদ্রি। অঙৌবা ফংনরি!'
+            },
+            mr: {
+                welcome_message: 'नमस्ते, प्रियंका!',
+                learning_message: 'चला, आज काहीतरी नवीन शिकूया!',
+                level_text: 'पातळी',
+                daily_quests_title: 'दैनिक कार्य',
+                leaderboard_title: 'लीडरबोर्ड',
+                badges_title: 'उपलब्धता बॅज',
+                progress_title: 'मॉड्यूल प्रगती',
+                generate_quest_button: '✨ नवीन कार्य तयार करा',
+                read_aloud_button: '✨ मोठ्याने वाचा',
+                explain_concept_button: '✨ संकल्पना स्पष्ट करा',
+                generate_report_button: '✨ अहवाल तयार करा',
+                badge_star: 'गावाचा तारा',
+                badge_water: 'जल योद्धा',
+                badge_bookworm: 'वाचनप्रेमी',
+                badge_locked: 'लॉक केलेले',
+                start_button_text: 'सुरू करा',
+                seeds_title: 'बियांबद्दल जाणून घ्या',
+                seeds_desc: 'स्थानिक पिके आणि त्यांच्या बियांवर एक व्हिडिओ पहा.',
+                water_conservation_title: 'आपल्या गावातील शेतांना पाणी द्या',
+                water_conservation_desc: 'पाण्याच्या संरक्षणाबद्दल जाणून घेण्यासाठी पिकांना पाणी देण्याचे अनुकरण करा.',
+                math_quest_title: 'गणित: फील्ड कॅल्क्युलेटर',
+                math_quest_desc: 'गणित मॉड्यूल तुम्हाला पिकांचे उत्पन्न कसे मोजावे, पाण्याचा वापर कसा मोजावा आणि शेतीसाठी तुमचे बजेट कसे व्यवस्थापित करावे हे शिकवते.',
+                science_quest_title: 'विज्ञान: आपले जल स्रोत',
+                science_quest_desc: 'या विज्ञान मॉड्यूलमध्ये, तुम्ही जलचक्र, तुमच्या गावातील विविध प्रकारचे जलस्रोत आणि ते कसे स्वच्छ ठेवायचे याबद्दल शिकाल.',
+                history_quest_title: 'स्थानिक इतिहास: आपले गावचे वडील',
+                history_quest_desc: 'स्थानिक इतिहास मॉड्यूल तुमच्या गावच्या वडिलांकडून सांगितलेल्या कथा आणि परंपरांचा शोध घेते.',
+                not_yet_earned: 'अद्याप प्राप्त झाले नाही',
+                loading_quests: 'नवीन कार्य तयार होत आहे...',
+                loading_audio: 'ऑडिओ लोड होत आहे...',
+                loading_explanation: 'स्पष्टीकरण तयार होत आहे...',
+                loading_report: 'वर्ग अहवाल तयार होत आहे...',
+                quest_generated_success: 'नवीन कार्य तयार झाले!',
+                quest_already_generated: 'तुम्ही दिवसातून फक्त एकच कार्य तयार करू शकता.',
+                no_text_to_read: 'वाचण्यासाठी काहीही नाही.',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कोणतेही कार्य उपलब्ध नाही. एक तयार करा!'
+            },
+            ne: {
+                welcome_message: 'नमस्ते, प्रियंका!',
+                learning_message: 'आउनुहोस्, आज केही नयाँ सिकौं!',
+                level_text: 'स्तर',
+                daily_quests_title: 'दैनिक कार्यहरू',
+                leaderboard_title: 'लीडरबोर्ड',
+                badges_title: 'उपलब्धि ब्याजहरू',
+                progress_title: 'मोड्युल प्रगति',
+                generate_quest_button: '✨ नयाँ कार्य सिर्जना गर्नुहोस्',
+                read_aloud_button: '✨ पढेर सुनाउनुहोस्',
+                explain_concept_button: '✨ अवधारणा व्याख्या गर्नुहोस्',
+                generate_report_button: '✨ रिपोर्ट सिर्जना गर्नुहोस्',
+                badge_star: 'गाउँको तारा',
+                badge_water: 'जल योद्धा',
+                badge_bookworm: 'किताबको कीरा',
+                badge_locked: 'लक गरिएको',
+                start_button_text: 'सुरु गर्नुहोस्',
+                seeds_title: 'बीउको प्रकारहरूको बारेमा जान्नुहोस्',
+                seeds_desc: 'स्थानीय बाली र तिनीहरूको बीउमा एउटा भिडियो हेर्नुहोस्।',
+                water_conservation_title: 'हाम्रो गाउँका खेतहरूलाई पानी दिनुहोस्',
+                water_conservation_desc: 'संरक्षणको बारेमा सिक्न बालीहरूलाई पानी दिने अनुकरण गर्नुहोस्।',
+                math_quest_title: 'गणित: फील्ड क्याल्कुलेटर',
+                math_quest_desc: 'गणित मोड्युलले तपाईंलाई बाली उत्पादन गणना गर्न, पानीको प्रयोग नाप्न र खेतीका लागि आफ्नो बजेट व्यवस्थापन गर्न सिकाउँछ।',
+                science_quest_title: 'विज्ञान: हाम्रो जल स्रोतहरू',
+                science_quest_desc: 'यस विज्ञान मोड्युलमा, तपाईं जलचक्र, आफ्नो गाउँमा विभिन्न प्रकारका जलस्रोतहरू र तिनीहरूलाई कसरी सफा राख्ने भन्ने बारे सिक्नुहुनेछ।',
+                history_quest_title: 'स्थानीय इतिहास: हाम्रो गाउँका बुजुर्गहरू',
+                history_quest_desc: 'स्थानीय इतिहास मोड्युलले तपाईंको गाउँका बुजुर्गहरूबाट आएका कथाहरू र परम्पराहरूको बारेमा खोजी गर्छ।',
+                not_yet_earned: 'अहिलेसम्म आर्जन गरिएको छैन',
+                loading_quests: 'नयाँ कार्य सिर्जना हुँदैछ...',
+                loading_audio: 'अडियो लोड हुँदैछ...',
+                loading_explanation: 'व्याख्या सिर्जना हुँदैछ...',
+                loading_report: 'कक्षा रिपोर्ट सिर्जना हुँदैछ...',
+                quest_generated_success: 'नयाँ कार्य सिर्जना भयो!',
+                quest_already_generated: 'तपाईंले एक दिनमा एउटा मात्र कार्य सिर्जना गर्न सक्नुहुन्छ।',
+                no_text_to_read: 'पढ्नको लागि कुनै पाठ छैन।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कुनै कार्यहरू उपलब्ध छैन। एउटा सिर्जना गर्नुहोस्!'
+            },
+            or: {
+                welcome_message: 'ନମସ୍କାର, ପ୍ରିୟଙ୍କା!',
+                learning_message: 'ଚାଲନ୍ତୁ, ଆଜି କିଛି ନୂଆ ଶିଖିବା!',
+                level_text: 'ସ୍ତର',
+                daily_quests_title: 'ଦୈନିକ କାର୍ଯ୍ୟ',
+                leaderboard_title: 'ଲିଡରବୋର୍ଡ',
+                badges_title: 'ସଫଳତା ବ୍ୟାଜ୍',
+                progress_title: 'ମଡ୍ୟୁଲ୍ ପ୍ରଗତି',
+                generate_quest_button: '✨ ନୂଆ କାର୍ଯ୍ୟ ତିଆରି କରନ୍ତୁ',
+                read_aloud_button: '✨ ପଢ଼ି ଶୁଣାନ୍ତୁ',
+                explain_concept_button: '✨ ଧାରଣା ବୁଝାନ୍ତୁ',
+                generate_report_button: '✨ ରିପୋର୍ଟ ତିଆରି କରନ୍ତୁ',
+                badge_star: 'ଗାଁର ତାରା',
+                badge_water: 'ଜଳ ଯୋଦ୍ଧା',
+                badge_bookworm: 'ପୁସ୍ତକ ପ୍ରେମୀ',
+                badge_locked: 'ଲକ୍ ହୋଇଛି',
+                start_button_text: 'ଆରମ୍ଭ କରନ୍ତୁ',
+                seeds_title: 'ବୀଜ ପ୍ରକାର ବିଷୟରେ ଜାଣନ୍ତୁ',
+                seeds_desc: 'ସ୍ଥାନୀୟ ଫସଲ ଏବଂ ସେମାନଙ୍କ ବୀଜ ଉପରେ ଏକ ଭିଡିଓ ଦେଖନ୍ତୁ।',
+                water_conservation_title: 'ଆମ ଗ୍ରାମର କ୍ଷେତ୍ରକୁ ପାଣି ଦିଅ',
+                water_conservation_desc: 'ଜଳ ସଂରକ୍ଷଣ ବିଷୟରେ ଜାଣିବାକୁ ଫସଲଗୁଡ଼ିକୁ ପାଣି ଦେବାକୁ ଅନୁକରଣ କରନ୍ତୁ।',
+                math_quest_title: 'ଗଣିତ: ଫିଲ୍ଡ କାଲକୁଲେଟର',
+                math_quest_desc: 'ଗଣିତ ମଡ୍ୟୁଲ୍ ଆପଣଙ୍କୁ ଫସଲର ଉତ୍ପାଦନ ଗଣନା କରିବା, ଜଳର ବ୍ୟବହାର ମାପିବା ଏବଂ ଚାଷ ପାଇଁ ଆପଣଙ୍କ ବଜେଟ୍ ପରିଚାଳନା କରିବା ଶିଖାଏ।',
+                science_quest_title: 'ବିଜ୍ଞାନ: ଆମର ଜଳ ଉତ୍ସ',
+                science_quest_desc: 'ଏହି ବିଜ୍ଞାନ ମଡ୍ୟୁଲରେ, ଆପଣ ଜଳ ଚକ୍ର, ଆପଣଙ୍କ ଗାଁରେ ବିଭିନ୍ନ ପ୍ରକାରର ଜଳ ଉତ୍ସ ଏବଂ ସେଗୁଡିକୁ କିପରି ସଫା ରଖିବେ ସେ ବିଷୟରେ ଜାଣିବେ।',
+                history_quest_title: 'ସ୍ଥାନୀୟ ଇତିହାସ: ଆମର ଗ୍ରାମୀଣ ବୃଦ୍ଧ',
+                history_quest_desc: 'ସ୍ଥାନୀୟ ଇତିହାସ ମଡ୍ୟୁଲ୍ ଆପଣଙ୍କ ଗାଁର ବୃଦ୍ଧମାନଙ୍କଠାରୁ ଆସିଥିବା କାହାଣୀ ଏବଂ ପରମ୍ପରାଗୁଡ଼ିକୁ ଅନୁସନ୍ଧାନ କରେ।',
+                not_yet_earned: 'ଏପର୍ଯ୍ୟନ୍ତ ଅର୍ଜନ କରିନାହାଁନ୍ତି',
+                loading_quests: 'ନୂଆ କାର୍ଯ୍ୟ ତିଆରି ହେଉଛି...',
+                loading_audio: 'ଅଡିଓ ଲୋଡ୍ ହେଉଛି...',
+                loading_explanation: 'ବ୍ୟାଖ୍ୟା ତିଆରି ହେଉଛି...',
+                loading_report: 'ରିପୋଟ୍ ତିଆରି ହେଉଛି...',
+                quest_generated_success: 'ନୂଆ କାର୍ଯ୍ୟ ତିଆରି ହେଲା!',
+                quest_already_generated: 'ଆପଣ ଦିନକୁ କେବଳ ଗୋଟିଏ କାର୍ଯ୍ୟ ତିଆରି କରିପାରିବେ।',
+                no_text_to_read: 'ପଢ଼ିବା ପାଇଁ କିଛି ଲେଖା ନାହିଁ।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'କୌଣସି କାର୍ଯ୍ୟ ଉପଲବ୍ଧ ନାହିଁ। ଏକ ତିଆରି କରନ୍ତୁ!'
+            },
+            pa: {
+                welcome_message: 'ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ, ਪ੍ਰਿਅੰਕਾ!',
+                learning_message: 'ਚਲੋ ਅੱਜ ਕੁਝ ਨਵਾਂ ਸਿੱਖੀਏ!',
+                level_text: 'ਪੱਧਰ',
+                daily_quests_title: 'ਰੋਜ਼ਾਨਾ ਕਾਰਜ',
+                leaderboard_title: 'ਲੀਡਰਬੋਰਡ',
+                badges_title: 'ਪ੍ਰਾਪਤੀ ਬੈਜ',
+                progress_title: 'ਮੋਡੀਊਲ ਪ੍ਰਗਤੀ',
+                generate_quest_button: '✨ ਨਵਾਂ ਕਾਰਜ ਬਣਾਓ',
+                read_aloud_button: '✨ ਪੜ੍ਹੋ',
+                explain_concept_button: '✨ ਸੰਕਲਪ ਸਮਝਾਓ',
+                generate_report_button: '✨ ਰਿਪੋਰਟ ਬਣਾਓ',
+                badge_star: 'ਪਿੰਡ ਦਾ ਤਾਰਾ',
+                badge_water: 'ਜਲ ਯੋਧਾ',
+                badge_bookworm: 'ਕਿਤਾਬਾਂ ਦਾ ਕੀੜਾ',
+                badge_locked: 'ਲਾਕ ਕੀਤਾ',
+                start_button_text: 'ਸ਼ੁਰੂ ਕਰੋ',
+                seeds_title: 'ਬੀਜਾਂ ਦੀਆਂ ਕਿਸਮਾਂ ਬਾਰੇ ਜਾਣੋ',
+                seeds_desc: 'ਸਥਾਨਕ ਫਸਲਾਂ ਅਤੇ ਉਹਨਾਂ ਦੇ ਬੀਜਾਂ ਬਾਰੇ ਇੱਕ ਵੀਡੀਓ ਦੇਖੋ।',
+                water_conservation_title: 'ਸਾਡੇ ਪਿੰਡ ਦੇ ਖੇਤਾਂ ਨੂੰ ਪਾਣੀ ਦਿਓ',
+                water_conservation_desc: 'ਪਾਣੀ ਦੀ ਸੰਭਾਲ ਬਾਰੇ ਸਿੱਖਣ ਲਈ ਫਸਲਾਂ ਨੂੰ ਪਾਣੀ ਦੇਣ ਦੀ ਨਕਲ ਕਰੋ।',
+                math_quest_title: 'ਗਣਿਤ: ਫੀਲਡ ਕੈਲਕੁਲੇਟਰ',
+                math_quest_desc: 'ਗਣਿਤ ਦਾ ਮੋਡੀਊਲ ਤੁਹਾਨੂੰ ਫਸਲਾਂ ਦੀ ਪੈਦਾਵਾਰ ਦੀ ਗਣਨਾ ਕਰਨ, ਪਾਣੀ ਦੀ ਵਰਤੋਂ ਨੂੰ ਮਾਪਣ ਅਤੇ ਖੇਤੀ ਲਈ ਆਪਣੇ ਬਜਟ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰਨ ਬਾਰੇ ਸਿਖਾਉਂਦਾ ਹੈ।',
+                science_quest_title: 'ਵਿਗਿਆਨ: ਸਾਡੇ ਪਾਣੀ ਦੇ ਸਰੋਤ',
+                science_quest_desc: 'ਇਸ ਵਿਗਿਆਨ ਮੋਡੀਊਲ ਵਿੱਚ, ਤੁਸੀਂ ਪਾਣੀ ਦੇ ਚੱਕਰ, ਆਪਣੇ ਪਿੰਡ ਵਿੱਚ ਪਾਣੀ ਦੇ ਵੱਖ-ਵੱਖ ਸਰੋਤਾਂ ਅਤੇ ਉਹਨਾਂ ਨੂੰ ਕਿਵੇਂ ਸਾਫ਼ ਰੱਖਣਾ ਹੈ ਬਾਰੇ ਸਿੱਖੋਗੇ।',
+                history_quest_title: 'ਸਥਾਨਕ ਇਤਿਹਾਸ: ਸਾਡੇ ਪਿੰਡ ਦੇ ਬਜ਼ੁਰਗ',
+                history_quest_desc: 'ਸਥਾਨਕ ਇਤਿਹਾਸ ਮੋਡੀਊਲ ਤੁਹਾਡੇ ਪਿੰਡ ਦੇ ਬਜ਼ੁਰਗਾਂ ਦੁਆਰਾ ਦੱਸੀਆਂ ਗਈਆਂ ਕਹਾਣੀਆਂ ਅਤੇ ਪਰੰਪਰਾਵਾਂ ਦੀ ਖੋਜ ਕਰਦਾ ਹੈ।',
+                not_yet_earned: 'ਅਜੇ ਪ੍ਰਾਪਤ ਨਹੀਂ ਹੋਇਆ',
+                loading_quests: 'ਨਵਾਂ ਕਾਰਜ ਬਣ ਰਿਹਾ ਹੈ...',
+                loading_audio: 'ਆਡੀਓ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...',
+                loading_explanation: 'ਵਿਆਖਿਆ ਬਣ ਰਹੀ ਹੈ...',
+                loading_report: 'ਕਲਾਸ ਰਿਪੋਰਟ ਬਣ ਰਹੀ ਹੈ...',
+                quest_generated_success: 'ਨਵਾਂ ਕਾਰਜ ਬਣਿਆ!',
+                quest_already_generated: 'ਤੁਸੀਂ ਇੱਕ ਦਿਨ ਵਿੱਚ ਸਿਰਫ਼ ਇੱਕ ਕਾਰਜ ਬਣਾ ਸਕਦੇ ਹੋ।',
+                no_text_to_read: 'ਪੜ੍ਹਨ ਲਈ ਕੋਈ ਪਾਠ ਨਹੀਂ ਹੈ।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'ਕੋਈ ਕਾਰਜ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਇੱਕ ਬਣਾਓ!'
+            },
+            sa: { // Sanskrit
+                welcome_message: 'नमस्ते, प्रियंका!',
+                learning_message: 'अद्य नूतनं किञ्चित् शिक्षामहे!',
+                level_text: 'स्तरः',
+                daily_quests_title: 'दैनिकानि कार्याणि',
+                leaderboard_title: 'लीडरबोर्ड',
+                badges_title: 'उपलब्धि-चिह्नानि',
+                progress_title: 'पाठस्य प्रगतिः',
+                generate_quest_button: '✨ नूतनं कार्यं जनयतु',
+                read_aloud_button: '✨ उच्चैः पठतु',
+                explain_concept_button: '✨ संकल्पनां विवरयतु',
+                generate_report_button: '✨ प्रतिवेदनं जनयतु',
+                badge_star: 'ग्रामस्य तारा',
+                badge_water: 'जल-योद्धा',
+                badge_bookworm: 'पुस्तक-कीटः',
+                badge_locked: 'निगडितम्',
+                start_button_text: 'प्रारम्भः',
+                seeds_title: 'बीजानां प्रकाराणां विषये ज्ञातुम्',
+                seeds_desc: 'स्थानीयसस्येषु तेषां बीजेषु च एकं चलचित्रं पश्यतु।',
+                water_conservation_title: 'अस्माकं ग्रामक्षेत्राणि जलं ददातु',
+                water_conservation_desc: 'संरक्षणविषये ज्ञातुं सस्येषु जलं ददातु।',
+                math_quest_title: 'गणित: क्षेत्र कैलकुलेटर',
+                math_quest_desc: 'गणित-पाठक्रमः भवन्तं कृषिक्षेत्रे फसलस्य उत्पत्त्यु गणनां कर्तुं, जलस्य उपयोगं मापयितुं, स्वस्य कृषिकार्याय व्ययस्य व्यवस्थापनं च कर्तुं शिक्षयति।',
+                science_quest_title: 'विज्ञान: अस्माकं जलस्रोताः',
+                science_quest_desc: 'अस्मिन् विज्ञान-पाठक्रमे, भवान् जलचक्रविषये, स्वग्रामे विभिन्नप्रकारके जलस्रोतेषु, तेषां संरक्षणे च विषये ज्ञातुं शक्नोति।',
+                history_quest_title: 'स्थानीय इतिहास: अस्माकं ग्रामीणानां वृद्धाः',
+                history_quest_desc: 'स्थानीय-इतिहास-पाठक्रमः भवतां ग्रामस्य वृद्धेभ्यः प्राप्तानां कथानां परम्पराणां च अन्वेषणं करोति।',
+                not_yet_earned: 'अद्यापि न प्राप्तम्',
+                loading_quests: 'नूतनं कार्यं जन्यते...',
+                loading_audio: 'श्रव्यं भारितं भवति...',
+                loading_explanation: 'व्याख्या जन्यते...',
+                loading_report: 'वर्ग प्रतिवेदनं जन्यते...',
+                quest_generated_success: 'नूतनं कार्यं जातम्!',
+                quest_already_generated: 'भवान् एकस्मिन् दिने केवलं एकं कार्यं जनयितुं शक्नोति।',
+                no_text_to_read: 'पठनाय किमपि नास्ति।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'कोई कार्यं उपलब्धं नास्ति। एकं जनयतु!'
+            },
+            sat: { // Santali
+                welcome_message: 'ᱡᱚᱦᱟᱨ, ᱯᱨᱤᱭᱟᱝᱠᱟ!',
+                learning_message: 'ᱛᱮᱦᱮᱧ ᱫᱚ ᱱᱟᱣᱟ ᱪᱤᱠᱟᱹᱭᱟ!',
+                level_text: 'ᱛᱟᱨᱟ',
+                daily_quests_title: 'ᱥᱟᱱᱟᱢ ᱠᱟᱹᱢᱤ',
+                leaderboard_title: 'ᱞᱤᱰᱟᱨᱵᱚᱨᱰ',
+                badges_title: 'ᱥᱟᱹᱜᱤᱛ ᱵᱟᱹᱡᱽ',
+                progress_title: 'ᱢᱚᱰᱭᱩᱞ ᱯᱨᱚᱜᱨᱮᱥ',
+                generate_quest_button: '✨ ᱱᱟᱣᱟ ᱠᱟᱹᱢᱤ ᱵᱟᱱᱟᱣ',
+                read_aloud_button: '✨ ᱯᱟᱲᱦᱟᱣ',
+                explain_concept_button: '✨ ᱵᱩᱡᱷᱟᱹᱣ',
+                generate_report_button: '✨ ᱨᱤᱯᱚᱴ ᱵᱟᱱᱟᱣ',
+                badge_star: 'ᱫᱤᱥᱚᱢ ᱨᱮᱱᱟᱜ ᱛᱟᱨᱟ',
+                badge_water: 'ᱫᱟᱹᱭ ᱞᱟᱹᱲᱦᱟᱹ',
+                badge_bookworm: 'ᱯᱩᱛᱷᱤ ᱨᱮᱱᱟᱜ ᱫᱷᱟᱹᱲ',
+                badge_locked: 'ᱞᱚᱠ ᱠᱟᱱᱟ',
+                start_button_text: 'ᱮᱦᱚᱵ',
+                seeds_title: 'ᱵᱤᱡ ᱨᱮᱱᱟᱜ ᱢᱩᱦᱩᱞ ᱵᱟᱰᱟᱭᱚᱜ',
+                seeds_desc: 'ᱪᱟᱥᱨᱮᱱᱟᱜ ᱟᱨ ᱩᱱᱟᱹᱜ ᱵᱤᱡᱽ ᱨᱮᱱᱟᱜ ᱵᱤᱰᱤᱭᱚ ᱧᱮᱞ ᱢᱮ᱾',
+                water_conservation_title: 'ᱟᱢᱟᱜ ᱫᱤᱥᱚᱢ ᱨᱮᱱᱟᱜ ᱯᱷᱤᱞᱰ ᱫᱟᱜ ᱮᱢ',
+                water_conservation_desc: 'ᱫᱟᱜ ᱨᱮᱱᱟᱜ ᱥᱟᱹᱜᱤᱛ ᱵᱟᱰᱟᱭᱚᱜ ᱞᱟᱹᱜᱤᱫ ᱪᱟᱥᱨᱮ ᱫᱟᱜ ᱮᱢ᱾',
+                math_quest_title: 'গণিত: ᱯᱷᱤᱞᱰ ᱠᱟᱞᱠᱩᱞᱮᱴᱚᱨ',
+                math_quest_desc: 'গণিত মডিউল ᱫᱚ ᱪᱟᱥᱨᱮᱱᱟᱜ ᱢᱩᱦᱤᱞ, ᱫᱟᱜ ᱨᱮᱱᱟᱜ ᱵᱮᱵᱷᱟᱨ, ᱟᱨ ᱟᱢ ᱨᱮᱱᱟᱜ ᱵᱟᱡᱮᱴ ᱨᱮᱱᱟᱜ ᱵᱮᱵᱷᱟᱨ ᱨᱮᱱᱟᱜ ᱛᱚᱞᱚᱴ ᱪᱤᱠᱟᱹᱭᱟ।',
+                science_quest_title: 'ᱵᱤᱜᱽᱭᱟᱱ: ᱟᱢᱟᱜ ᱫᱟᱜ ᱨᱮᱱᱟᱜ ᱥᱚᱨᱚᱛ',
+                science_quest_desc: 'ᱱᱚᱣᱟ ᱵᱤᱜᱽᱭᱟᱱ ᱢᱚᱰᱭᱩᱞ ᱨᱮ, ᱟᱢ ᱫᱚ ᱫᱟᱜ ᱨᱮᱱᱟᱜ ᱪᱟᱠᱨ, ᱟᱢᱟᱜ ᱫᱤᱥᱚᱢ ᱨᱮ ᱫᱟᱜ ᱨᱮᱱᱟᱜ ᱵᱷᱤᱱᱱ-ᱵᱷᱤᱱᱱ ᱥᱚᱨᱚᱛ, ᱟᱨ ᱩᱱᱟᱹᱜ ᱪᱤᱠᱟᱹᱭᱟ᱾',
+                history_quest_title: 'ᱞᱚᱠᱟᱞ ᱤᱛᱦᱤᱟᱥ: ᱟᱢᱟᱜ ᱫᱤᱥᱚᱢ ᱨᱮᱱᱟᱜ ᱵᱩᱡᱷᱟᱹᱣ',
+                history_quest_desc: 'ᱞᱚᱠᱟᱞ ᱤᱛᱦᱤᱟᱥ মডিউল ᱟᱢᱟᱜ ᱫᱤᱥᱚᱢ ᱨᱮᱱᱟᱜ ᱵᱩᱡᱷᱟᱹᱣ ᱠᱚᱭ ᱠᱟᱛᱷᱟ ᱟᱨ ᱯᱚᱨᱚᱢᱯᱚᱨᱟ ᱧᱮᱞ ᱠᱮᱫᱟ᱾',
+                not_yet_earned: 'ᱱᱤᱛᱦᱟᱹᱵᱤᱡ ᱵᱟᱝ ᱠᱟᱹᱢᱤ ᱟᱠᱟᱫᱟ',
+                loading_quests: 'ᱱᱟᱣᱟ ᱠᱟᱹᱢᱤ ᱵᱟᱱᱟᱣ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ...',
+                loading_audio: 'ᱟᱰᱤᱭᱚ ᱞᱚᱰ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ...',
+                loading_explanation: 'ᱵᱩᱡᱷᱟᱹᱣ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ...',
+                loading_report: 'ᱨᱤᱯᱚᱴ ᱵᱟᱱᱟᱣ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ...',
+                quest_generated_success: 'ᱱᱟᱣᱟ ᱠᱟᱹᱢᱤ ᱵᱟᱱᱟᱣ ᱦᱩᱭ ᱠᱟᱱᱟ!',
+                quest_already_generated: 'ᱟᱢ ᱫᱚ ᱢᱤᱫ ᱫᱤᱱ ᱨᱮ ᱢᱤᱫ ᱠᱟᱹᱢᱤ ᱜᱮ ᱵᱟᱱᱟᱣ ᱫᱟᱲᱮᱭᱟᱜ-ᱟ᱾',
+                no_text_to_read: 'ᱯᱟᱲᱦᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱦᱚᱸ ᱵᱟᱹᱱᱩᱜᱼᱟ᱾',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'ᱠᱚᱱᱚ ᱠᱟᱹᱢᱤ ᱵᱟᱹᱱᱩᱜᱼᱟ᱾ ᱮᱠᱴᱟ ᱵᱟᱱᱟᱣ!'
+            },
+            sd: { // Sindhi
+                welcome_message: 'نَمَستَي، پرينڪا!',
+                learning_message: 'هلو، اڄ ڪجهه نئون سکو!',
+                level_text: 'درجو',
+                daily_quests_title: 'روزاني ڪم',
+                leaderboard_title: 'ليڊربورڊ',
+                badges_title: 'ڪاميابي بيج',
+                progress_title: 'ماڊول ترقي',
+                generate_quest_button: '✨ نئون ڪم ٺاهيو',
+                read_aloud_button: '✨ پڙهو',
+                explain_concept_button: '✨ تصور سمجھايو',
+                generate_report_button: '✨ رپورٽ ٺاهيو',
+                badge_star: 'ڳوٺ جو تارو',
+                badge_water: 'پاڻي جو يودھا',
+                badge_bookworm: 'ڪتاب جو ڪيڙو',
+                badge_locked: 'بند',
+                start_button_text: 'شروع',
+                seeds_title: 'بِيَڻَن جي قِسمَن بابت ڄاڻو',
+                seeds_desc: 'مُقامي فصلن ۽ سندن بِيَڻَن تي هڪ وڊيو ڏسو.',
+                water_conservation_title: 'اسان جي ڳوٺ جي پوکن کي پاڻي ڏيو',
+                water_conservation_desc: 'پاڻي جي بچت بابت سکڻ لاءِ فصلن کي پاڻي ڏيڻ جو اَنُڪرڻ ڪريو.',
+                math_quest_title: 'رياضي: فيلڊ ڪيڪليٽر',
+                math_quest_desc: 'رياضي جو ماڊول اوهان کي فصل جي پيداوار جو حساب ڪرڻ، پاڻي جي استعمال جي ماپ ڪرڻ، ۽ زراعت لاء اوهان جي بجيٽ کي سنڀالڻ سيکاري ٿو۔',
+                science_quest_title: 'سائنس: اسان جا پاڻي جا ذريعا',
+                science_quest_desc: 'هن سائنس ماڊول ۾، اوهان پاڻي جي چڪر، اوهان جي ڳوٺ ۾ پاڻي جي مختلف ذريعن ۽ انهن کي ڪيئن صاف رکڻ جي باري ۾ سکندا۔',
+                history_quest_title: 'مقامي تاريخ: اسان جا ڳوٺ جا بزرگ',
+                history_quest_desc: 'مقامي تاريخ جو ماڊول اوهان جي ڳوٺ جي بزرگن کان ٻڌايل ڪهاڻيون ۽ روايتون ڳولي ٿو۔',
+                not_yet_earned: 'اڃا تائين نه ڪمايو آهي',
+                loading_quests: 'نئون ڪم ٺهي رهيو آهي...',
+                loading_audio: 'آڊيو لوڊ ٿي رهيو آهي...',
+                loading_explanation: 'وضاحت ٺهي رهي آهي...',
+                loading_report: 'رپورٽ ٺهي رهي آهي...',
+                quest_generated_success: 'نئون ڪم ٺهي ويو!',
+                quest_already_generated: 'توهان هڪ ڏينهن ۾ صرف هڪ ڪم ٺاهي سگهو ٿا.',
+                no_text_to_read: 'پڙهڻ لاءِ ڪو متن ناهي.',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'ڪو به ڪم موجود ناهي. هڪ ٺاهيو!'
+            },
+            ta: {
+                welcome_message: 'வணக்கம், பிரியங்கா!',
+                learning_message: 'இன்று புதியதைக் கற்போம்!',
+                level_text: 'நிலை',
+                daily_quests_title: 'தினசரி தேடல்கள்',
+                leaderboard_title: 'தரவரிசைப் பட்டியல்',
+                badges_title: 'சாதனைப் பட்டங்கள்',
+                progress_title: 'பாட முன்னேற்றம்',
+                generate_quest_button: '✨ புதிய தேடலை உருவாக்கு',
+                read_aloud_button: '✨ சத்தமாக வாசிக்கவும்',
+                explain_concept_button: '✨ கருத்தை விளக்கவும்',
+                generate_report_button: '✨ அறிக்கை உருவாக்கு',
+                badge_star: 'கிராம நட்சத்திரம்',
+                badge_water: 'நீர் வீரன்',
+                badge_bookworm: 'புத்தகப் புழு',
+                badge_locked: 'பூட்டப்பட்டது',
+                start_button_text: 'தொடங்கு',
+                seeds_title: 'விதைகளின் வகைகள் பற்றி அறிக',
+                seeds_desc: 'உள்ளூர் பயிர்கள் மற்றும் அவற்றின் விதைகள் பற்றிய வீடியோவைப் பார்க்கவும்.',
+                water_conservation_title: 'நமது கிராம வயல்களுக்கு தண்ணீர் கொடுங்கள்',
+                water_conservation_desc: 'பாதுகாப்பு பற்றி அறிய பயிர்களுக்கு தண்ணீர் கொடுப்பதை உருவகப்படுத்தவும்.',
+                math_quest_title: 'கணிதம்: புலம் கணக்கிடும் கருவி',
+                math_quest_desc: 'கணிதப் பாடம் உங்களுக்கு பயிர் விளைச்சலைக் கணக்கிடுவது, தண்ணீர் பயன்பாட்டை அளவிடுவது மற்றும் விவசாயத்திற்கான உங்கள் பட்ஜெட்டை நிர்வகிப்பது எப்படி என்பதைக் கற்றுக்கொடுக்கிறது.',
+                science_quest_title: 'அறிவியல்: நமது நீர் ஆதாரங்கள்',
+                science_quest_desc: 'இந்த அறிவியல் பாடத்தில், நீங்கள் நீர் சுழற்சி, உங்கள் கிராமத்தில் உள்ள பல்வேறு வகையான நீர் ஆதாரங்கள் மற்றும் அவற்றை எவ்வாறு சுத்தமாக வைத்திருப்பது என்பது பற்றி அறிந்துகொள்வீர்கள்.',
+                history_quest_title: 'உள்ளூர் வரலாறு: நமது கிராமத் தலைவர்கள்',
+                history_quest_desc: 'உள்ளூர் வரலாறு பாடம் உங்கள் கிராமத் தலைவர்களிடமிருந்து வந்த கதைகள் மற்றும் மரபுகளை ஆராய்கிறது.',
+                not_yet_earned: 'இதுவரை பெறப்படவில்லை',
+                loading_quests: 'புதிய தேடலை உருவாக்குகிறது...',
+                loading_audio: 'ஆடியோ ஏற்றுகிறது...',
+                loading_explanation: 'விளக்கத்தை உருவாக்குகிறது...',
+                loading_report: 'அறிக்கையை உருவாக்குகிறது...',
+                quest_generated_success: 'புதிய தேடல் உருவாக்கப்பட்டது!',
+                quest_already_generated: 'நீங்கள் ஒரு நாளைக்கு ஒரு தேடலை மட்டுமே உருவாக்க முடியும்.',
+                no_text_to_read: 'வாசிக்க உரை இல்லை.',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'தேடல்கள் எதுவும் கிடைக்கவில்லை. ஒன்றை உருவாக்கவும்!'
+            },
+            te: {
+                welcome_message: 'నమస్కారం, ప్రియాంక!',
+                learning_message: 'ఈరోజు కొత్తగా ఏదైనా నేర్చుకుందాం!',
+                level_text: 'స్థాయి',
+                daily_quests_title: 'రోజువారీ అన్వేషణలు',
+                leaderboard_title: 'లీడర్‌బోర్డ్',
+                badges_title: 'సాధన బ్యాడ్జ్‌లు',
+                progress_title: 'మాడ్యూల్ పురోగతి',
+                generate_quest_button: '✨ కొత్త అన్వేషణను రూపొందించండి',
+                read_aloud_button: '✨ గట్టిగా చదవండి',
+                explain_concept_button: '✨ భావనను వివరించండి',
+                generate_report_button: '✨ నివేదికను రూపొందించండి',
+                badge_star: 'గ్రామ నక్షత్రం',
+                badge_water: 'జల యోధుడు',
+                badge_bookworm: 'పుస్తక ప్రియుడు',
+                badge_locked: 'లాక్ చేయబడింది',
+                start_button_text: 'ప్రారంభించండి',
+                seeds_title: 'విత్తనాల రకాల గురించి తెలుసుకోండి',
+                seeds_desc: 'స్థానిక పంటలు మరియు వాటి విత్తనాలపై వీడియో చూడండి.',
+                water_conservation_title: 'మన గ్రామంలోని పొలాలకు నీరు పెట్టండి',
+                water_conservation_desc: 'సంరక్షణ గురించి తెలుసుకోవడానికి పంటలకు నీరు పెట్టడాన్ని అనుకరించండి.',
+                math_quest_title: 'గణితం: ఫీల్డ్ కాలిక్యులేటర్',
+                math_quest_desc: 'గణిత మాడ్యూల్ పంట దిగుబడిని ఎలా లెక్కించాలి, నీటి వినియోగాన్ని ఎలా కొలవాలి మరియు వ్యవసాయం కోసం మీ బడ్జెట్‌ను ఎలా నిర్వహించాలి అని మీకు బోధిస్తుంది.',
+                science_quest_title: 'సైన్స్: మన నీటి వనరులు',
+                science_quest_desc: 'ఈ సైన్స్ మాడ్యూల్‌లో, మీరు నీటి చక్రం, మీ గ్రామంలో వివిధ రకాల నీటి వనరులు మరియు వాటిని ఎలా శుభ్రంగా ఉంచుకోవాలి అనే వాటి గురించి తెలుసుకుంటారు.',
+                history_quest_title: 'స్థానిక చరిత్ర: మన గ్రామ పెద్దలు',
+                history_quest_desc: 'స్థానిక చరిత్ర మాడ్యూల్ మీ గ్రామ పెద్దల నుండి వచ్చిన కథలు మరియు సంప్రదాయాలను అన్వేషిస్తుంది।',
+                not_yet_earned: 'ఇంకా సంపాదించబడలేదు',
+                loading_quests: 'కొత్త అన్వేషణను రూపొందిస్తోంది...',
+                loading_audio: 'ఆడియో లోడ్ అవుతోంది...',
+                loading_explanation: 'వివరణను రూపొందిస్తోంది...',
+                loading_report: 'నివేదికను రూపొందిస్తోంది...',
+                quest_generated_success: 'కొత్త అన్వేషణ రూపొందించబడింది!',
+                quest_already_generated: 'మీరు రోజుకు ఒక అన్వేషణను మాత్రమే రూపొందించగలరు।',
+                no_text_to_read: 'చదవడానికి వచనం లేదు।',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'అన్వేషణలు అందుబాటులో లేవు। ఒకదాన్ని రూపొందించండి!'
+            },
+            ur: {
+                welcome_message: 'السلام علیکم، پریینکا!',
+                learning_message: 'چلیں، آج کچھ نیا سیکھتے ہیں!',
+                level_text: 'سطح',
+                daily_quests_title: 'روزانہ کے کام',
+                leaderboard_title: 'لیڈر بورڈ',
+                badges_title: 'کامیابی کے بیجز',
+                progress_title: 'ماڈیول ترقی',
+                generate_quest_button: '✨ نیا کام بنائیں',
+                read_aloud_button: '✨ بلند آواز میں پڑھیں',
+                explain_concept_button: '✨ تصور کی وضاحت کریں',
+                generate_report_button: '✨ رپورٹ بنائیں',
+                badge_star: 'گاؤں کا ستارہ',
+                badge_water: 'پانی کا جنگجو',
+                badge_bookworm: 'کتاب کا کیڑا',
+                badge_locked: 'بند',
+                start_button_text: 'شروع کریں',
+                seeds_title: 'بیج کی اقسام کے بارے میں جانیں',
+                seeds_desc: 'مقامی فصلوں اور ان کے بیجوں پر ایک ویڈیو دیکھیں۔',
+                water_conservation_title: 'ہمارے گاؤں کے کھیتوں کو پانی دیں',
+                water_conservation_desc: 'تحفظ کے بارے میں جاننے کے لیے فصلوں کو پانی دینے کی نقل کریں۔',
+                math_quest_title: 'ریاضی: فیلڈ کیلکولیٹر',
+                math_quest_desc: 'ریاضی کا ماڈیول آپ کو فصل کی پیداوار کا حساب لگانے، پانی کے استعمال کی پیمائش کرنے اور زراعت کے لیے اپنے بجٹ کا انتظام کرنے کا طریقہ سکھاتا ہے۔',
+                science_quest_title: 'سائنس: ہمارے پانی کے ذرائع',
+                science_quest_desc: 'اس سائنس ماڈیول میں، آپ پانی کے چکر، اپنے گاؤں میں پانی کے مختلف ذرائع، اور انہیں کیسے صاف رکھنا ہے کے بارے میں سیکھیں گے۔',
+                history_quest_title: 'مقامی تاریخ: ہمارے گاؤں کے بزرگ',
+                history_quest_desc: 'مقامی تاریخ کا ماڈیول آپ کے گاؤں کے بزرگوں کی طرف سے سنائی گئی کہانیوں اور روایات کو تلاش کرتا ہے۔',
+                not_yet_earned: 'ابھی تک حاصل نہیں کیا گیا',
+                loading_quests: 'نیا کام بنایا جا رہا ہے...',
+                loading_audio: 'آڈیو لوڈ ہو رہا ہے...',
+                loading_explanation: 'وضاحت بنائی جا رہی ہے...',
+                loading_report: 'رپورٹ بنائی جا رہی ہے...',
+                quest_generated_success: 'نیا کام بن گیا!',
+                quest_already_generated: 'آپ ایک دن میں صرف ایک کام بنا سکتے ہیں۔',
+                no_text_to_read: 'پڑھنے کے لیے کوئی متن نہیں ہے۔',
+                xp_gained: '+{xp} XP!',
+                no_quests: 'کوئی کام دستیاب نہیں ہے۔ ایک بنائیں!'
+            }
+        };
+        const ttsVoiceMap = {
+            'en': 'Kore', 'hi': 'Algenib', 'as': 'Algenib', 'bn': 'Gacrux', 'brx': 'Kore',
+            'doi': 'Kore', 'gu': 'Sadachbia', 'kn': 'Vindemiatrix', 'ks': 'Algenib', 'kok': 'Sadachbia',
+            'mai': 'Algenib', 'ml': 'Vindemiatrix', 'mni': 'Kore', 'mr': 'Sadachbia', 'ne': 'Algenib',
+            'or': 'Gacrux', 'pa': 'Sadaltager', 'sa': 'Kore', 'sat': 'Kore', 'sd': 'Algenib',
+            'ta': 'Vindemiatrix', 'te': 'Zubenelgenubi', 'ur': 'Algenib',
+        };
+
+        // --- Message Box Utility ---
+        function showMessage(text, type = 'success') {
+            const container = document.getElementById('message-container');
+            const messageText = document.getElementById('message-text');
+            let bgColor = 'bg-blue-500';
+            if (type === 'error') bgColor = 'bg-red-500';
+            if (type === 'success') bgColor = 'bg-green-500';
+            container.className = `fixed top-5 left-1/2 -translate-x-1/2 text-white px-6 py-3 rounded-full shadow-lg z-50 transform scale-0 opacity-0 transition-all duration-300 ${bgColor}`;
+            messageText.textContent = text;
+            setTimeout(() => {
+                container.style.transform = 'translate(-50%, 0) scale(1)';
+                container.style.opacity = '1';
+            }, 10);
+            setTimeout(() => {
+                container.style.transform = 'translate(-50%, -20px) scale(0.9)';
+                container.style.opacity = '0';
+            }, 3000);
+        }
+        
+        // Helper function for Base64 to ArrayBuffer conversion
+        function base64ToArrayBuffer(base64) {
+            const binaryString = window.atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        // Helper function to convert raw PCM to WAV format
+        function pcmToWav(pcmData, sampleRate) {
+            const dataLength = pcmData.byteLength;
+            const buffer = new ArrayBuffer(44 + dataLength);
+            const view = new DataView(buffer);
+            let offset = 0;
+
+            view.setUint32(offset, 0x52494646, false); offset += 4; // "RIFF"
+            view.setUint32(offset, 36 + dataLength, true); offset += 4; // file size
+            view.setUint32(offset, 0x57415645, false); offset += 4; // "WAVE"
+
+            view.setUint32(offset, 0x666d7420, false); offset += 4; // "fmt "
+            view.setUint32(offset, 16, true); offset += 4; // chunk size
+            view.setUint16(offset, 1, true); offset += 2; // channels
+            view.setUint32(offset, sampleRate, true); offset += 4; // sample rate
+            view.setUint32(offset, sampleRate * 2, true); offset += 4; // byte rate
+            view.setUint16(offset, 2, true); offset += 2; // block align
+            view.setUint16(offset, 16, true); offset += 2; // bits per sample
+
+            view.setUint32(offset, 0x64617461, false); offset += 4; // "data"
+            view.setUint32(offset, dataLength, true); offset += 4; // chunk size
+
+            const pcmBytes = new Int16Array(buffer, offset);
+            pcmBytes.set(pcmData);
+
+            return new Blob([view], { type: 'audio/wav' });
+        }
+
+
+        // --- UI Rendering Functions for Student Dashboard ---
+        function renderStudentQuests(quests) {
+            const questList = document.getElementById('student-quest-list');
+            questList.innerHTML = '';
+            const lang = document.getElementById('language-selector').value;
+            if (quests.length === 0) {
+                questList.innerHTML = `<p class="text-center text-gray-500">${translations[lang]['no_quests']}</p>`;
+                return;
+            }
+            quests.forEach(quest => {
+                const startButtonText = translations[lang]['start_button_text'];
+                const explainButtonText = translations[lang]['explain_concept_button'];
+                const questHtml = `
+                    <div class="bg-gray-50 rounded-lg p-8 flex flex-col sm:flex-row items-center justify-between hover:bg-gray-100 transition-colors duration-200">
+                        <div>
+                            <div class="font-extrabold text-2xl text-gray-900 mb-2">${translations[lang][`${quest.id}_title`]}</div>
+                            <p class="text-lg text-gray-600">${translations[lang][`${quest.id}_desc`]}</p>
+                        </div>
+                        <div class="mt-6 sm:mt-0 flex items-center space-x-4">
+                            <span class="text-yellow-600 font-bold text-2xl">+${quest.xp} XP</span>
+                            <button class="bg-blue-500 text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg explain-quest-btn" data-desc="${translations[lang][`${quest.id}_desc`] || ''}">
+                                <span>${explainButtonText}</span>
+                            </button>
+                            <button class="btn-start text-white text-lg px-8 py-4 rounded-full font-bold shadow-lg student-start-quest-btn" data-xp="${quest.xp}">
+                                <span>${startButtonText}</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                questList.insertAdjacentHTML('beforeend', questHtml);
+            });
+        }
+        function renderStudentLeaderboard(leaderboardData) {
+            const leaderboardList = document.getElementById('student-leaderboard-list');
+            leaderboardList.innerHTML = '';
+            const allUsers = [...leaderboardData, { name: studentData.name, xp: studentData.xp, id: userId }];
+            const sortedUsers = allUsers.sort((a, b) => b.xp - a.xp).slice(0, 5);
+            sortedUsers.forEach((user, index) => {
+                const isCurrentUser = user.id === userId;
+                const itemClass = isCurrentUser
+                    ? 'flex items-center justify-between bg-emerald-100 rounded-xl p-5 font-semibold text-xl transform transition-transform duration-200 hover:scale-105'
+                    : 'flex items-center justify-between p-5 rounded-xl hover:bg-gray-50 transition-colors duration-200 text-xl';
+                const rankClass = isCurrentUser ? 'font-extrabold text-emerald-700 text-3xl' : 'font-bold text-gray-600 text-2xl';
+                const nameClass = 'text-gray-900';
+                const xpClass = isCurrentUser ? 'font-extrabold text-emerald-700 text-2xl' : 'font-semibold text-gray-600 text-xl';
+                const listItemHtml = `
+                    <li class="${itemClass}">
+                        <div class="flex items-center space-x-5">
+                            <span class="${rankClass}">#${index + 1}</span>
+                            <span class="${nameClass}">${user.name}</span>
+                        </div>
+                        <span class="${xpClass}">${user.xp} XP</span>
+                    </li>
+                `;
+                leaderboardList.insertAdjacentHTML('beforeend', listItemHtml);
+            });
+        }
+        function renderStudentBadges(badges) {
+            const badgesGrid = document.getElementById('student-badges-grid');
+            badgesGrid.innerHTML = '';
+            badges.forEach(badge => {
+                const lang = document.getElementById('language-selector').value;
+                const opacity = badge.earned ? 'opacity-100' : 'opacity-40';
+                const ringColor = badge.earned ? `ring-4 ring-${badge.color}-300 group-hover:ring-${badge.color}-500` : 'ring-4 ring-gray-300';
+                const bgColor = badge.earned ? `bg-${badge.color}-100` : 'bg-gray-200';
+                const textColor = badge.earned ? `text-${badge.color}-600` : 'text-gray-500';
+                const icon = badge.earned ? badge.icon : 'fas fa-lock';
+                const nameKey = badge.id;
+                const name = translations[lang][`badge_${nameKey}`] || translations[lang][`badge_locked`];
+                const badgeHtml = `
+                    <div class="flex flex-col items-center transform transition-transform duration-200 hover:scale-110 group ${opacity}">
+                        <div class="w-24 h-24 rounded-full ${bgColor} flex items-center justify-center ${textColor} text-5xl ${ringColor} transition-all duration-200 shadow-lg">
+                            <i class="${icon}"></i>
+                        </div>
+                        <span class="mt-4 text-lg text-center font-semibold text-gray-700">${name}</span>
+                    </div>
+                `;
+                badgesGrid.insertAdjacentHTML('beforeend', badgeHtml);
+            });
+        }
+        function renderStudentModules(modules) {
+            const moduleList = document.getElementById('student-module-progress-list');
+            moduleList.innerHTML = '';
+            const lang = document.getElementById('language-selector').value;
+            modules.forEach(module => {
+                const readAloudText = translations[lang]['read_aloud_button'];
+                const moduleHtml = `
+                    <div id="module-${module.color}">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="font-bold text-2xl text-gray-900">${translations[lang][`${module.id}_quest_title`]}</span>
+                            <span class="text-lg text-gray-600">${module.progress}%</span>
+                        </div>
+                        <div class="progress-bar mb-4">
+                            <div class="progress-fill bg-gradient-to-r from-${module.color}-500 to-${module.color}-500" style="width: ${module.progress}%;"></div>
+                        </div>
+                        <button class="read-aloud-btn bg-${module.color}-100 text-${module.color}-600 text-lg px-5 py-2 rounded-full font-semibold hover:bg-${module.color}-200 transition-colors duration-200" data-text="${translations[lang][`${module.id}_quest_desc`]}">
+                            <span>${readAloudText}</span>
+                        </button>
+                    </div>
+                `;
+                moduleList.insertAdjacentHTML('beforeend', moduleHtml);
+            });
+        }
+        function updateStudentUI() {
+            const lang = document.getElementById('language-selector').value;
+            document.getElementById('student-user-avatar').textContent = studentData.name.charAt(0).toUpperCase();
+            document.getElementById('student-welcome-message').textContent = translations[lang].welcome_message;
+            document.getElementById('student-learning-message').textContent = translations[lang].learning_message;
+            document.getElementById('student-level-text').textContent = `${translations[lang]['level_text']} ${studentData.level}`;
+            document.getElementById('student-xp-text').textContent = `${studentData.xp} / ${studentData.nextLevelXp} XP`;
+            const progressPercentage = (studentData.xp / studentData.nextLevelXp) * 100;
+            document.getElementById('student-xp-progress-fill').style.width = `${Math.min(progressPercentage, 100)}%`;
+            renderStudentQuests(studentData.quests);
+            renderStudentLeaderboard(defaultLeaderboard);
+            renderStudentBadges(studentBadges);
+            renderStudentModules(studentModules);
+        }
+        function translateStudentPage(lang) {
+            document.getElementById('student-welcome-message').textContent = translations[lang].welcome_message;
+            document.getElementById('student-learning-message').textContent = translations[lang].learning_message;
+            document.getElementById('student-daily-quests-title').querySelector('span').textContent = translations[lang].daily_quests_title;
+            document.getElementById('student-leaderboard-title').querySelector('span').textContent = translations[lang].leaderboard_title;
+            document.getElementById('student-badges-title').querySelector('span').textContent = translations[lang].badges_title;
+            document.getElementById('student-progress-title').querySelector('span').textContent = translations[lang].progress_title;
+            renderStudentQuests(studentData.quests);
+            renderStudentBadges(studentBadges);
+            renderStudentModules(studentModules);
+        }
+        function checkLevelUp() {
+            while (studentData.xp >= studentData.nextLevelXp) {
+                studentData.level++;
+                studentData.xp -= studentData.nextLevelXp;
+                studentData.nextLevelXp = studentData.level * 100 + 500;
+                showMessage(`Level Up! You are now Level ${studentData.level}!`, 'success');
+            }
+        }
+        
+        // --- API & Firestore Functions for Student Dashboard ---
+        async function updateStudentLeaderboardData(user) {
+            if (!db || !userId) {
+                console.log('Skipping leaderboard update: Not on Gemini platform.');
+                return;
+            }
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', userId);
+            try {
+                await setDoc(docRef, { name: user.name, xp: user.xp, lastUpdated: new Date() }, { merge: true });
+            } catch (error) {
+                console.error('Error updating leaderboard:', error);
+            }
+        }
+        async function fetchInitialStudentData() {
+            if (!db || !userId) {
+                console.log('Skipping initial student data fetch: Not on Gemini platform.');
+                return;
+            }
+            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'dashboardData', 'profile');
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    studentData = { ...studentData, ...docSnap.data() };
+                } else {
+                    await setDoc(docRef, studentData);
+                }
+            } catch (error) {
+                console.error('Error fetching/setting user data:', error);
+            }
+        }
+        async function saveStudentData() {
+            if (!db || !userId) {
+                console.log('Skipping student data save: Not on Gemini platform.');
+                return;
+            }
+            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'dashboardData', 'profile');
+            try {
+                await setDoc(docRef, studentData, { merge: true });
+            } catch (error) {
+                console.error('Error saving user data:', error);
+            }
+        }
+        async function generateNewQuest() {
+            const generateBtn = document.getElementById('student-generate-quest-btn');
+            const generateLoading = document.getElementById('student-generate-loading');
+            const now = new Date();
+            const today = now.toISOString().slice(0, 10);
+            if (studentData.lastQuestGenerated === today) {
+                showMessage(translations[document.getElementById('language-selector').value]['quest_already_generated'], 'error');
+                return;
+            }
+            generateBtn.disabled = true;
+            generateLoading.classList.remove('hidden');
+            showMessage(translations[document.getElementById('language-selector').value]['loading_quests']);
+            try {
+                if (!isGeminiPlatform) {
+                    // Mocking for local development
+                    const mockQuest = { id: 'water_conservation', xp: 90 };
+                    studentData.quests = [mockQuest];
+                    studentData.lastQuestGenerated = today;
+                    await saveStudentData();
+                    renderStudentQuests(studentData.quests);
+                    showMessage(translations[document.getElementById('language-selector').value]['quest_generated_success'], 'success');
+                    console.log('Mock quest generated for local development.');
+                    return;
+                }
+
+                const prompt = "Generate a new daily learning quest for a user on a gamified learning platform. The user is in a village in India. The quest should be related to practical, real-world skills like agriculture, water conservation, local history, or traditional crafts. The quest should have a 'title' (max 6 words), a 'description' (max 15 words), and a numerical 'xp' reward between 50 and 100. Provide the response as a single JSON object with the keys 'title', 'description', and 'xp'.";
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "title": { "type": "STRING" },
+                                "description": { "type": "STRING" },
+                                "xp": { "type": "NUMBER" }
+                            }
+                        }
+                    }
+                };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+                const result = await response.json();
+                const content = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!content) {
+                     throw new Error('No content returned from API');
+                }
+                const newQuest = JSON.parse(content);
+                studentData.quests = [{ id: newQuest.title.toLowerCase().replace(/ /g, '_'), xp: newQuest.xp }];
+                studentData.lastQuestGenerated = today;
+                await saveStudentData();
+                renderStudentQuests(studentData.quests);
+                showMessage(translations[document.getElementById('language-selector').value]['quest_generated_success'], 'success');
+            } catch (error) {
+                console.error('Error generating quest:', error);
+                showMessage('Failed to generate quest. Please try again.', 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateLoading.classList.add('hidden');
+            }
+        }
+
+        async function explainQuestConcept(description) {
+            const langCode = document.getElementById('language-selector').value;
+            showMessage(translations[langCode]['loading_explanation']);
+            try {
+                if (!isGeminiPlatform) {
+                    // Mocking for local development
+                    showMessage("This is a mock explanation for local development.", 'success');
+                    console.log(`Mock explanation for: "${description}"`);
+                    return;
+                }
+                const prompt = `Explain the following concept in simple, easy-to-understand terms suitable for a student in a rural Indian village. Keep the explanation concise, no more than 3-4 sentences: ${description}`;
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    model: "gemini-2.5-flash-preview-05-20"
+                };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+                const result = await response.json();
+                const explanation = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (explanation) {
+                    showMessage(explanation, 'success');
+                } else {
+                    throw new Error('No explanation returned from API');
+                }
+            } catch (error) {
+                console.error('Error explaining concept:', error);
+                showMessage('Failed to explain concept. Please try again.', 'error');
+            }
+        }
+
+        async function readAloud(text) {
+            const langCode = document.getElementById('language-selector').value;
+            showMessage(translations[langCode]['loading_audio']);
+            try {
+                if (!isGeminiPlatform) {
+                    // Mocking for local development
+                    showMessage("This is a mock read aloud for local development.", 'success');
+                    console.log(`Mock read aloud for: "${text}"`);
+                    return;
+                }
+                const voiceName = ttsVoiceMap[langCode] || 'Kore';
+                const payload = {
+                    contents: [{ parts: [{ text: text }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voiceName } } },
+                    },
+                    model: "gemini-2.5-flash-preview-tts"
+                };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error(`TTS API call failed with status: ${response.status}`);
+                }
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+                if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000;
+                    const pcmData = base64ToArrayBuffer(audioData);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+                    showMessage('Playing audio...', 'success');
+                } else {
+                    throw new Error('Invalid audio data or mime type received.');
+                }
+            } catch (error) {
+                console.error('Error reading aloud:', error);
+                showMessage('Failed to read aloud. Please try again.', 'error');
+            }
+        }
+
+        async function generateClassReport() {
+            const langCode = document.getElementById('language-selector').value;
+            showMessage(translations[langCode]['loading_report']);
+            
+            if (!isGeminiPlatform) {
+                // Mocking for local development
+                document.getElementById('teacher-report-text').textContent = "This is a mock report generated for local development. The class is doing great, with top performers setting a good example. Let's focus on improving 'Local History' with more interactive lessons.";
+                showMessage('Mock report generated successfully!', 'success');
+                console.log('Mock report generated for local development.');
+                return;
+            }
+
+            const prompt = `Based on the following student data, generate a concise, encouraging, and actionable class report for the teacher. Highlight the overall class performance, mention top-performing students, and identify a general area for improvement. The data is as follows: ${JSON.stringify(students)}.`;
+            
+            try {
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    model: "gemini-2.5-flash-preview-05-20"
+                };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+                const result = await response.json();
+                const reportText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (reportText) {
+                    document.getElementById('teacher-report-text').textContent = reportText;
+                    showMessage('Report generated successfully!', 'success');
+                } else {
+                    throw new Error('No report text returned from API');
+                }
+            } catch (error) {
+                console.error('Error generating report:', error);
+                showMessage('Failed to generate report. Please try again.', 'error');
+            }
+        }
+
+        // --- UI Rendering Functions for Teacher Dashboard ---
+        function renderTeacherStudentProgress() {
+            const list = document.getElementById('teacher-student-progress-list');
+            const summary = document.getElementById('teacher-progress-summary');
+            const viewType = document.getElementById('teacher-progress-view').value;
+
+            if (viewType === 'class-summary') {
+                list.classList.add('hidden');
+                summary.classList.remove('hidden');
+                if (students.length > 0) {
+                    const totalXP = students.reduce((sum, s) => sum + s.xp, 0);
+                    const totalLevel = students.reduce((sum, s) => sum + s.level, 0);
+                    document.getElementById('teacher-avg-xp').textContent = (totalXP / students.length).toFixed(0);
+                    document.getElementById('teacher-avg-level').textContent = (totalLevel / students.length).toFixed(1);
+                    document.getElementById('teacher-total-students').textContent = students.length;
+                } else {
+                    document.getElementById('teacher-avg-xp').textContent = '0';
+                    document.getElementById('teacher-avg-level').textContent = '0';
+                    document.getElementById('teacher-total-students').textContent = '0';
+                }
+            } else { // 'all-students'
+                summary.classList.add('hidden');
+                list.classList.remove('hidden');
+                list.innerHTML = '';
+                students.sort((a, b) => b.progress - a.progress);
+                students.forEach(student => {
+                    const progressColor = student.progress >= 100 ? 'bg-green-500' : (student.progress > 0 ? 'bg-yellow-400' : 'bg-red-500');
+                    const progressHtml = `<div class="progress-bar"><div class="progress-fill ${progressColor}" style="width: ${student.progress}%;"></div></div>`;
+                    const studentHtml = `
+                        <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl">
+                            <div class="w-12 h-12 rounded-full bg-indigo-200 flex items-center justify-center font-bold text-indigo-700">
+                                ${student.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold">${student.name}</h3>
+                                <p class="text-sm text-gray-500">Level: ${student.level}</p>
+                            </div>
+                            <div class="flex-1">
+                                ${progressHtml}
+                                <p class="text-sm text-right mt-1 font-semibold">${student.progress}%</p>
+                            </div>
+                        </div>
+                    `;
+                    list.insertAdjacentHTML('beforeend', studentHtml);
+                });
+            }
+        }
+        function renderTeacherLeaderboard() {
+            const list = document.getElementById('teacher-leaderboard-list');
+            list.innerHTML = '';
+            const sortedStudents = [...students].sort((a, b) => b.xp - a.xp).slice(0, 5);
+            sortedStudents.forEach((student, index) => {
+                const rank = index + 1;
+                const itemHtml = `
+                    <li class="flex items-center justify-between p-4 rounded-xl bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-xl font-bold text-yellow-600">#${rank}</span>
+                            <span class="text-lg font-semibold">${student.name}</span>
+                        </div>
+                        <span class="text-lg font-bold text-gray-700">${student.xp} XP</span>
+                    </li>
+                `;
+                list.insertAdjacentHTML('beforeend', itemHtml);
+            });
+        }
+        function renderTeacherRewardBadges() {
+            const grid = document.getElementById('teacher-badge-grid');
+            grid.innerHTML = '';
+            teacherBadges.forEach(badge => {
+                const badgeHtml = `
+                    <div class="flex flex-col items-center cursor-pointer p-2 rounded-xl hover:bg-white transition-colors" data-badge-id="${badge.id}">
+                        <i class="${badge.icon} ${badge.color} badge-icon"></i>
+                        <span class="text-xs font-semibold mt-1 text-center">${badge.name}</span>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', badgeHtml);
+            });
+        }
+        function renderTeacherStudentSelector() {
+            const selector = document.getElementById('teacher-reward-student-selector');
+            selector.innerHTML = '<option value="" disabled selected>Select a student</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = student.name;
+                selector.appendChild(option);
+            });
+        }
+        function addNotification(message) {
+            const list = document.getElementById('teacher-notification-list');
+            const notificationHtml = `<div class="p-4 bg-gray-100 rounded-xl font-medium">${message}</div>`;
+            list.insertAdjacentHTML('afterbegin', notificationHtml);
+        }
+
+        // --- Core Application Logic ---
+        function setRole(role) {
+            currentRole = role;
+            localStorage.setItem('userRole', role);
+            document.getElementById('role-selection-modal').classList.add('hidden');
+            document.getElementById('role-switch-btn').classList.remove('hidden');
+            if (role === 'student') {
+                document.getElementById('student-dashboard').classList.remove('hidden');
+                document.getElementById('teacher-dashboard').classList.add('hidden');
+                initStudentDashboard();
+            } else if (role === 'teacher') {
+                document.getElementById('teacher-dashboard').classList.remove('hidden');
+                document.getElementById('student-dashboard').classList.add('hidden');
+                initTeacherDashboard();
+            }
+        }
+        function toggleRole() {
+            if (currentRole === 'student') {
+                setRole('teacher');
+            } else {
+                setRole('student');
+            }
+        }
+        
+        async function createMockStudents() {
+            const mockStudents = [
+                { name: 'Ravi', level: 5, xp: 1200, progress: 85, badges: ['helping-hand'], id: 'ravi-1' },
+                { name: 'Priya', level: 4, xp: 950, progress: 95, badges: ['star-performer'], id: 'priya-2' },
+                { name: 'Amit', level: 3, xp: 750, progress: 60, badges: [], id: 'amit-3' },
+                { name: 'Meena', level: 6, xp: 1500, progress: 100, badges: ['star-performer', 'problem-solver'], id: 'meena-4' },
+                { name: 'Suresh', level: 2, xp: 400, progress: 30, badges: [], id: 'suresh-5' },
+            ];
+            if (!isGeminiPlatform) {
+                students = mockStudents;
+                console.log("Using mock student data for local development.");
+                return;
+            }
+            const studentCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'students');
+            const snapshot = await getDocs(studentCollectionRef);
+            if (snapshot.empty) {
+                console.log("No student data found, creating mock data.");
+                for (const student of mockStudents) {
+                    await setDoc(doc(studentCollectionRef, student.id), student);
+                }
+            }
+        }
+        
+        async function initStudentDashboard() {
+            await fetchInitialStudentData();
+            updateStudentUI();
+            if (!isGeminiPlatform) {
+                renderStudentLeaderboard(defaultLeaderboard);
+                return;
+            }
+            const publicLeaderboardRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+            onSnapshot(publicLeaderboardRef, (snapshot) => {
+                const leaderboardData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderStudentLeaderboard(leaderboardData);
+            }, (error) => {
+                console.error('Error listening to leaderboard:', error);
+                renderStudentLeaderboard(defaultLeaderboard);
+            });
+        }
+        async function initTeacherDashboard() {
+            renderTeacherRewardBadges();
+            await createMockStudents();
+            // Set a dummy report initially
+            document.getElementById('teacher-report-text').textContent = "Based on current progress, the class is performing well with an average of 65% module completion. Top performers like Ravi and Meena are setting a great example. However, there's a slight dip in performance in the 'Local History' module. We could focus on more engaging activities for that topic.";
+            
+            if (!isGeminiPlatform) {
+                renderTeacherStudentProgress();
+                renderTeacherLeaderboard();
+                renderTeacherStudentSelector();
+                return;
+            }
+
+            const studentCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'students');
+            onSnapshot(studentCollectionRef, (snapshot) => {
+                students = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderTeacherStudentProgress();
+                renderTeacherLeaderboard();
+                renderTeacherStudentSelector();
+            }, (error) => {
+                console.error("Error listening to student data: ", error);
+                showMessage("Failed to get real-time student data.", "error");
+            });
+        }
+        
+        async function initializeAppAndAuth() {
+            try {
+                if (!isGeminiPlatform) {
+                    console.warn("Not on Gemini platform. Using mock Firebase config.");
+                    // In a real local setup, you'd put your own Firebase config here.
+                    // For this mock, we just skip the real initialization.
+                    document.getElementById('login-modal').classList.remove('hidden');
+                    return;
+                }
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        document.getElementById('login-modal').classList.add('hidden');
+                        if (currentRole) {
+                            setRole(currentRole);
+                        } else {
+                            document.getElementById('role-selection-modal').classList.remove('hidden');
+                        }
+                    } else {
+                         document.getElementById('login-modal').classList.remove('hidden');
+                    }
+                });
+            } catch (error) {
+                console.error('Firebase initialization or authentication failed:', error);
+                showMessage('Failed to connect to the database. Check console for details.', 'error');
+            }
+        }
+
+        async function handleLogin() {
+            const phoneNumber = document.getElementById('phone-number').value;
+            // Mock OTP request
+            if (phoneNumber) {
+                showMessage("A mock OTP has been sent. Please enter '123456'", 'success');
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('otp-section').classList.remove('hidden');
+            } else {
+                showMessage("Please enter a valid phone number.", 'error');
+            }
+        }
+
+        async function handleOtpVerification() {
+            const otpInput = document.getElementById('otp-input').value;
+            // Mock OTP verification
+            if (otpInput === '123456') {
+                let user;
+                if (isGeminiPlatform) {
+                    user = await signInWithCustomToken(auth, authToken);
+                } else {
+                    // For local, anonymous sign-in is a good fallback
+                    // or you can set a mock user object
+                    try {
+                        user = await signInAnonymously(auth);
+                        userId = user.user.uid;
+                    } catch(e) {
+                         console.log("Mock sign in for local dev");
+                         userId = "mock-user-id";
+                    }
+                }
+                showMessage("Login successful!", 'success');
+                document.getElementById('login-modal').classList.add('hidden');
+                if (currentRole) {
+                    setRole(currentRole);
+                } else {
+                    document.getElementById('role-selection-modal').classList.remove('hidden');
+                }
+            } else {
+                showMessage("Invalid OTP. Please try again.", 'error');
+            }
+        }
+
+        function handleVoiceInput() {
+            const voiceInput = document.getElementById('voice-input').value;
+            if (voiceInput) {
+                showMessage(`You said: "${voiceInput}"`, 'success');
+            } else {
+                showMessage("Please speak or type something first.", 'error');
+            }
+        }
+
+
+        // --- Event Handlers ---
+        window.onload = initializeAppAndAuth;
+        document.getElementById('student-role-btn').addEventListener('click', () => setRole('student'));
+        document.getElementById('teacher-role-btn').addEventListener('click', () => setRole('teacher'));
+        document.getElementById('role-switch-btn').addEventListener('click', toggleRole);
+        document.getElementById('language-selector').addEventListener('change', (e) => translateStudentPage(e.target.value));
+        document.getElementById('student-generate-quest-btn').addEventListener('click', generateNewQuest);
+        document.getElementById('student-quest-list').addEventListener('click', async (event) => {
+            const btn = event.target.closest('.student-start-quest-btn');
+            if (btn) {
+                const xpReward = parseInt(btn.dataset.xp, 10);
+                studentData.xp += xpReward;
+                checkLevelUp();
+                studentData.quests = [];
+                await saveStudentData();
+                await updateStudentLeaderboardData(studentData);
+                updateStudentUI();
+                const lang = document.getElementById('language-selector').value;
+                const message = translations[lang]['xp_gained'].replace('{xp}', xpReward);
+                showMessage(message, 'success');
+            }
+            const explainBtn = event.target.closest('.explain-quest-btn');
+            if(explainBtn) {
+                const description = explainBtn.dataset.desc;
+                explainQuestConcept(description);
+            }
+        });
+        document.getElementById('student-module-progress-list').addEventListener('click', (event) => {
+            const btn = event.target.closest('.read-aloud-btn');
+            if (btn) {
+                const textToRead = btn.dataset.text;
+                readAloud(textToRead);
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleLogin();
+        });
+        document.getElementById('verify-otp-btn').addEventListener('click', handleOtpVerification);
+        document.getElementById('mic-btn').addEventListener('click', handleVoiceInput);
+
+        
+        document.getElementById('teacher-progress-view').addEventListener('change', renderTeacherStudentProgress);
+        document.getElementById('generate-report-btn').addEventListener('click', generateClassReport);
+        document.getElementById('teacher-reward-student-selector').addEventListener('change', (e) => {
+            const awardBtn = document.getElementById('teacher-award-badge-btn');
+            awardBtn.disabled = !e.target.value;
+        });
+        let selectedBadgeId = null;
+        document.getElementById('teacher-badge-grid').addEventListener('click', (e) => {
+            const badgeElement = e.target.closest('div');
+            if (badgeElement && badgeElement.dataset.badgeId) {
+                document.querySelectorAll('#teacher-badge-grid > div').forEach(el => el.classList.remove('bg-white'));
+                badgeElement.classList.add('bg-white');
+                selectedBadgeId = badgeElement.dataset.badgeId;
+            }
+        });
+        document.getElementById('teacher-award-badge-btn').addEventListener('click', async () => {
+            const studentId = document.getElementById('teacher-reward-student-selector').value;
+            if (!studentId || !selectedBadgeId) {
+                showMessage("Please select a student and a badge.", "error");
+                return;
+            }
+            try {
+                if (!isGeminiPlatform) {
+                    console.log(`Mock: Awarded badge ${selectedBadgeId} to student ${studentId}`);
+                    showMessage("Badge awarded successfully! (Mock)", "success");
+                    addNotification(`Mock: Awarded badge to student ${studentId}.`);
+                    return;
+                }
+                const studentDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', studentId);
+                const student = students.find(s => s.id === studentId);
+                if (student && student.badges && !student.badges.includes(selectedBadgeId)) {
+                    const updatedBadges = [...student.badges, selectedBadgeId];
+                    await setDoc(studentDocRef, { badges: updatedBadges }, { merge: true });
+                    showMessage(`${student.name} was awarded the ${selectedBadgeId} badge!`);
+                    addNotification(`${student.name} just earned the "${teacherBadges.find(b => b.id === selectedBadgeId).name}" badge!`);
+                } else {
+                    showMessage("Student already has this badge or an error occurred.", "error");
+                }
+            } catch (error) {
+                console.error("Error awarding badge: ", error);
+                showMessage("Failed to award badge. Please try again.", "error");
+            }
+        });
+        document.getElementById('teacher-assignment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('teacher-assignment-title').value;
+            const desc = document.getElementById('teacher-assignment-desc').value;
+            const group = document.getElementById('teacher-assignment-group').value;
+            if (!title || !desc) {
+                showMessage("Please fill out all assignment fields.", "error");
+                return;
+            }
+            const newAssignment = { title, description: desc, assignedTo: group, createdAt: new Date() };
+            try {
+                if (!isGeminiPlatform) {
+                    console.log("Mock: Created new assignment", newAssignment);
+                    showMessage("Assignment created and assigned successfully! (Mock)", "success");
+                    addNotification(`Mock: New assignment "${title}" created for "${group}".`);
+                    document.getElementById('teacher-assignment-form').reset();
+                    return;
+                }
+                const assignmentsCollectionRef = collection(db, 'artifacts', appId, 'private', 'data', 'assignments');
+                await addDoc(assignmentsCollectionRef, newAssignment);
+                showMessage("Assignment created and assigned successfully!");
+                addNotification(`New assignment "${title}" created for "${group}".`);
+                document.getElementById('teacher-assignment-form').reset();
+            } catch (error) {
+                console.error("Error creating assignment: ", error);
+                showMessage("Failed to create assignment. Please try again.", "error");
+            }
+        });
+    </script>
+</body>
+</html>
