@@ -10,68 +10,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- General & Student/Teacher Dashboard Styles --- */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Original background color */
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>') 12 12, auto;
-            background-attachment: fixed;
-            transition: background 0.5s ease-in-out;
-        }
-        .card {
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease-in-out;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .progress-bar {
-            height: 10px;
-            background-color: #e2e8f0;
-            border-radius: 9999px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            transition: width 0.5s ease-in-out;
-            border-radius: 9999px;
-        }
-        .badge-icon {
-            font-size: 2.5rem;
-            transition: transform 0.2s ease-in-out;
-        }
-        .badge-icon:hover {
-            transform: scale(1.1);
-        }
-        .btn-start {
-            background-image: linear-gradient(to right, #6EE7B7, #34D399);
-            transition: all 0.3s ease-in-out;
-        }
-        .btn-start:hover {
-            transform: scale(1.05) rotate(2deg);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-        }
-        .btn-generate {
-            background-image: linear-gradient(to right, #8B5CF6, #EC4899);
-            transition: all 0.3s ease-in-out;
-        }
-        .btn-generate:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(109, 40, 217, 0.4);
-        }
-        .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fff;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* --- Vibrant Animated Kids Theme for Student Dashboard --- */
+.student-bg-animated {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: -1;
+    background: linear-gradient(135deg, #ffe53b 0%, #ff2525 100%);
+    overflow: hidden;
+}
+
+/* Floating emoji animation */
+@keyframes emoji-float {
+    0% { transform: translateY(120vh) scale(0.9) rotate(-12deg); opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-120vh) scale(1.15) rotate(20deg); opacity: 0.7; }
+}
+.bg-emoji {
+    position: absolute;
+    font-size: 3.2rem;
+    pointer-events: none;
+    opacity: 0.85;
+    animation: emoji-float 12s linear infinite;
+    will-change: transform;
+}
+.bg-emoji:nth-child(2) { left: 15vw; animation-delay: 2s; font-size: 4rem;}
+.bg-emoji:nth-child(3) { left: 30vw; animation-delay: 5.5s; font-size: 3rem;}
+.bg-emoji:nth-child(4) { left: 45vw; animation-delay: 0.5s; font-size: 3.7rem;}
+.bg-emoji:nth-child(5) { left: 60vw; animation-delay: 7s; font-size: 5rem;}
+.bg-emoji:nth-child(6) { left: 80vw; animation-delay: 3.2s; font-size: 2.7rem;}
+.bg-emoji:nth-child(7) { left: 5vw; animation-delay: 8s; font-size: 4.2rem;}
+.bg-emoji:nth-child(8) { left: 72vw; animation-delay: 4.7s; font-size: 3.4rem;}
+.bg-emoji:nth-child(9) { left: 55vw; animation-delay: 10s; font-size: 3.8rem;}
+.bg-emoji:nth-child(10) { left: 22vw; animation-delay: 6s; font-size: 4.6rem; }
+
+/* Sparkle Animation */
+@keyframes sparkle {
+    0%, 100% { opacity: 0.45; transform: scale(1);}
+    50% { opacity: 1; transform: scale(1.25);}
+}
+.sparkle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle, #fff7ad 55%, #ffe53b 80%, transparent 100%);
+    border-radius: 50%;
+    opacity: 0.45;
+    animation: sparkle 3s infinite;
+}
+.sparkle:nth-child(11) { top: 10vh; left: 25vw; animation-delay: 1.5s; }
+.sparkle:nth-child(12) { top: 70vh; left: 55vw; animation-delay: 2.5s; }
+.sparkle:nth-child(13) { top: 40vh; left: 15vw; animation-delay: 0.7s; }
+.sparkle:nth-child(14) { top: 80vh; left: 85vw; animation-delay: 3.2s; }
+.sparkle:nth-child(15) { top: 60vh; left: 42vw; animation-delay: 2.8s; }
+
+/* Responsive fix for content */
+#student-dashboard {
+    position: relative;
+    z-index: 10;
+}
+
 
         /* --- Parent Dashboard Specific Styles --- */
         h1, h2, h3 { font-family: 'Poppins', sans-serif; font-weight: 700; }
@@ -81,7 +80,7 @@
         }
         .parent-dashboard-bg .themed-header { color: #1e293b; }
         .parent-dashboard-bg .themed-text { color: #475569; }
-       
+        
         .dashboard-card {
             background-color: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -124,7 +123,7 @@
         .avatar-pulse {
             animation: pulse-avatar 2.5s infinite;
         }
-       
+        
         /* --- Styles for the added student dashboard sections --- */
         .spinner {
             border-top-color: #3498db;
@@ -142,7 +141,7 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
-       
+        
         /* --- Monkey Animation Styles --- */
         @keyframes fall-down {
             from { transform: translateY(-100vh) rotate(-60deg); }
@@ -188,7 +187,7 @@
             font-size: 2.5rem;
             animation: thinking 1.5s infinite ease-in-out;
         }
-       
+        
         @keyframes page-turn {
             0% { transform: rotateY(0deg); }
             100% { transform: rotateY(360deg); }
@@ -197,7 +196,7 @@
               font-size: 2.5rem;
               animation: page-turn 2s infinite linear;
         }
-       
+        
         /* Styles for Math Bullseye game */
         #math-game-modal #game-container {
             background-color: #121212;
@@ -415,11 +414,11 @@
             </div>
         </div>
     </div>
-   
+    
     <button id="role-switch-btn" class="fixed bottom-5 right-5 z-40 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-700 transition-colors hidden">
         Switch Role
     </button>
-   
+    
     <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
         <div class="bg-white p-10 rounded-3xl shadow-2xl text-center w-full max-w-md">
             <h2 id="login-modal-title" class="text-3xl font-bold mb-6 text-indigo-800">Login with Phone</h2>
@@ -434,7 +433,25 @@
             </div>
         </div>
     </div>
-   
+    
+   <div class="student-bg-animated">
+    <div class="bg-emoji" style="top:80vh;">🦄</div>
+    <div class="bg-emoji" style="top:65vh;">🚀</div>
+    <div class="bg-emoji" style="top:70vh;">🔤</div>
+    <div class="bg-emoji" style="top:90vh;">🍉</div>
+    <div class="bg-emoji" style="top:85vh;">🧠</div>
+    <div class="bg-emoji" style="top:75vh;">🎈</div>
+    <div class="bg-emoji" style="top:30vh;">🌟</div>
+    <div class="bg-emoji" style="top:50vh;">🤩</div>
+    <div class="bg-emoji" style="top:20vh;">📚</div>
+    <div class="bg-emoji" style="top:15vh;">🏆</div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+</div>
+
     <div id="student-dashboard" class="hidden">
 
         <div class="w-full">
@@ -447,13 +464,13 @@
                 </p>
             </header>
         </div>
-       
+        
         <div class="container mx-auto p-4 md:p-10">
             <div class="flex justify-end mb-4">
                 <select id="language-selector" class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </select>
             </div>
-           
+            
             <div class="card bg-white p-10 mb-10 flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-16">
                 <div class="flex items-center space-x-8">
                     <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center overflow-hidden shadow-xl">
@@ -464,7 +481,7 @@
                         <p id="student-learning-message" class="text-xl text-gray-600 font-medium"></p>
                     </div>
                 </div>
-               
+                
                 <div class="flex-grow flex flex-col md:flex-row items-end md:items-center space-y-5 md:space-y-0 md:space-x-8">
                     <div class="flex items-center space-x-4 bg-yellow-200 px-8 py-4 rounded-full shadow-inner">
                         <i class="fas fa-star text-yellow-600 text-3xl"></i>
@@ -478,9 +495,9 @@
                     </div>
                 </div>
             </div>
-           
+            
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-               
+                
                 <div class="lg:col-span-2 card bg-white p-8">
                     <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-emerald-600">
                         <i class="fas fa-tasks text-emerald-600 text-3xl"></i>
@@ -497,7 +514,7 @@
                         </button>
                     </div>
                 </div>
-               
+                
                 <div class="card bg-white p-8">
                     <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-amber-500">
                         <i class="fas fa-trophy text-amber-500 text-3xl"></i>
@@ -508,7 +525,7 @@
                     </ul>
                 </div>
             </div>
-           
+            
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-10">
                 <div class="card bg-white p-8">
                     <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-indigo-500">
@@ -518,7 +535,7 @@
                     <div id="student-badges-grid" class="grid grid-cols-3 md:grid-cols-4 gap-8">
                         </div>
                 </div>
-               
+                
                 <div class="card bg-white p-8">
                     <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-purple-600">
                         <i class="fas fa-chart-line text-purple-600 text-3xl"></i>
@@ -538,17 +555,17 @@
                 </div>
             </div>
         </div>
-       
+        
         <div id="star-container"></div>
-   
-       
+    
+        
 
 
             <section id="attendance-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500 opacity-0 animate-slide-in-up" style="animation-delay: 200ms;">
                 <div class="flex flex-col sm:flex-row justify-between items-center">
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Attendance</h2>
+                    <h2 id="attendance-title" class="text-xl sm:text-2xl font-bold text-gray-800">Attendance</h2>
                     <button id="markAttendanceBtn" class="mt-4 sm:mt-0 px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105 shadow-md disabled:bg-gray-400 disabled:scale-100">
-                        Mark Attendance
+                       <span id="mark-attendance-btn-text">Mark Attendance</span>
                     </button>
                 </div>
                 <p id="attendance-status" class="mt-4 text-center text-gray-500 hidden">
@@ -557,16 +574,20 @@
             </section>
 
             <section id="homework-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500 opacity-0 animate-slide-in-up" style="animation-delay: 300ms;">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Homework</h2>
+                <h2 id="homework-title" class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Homework</h2>
                 <div class="space-y-4">
+                    
                     <div class="bg-gray-50 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <div class="flex-grow">
                             <h3 class="font-semibold text-gray-700">Math: Algebra Chapter 3</h3>
                             <p class="text-sm text-gray-500">Due: October 26, 2025</p>
                         </div>
-                        <div class="flex items-center mt-3 sm:mt-0 sm:ml-4">
-                            <span class="text-sm font-medium text-red-500 mr-4">Pending</span>
-                            <button class="homework-help-btn px-4 py-2 bg-purple-500 text-white text-sm rounded-full hover:bg-purple-600 transition-transform transform hover:scale-105 ai-glow" data-homework="Math: Algebra basics">Get Help ✨</button>
+                        <div class="flex items-center mt-3 sm:mt-0 sm:ml-4 space-x-2">
+                            <span class="text-sm font-medium text-red-500 mr-2 homework-status-text">Pending</span>
+                            <input type="file" class="hidden homework-upload" id="upload-math">
+                            <label for="upload-math" class="cursor-pointer px-3 py-1 bg-green-500 text-white text-xs rounded-full hover:bg-green-600 upload-btn-text">Upload</label>
+                             <span class="homework-marks text-xs font-semibold text-gray-600 hidden">Marks: <span>0</span></span>
+                            <button class="homework-help-btn px-4 py-2 bg-purple-500 text-white text-sm rounded-full hover:bg-purple-600 ai-glow get-help-btn-text" data-homework="Math: Algebra basics">Get Help ✨</button>
                         </div>
                     </div>
                     <div class="bg-gray-50 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center">
@@ -574,22 +595,29 @@
                             <h3 class="font-semibold text-gray-700">Science: Photosynthesis Lab Report</h3>
                             <p class="text-sm text-gray-500">Due: October 20, 2025</p>
                         </div>
-                        <div class="flex items-center mt-3 sm:mt-0 sm:ml-4">
-                            <span class="text-sm font-medium text-green-500">Completed</span>
+                        <div class="flex items-center mt-3 sm:mt-0 sm:ml-4 space-x-2">
+                            <span class="text-sm font-medium text-green-500 mr-2 homework-status-text">Completed</span>
+                             <span class="homework-marks text-xs font-semibold text-gray-600">Marks: <span>8</span></span>
                         </div>
                     </div>
+
                     <div class="bg-gray-50 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <div class="flex-grow">
                             <h3 class="font-semibold text-gray-700">History: Civil War Essay Outline</h3>
                             <p class="text-sm text-gray-500">Due: October 28, 2025</p>
                         </div>
-                        <div class="flex items-center mt-3 sm:mt-0 sm:ml-4">
-                            <span class="text-sm font-medium text-red-500 mr-4">Pending</span>
-                            <button class="homework-help-btn px-4 py-2 bg-purple-500 text-white text-sm rounded-full hover:bg-purple-600 transition-transform transform hover:scale-105 ai-glow" data-homework="History: How to outline an essay about a historical event">Get Help ✨</button>
+                        <div class="flex items-center mt-3 sm:mt-0 sm:ml-4 space-x-2">
+                            <span class="text-sm font-medium text-red-500 mr-2 homework-status-text">Overdue</span>
+                            <input type="file" class="hidden homework-upload" id="upload-history">
+                            <label for="upload-history" class="cursor-pointer px-3 py-1 bg-green-500 text-white text-xs rounded-full hover:bg-green-600 upload-btn-text">Upload</label>
+                             <span class="homework-marks text-xs font-semibold text-gray-600 hidden">Marks: <span>0</span></span>
+                            <button class="homework-help-btn px-4 py-2 bg-purple-500 text-white text-sm rounded-full hover:bg-purple-600 ai-glow get-help-btn-text" data-homework="History: How to outline an essay about a historical event">Get Help ✨</button>
+
                         </div>
                     </div>
                 </div>
             </section>
+
 
             <section id="curious-corner" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-yellow-500 opacity-0 animate-slide-in-up" style="animation-delay: 400ms;">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Curious Corner ✨</h2>
@@ -598,21 +626,52 @@
                     <input type="text" id="curious-question-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 flex-grow" placeholder="e.g., Why is the sky blue?">
                     <button id="ask-curious-question-btn" class="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors duration-300">Ask Question</button>
                 </div>
-                <div id="curious-answer" class="mt-4 text-gray-700 p-4 bg-gray-50 rounded-lg min-h-[100px] hidden">
-                    </div>
+                <div id="curious-answer" class="mt-4 text-gray-700 p-4 bg-gray-50 rounded-lg min-h-[100px] hidden"></div>
             </section>
+
+
 
             <section id="gaming-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-purple-500 opacity-0 animate-slide-in-up" style="animation-delay: 500ms;">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Learning Games</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div id="puzzle-mania-card" class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">👾</div><h3 class="font-semibold text-gray-800">Puzzle Mania</h3><p class="text-sm text-gray-500">Brain-teasers for fun!</p></div>
-                    <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🚀</div><h3 class="font-semibold text-gray-800">Space Adventure</h3><p class="text-sm text-gray-500">Blast off and explore!</p></div>
-                    <div id="math-bullseye-card" class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🎯</div><h3 class="font-semibold text-gray-800">Math Bullseye</h3><p class="text-sm text-gray-500">Hit the number target!</p></div>
-                    <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🕸️</div><h3 class="font-semibold text-gray-800">Word Weaver</h3><p class="text-sm text-gray-500">Build words, win points!</p></div>
-                    <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🗺️</div><h3 class="font-semibold text-gray-800">State Spotter</h3><p class="text-sm text-gray-500">Find the Indian states!</p></div>
+                    <div id="physics-nexus-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">⚛️</div>
+                        <h3 class="font-semibold text-gray-800">Newton’s Nexus</h3>
+                        <p class="text-sm text-gray-500">Solve physics numericals!</p>
+                    </div>
+
+                    <div id="math-bullseye-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">🎯</div>
+                        <h3 class="font-semibold text-gray-800">Math Bullseye</h3>
+                        <p class="text-sm text-gray-500">Hit the number target!</p>
+                    </div>
+
+                    <div id="grammar-galaxy-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">🌌</div>
+                        <h3 class="font-semibold text-gray-800">Grammar Galaxy</h3>
+                        <p class="text-sm text-gray-500">Master your grammar skills!</p>
+                    </div>
+
+                    <div id="state-spotter-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">🗺️</div>
+                        <h3 class="font-semibold text-gray-800">State Spotter</h3>
+                        <p class="text-sm text-gray-500">Find the Indian states!</p>
+                    </div>
+
                     <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🦁</div><h3 class="font-semibold text-gray-800">Animal Kingdom</h3><p class="text-sm text-gray-500">Match animals & sounds.</p></div>
-                    <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">⏳</div><h3 class="font-semibold text-gray-800">History Timeline</h3><p class="text-sm text-gray-500">Order the events!</p></div>
-                    <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🔷</div><h3 class="font-semibold text-gray-800">Shape Sorter</h3><p class="text-sm text-gray-500">Identify geometric shapes.</p></div>
+                    <div id="history-timeline-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">⏳</div>
+                        <h3 class="font-semibold text-gray-800">History Timeline</h3>
+                        <p class="text-sm text-gray-500">Order the events!</p>
+                    </div>
+
+                    <div id="shape-sorter-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">🔷</div>
+                        <h3 class="font-semibold text-gray-800">Shape Sorter</h3>
+                        <p class="text-sm text-gray-500">Identify geometric shapes.</p>
+                    </div>
+
                     <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🌾</div><h3 class="font-semibold text-gray-800">Farming Fun</h3><p class="text-sm text-gray-500">Learn about crops!</p></div>
                     <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">💧</div><h3 class="font-semibold text-gray-800">Clean Village</h3><p class="text-sm text-gray-500">A game on hygiene.</p></div>
                     <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🛒</div><h3 class="font-semibold text-gray-800">Market Math</h3><p class="text-sm text-gray-500">Simple money calculations.</p></div>
@@ -621,9 +680,14 @@
                         <h3 class="font-semibold text-gray-800">Story Maker ✨</h3>
                         <p class="text-sm text-gray-500">Create with AI!</p>
                     </div>
-                     <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
-                         <div class="text-5xl mb-2 jiggle-on-hover">🔬</div> <h3 class="font-semibold text-gray-800">Science Lab</h3> <p class="text-sm text-gray-500">Fun science experiments.</p>
-                     </div>
+                     
+                    <div id="science-lab-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">🔬</div>
+                        <h3 class="font-semibold text-gray-800">Science Lab</h3>
+                        <p class="text-sm text-gray-500">Fun science experiments.</p>
+                    </div>
+
+                       </div>
                 </div>
             </section>
         </div>
@@ -631,6 +695,7 @@
 
 
     <div id="teacher-dashboard" class="hidden">
+        
         <header class="text-center mb-10 flex justify-between items-center">
             <div>
                 <h1 class="text-5xl font-extrabold text-indigo-800">EduVaani</h1>
@@ -639,9 +704,9 @@
             <select id="teacher-language-selector" class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </select>
         </header>
-       
+        
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-           
+            
             <section class="lg:col-span-2 card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-indigo-700">
                     <i class="fas fa-users"></i>
@@ -665,9 +730,11 @@
                     <div id="teacher-report-text" class="mt-4 text-gray-800 italic"></div>
                 </div>
                 <div id="teacher-student-progress-list" class="space-y-6">
-                    </div>
+
+                </div>
+                
             </section>
-           
+            
             <section class="card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-amber-600">
                     <i class="fas fa-trophy"></i>
@@ -676,11 +743,11 @@
                 <ul id="teacher-leaderboard-list" class="space-y-4">
                     </ul>
             </section>
-           
+            
         </div>
-       
+        
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-           
+            
             <section class="card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-emerald-600">
                     <i class="fas fa-award"></i>
@@ -695,7 +762,7 @@
                     <button id="teacher-award-badge-btn" class="w-full bg-emerald-500 text-white py-3 rounded-xl font-bold hover:bg-emerald-600 transition-colors duration-200" disabled>Award Badge</button>
                 </div>
             </section>
-           
+            
             <section class="card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-red-500">
                     <i class="fas fa-paper-plane"></i>
@@ -723,7 +790,7 @@
                     </button>
                 </form>
             </section>
-           
+            
             <section class="lg:col-span-2 card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-cyan-600">
                     <i class="fas fa-bell"></i>
@@ -732,13 +799,14 @@
                 <div id="teacher-notification-list" class="space-y-4">
                     </div>
             </section>
-           
+            
         </div>
     </div>
-   
+
+    
     <div id="parent-dashboard" class="hidden">
         <div class="container mx-auto p-4 md:p-6 max-w-4xl">
-   
+    
             <header class="flex justify-between items-center mb-6 animate-slide-in-up" style="animation-delay: 100ms;">
                 <div>
                     <h1 class="text-2xl md:text-3xl font-bold text-teal-600">EduVaani</h1>
@@ -751,11 +819,11 @@
                     <img src="https://placehold.co/60x60/31C48D/FFFFFF?text=P" alt="Priyanka's Profile Picture" class="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-teal-500 avatar-pulse">
                 </div>
             </header>
-   
+    
             <main class="grid grid-cols-1 md:grid-cols-3 gap-6">
-               
+                
                 <div class="md:col-span-2 space-y-6">
-                   
+                    
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 200ms;">
                         <h2 id="parent-overall-progress-title" class="text-xl font-bold mb-4 themed-header">Overall Progress</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
@@ -776,7 +844,7 @@
                             </div>
                         </div>
                     </div>
-   
+    
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 300ms;">
                         <h2 id="parent-subject-progress-title" class="text-xl font-bold mb-4 themed-header">Subject Progress</h2>
                         <div class="space-y-5">
@@ -809,7 +877,7 @@
                             </div>
                         </div>
                     </div>
-   
+    
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 400ms;">
                         <h2 id="parent-homework-title" class="text-xl font-bold mb-4 themed-header">Recent Homework</h2>
                         <div class="space-y-3">
@@ -836,9 +904,9 @@
                             </div>
                         </div>
                     </div>
-   
+    
                 </div>
-               
+                
                 <div class="space-y-6">
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 500ms;">
                         <h2 id="parent-attendance-title" class="text-xl font-bold mb-4 themed-header">Attendance</h2>
@@ -871,16 +939,16 @@
                         </div>
                     </div>
                 </div>
-   
+    
             </main>
-   
+    
             <footer class="text-center mt-8 text-sm themed-text animate-slide-in-up" style="animation-delay: 600ms;">
                 <p id="parent-footer-text">&copy; 2025 EduVaani. Empowering rural learning.</p>
             </footer>
-   
+    
         </div>
     </div>
-   
+    
     <div id="messageBox" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50">
         <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-95">
             <h3 class="text-xl font-bold text-gray-800" id="messageBoxTitle"></h3>
@@ -924,7 +992,7 @@
             <p id="monkeyMessage" class="absolute -bottom-12 w-max left-1/2 -translate-x-1/2 mt-4 text-xl font-bold text-white bg-green-500 rounded-full px-6 py-2 opacity-0 transition-opacity duration-300">Attendance Marked!</p>
         </div>
     </div>
-   
+    
     <div id="math-game-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
         <div id="game-container" class="relative bg-black rounded-lg shadow-xl overflow-hidden p-6">
             <canvas id="gameCanvas"></canvas>
@@ -1014,7 +1082,7 @@
             { id: 'science', progress: 50, color: 'blue' },
             { id: 'history', progress: 20, color: 'emerald' }
         ];
-       
+        
         const teacherBadges = [
             { id: 'star-performer', name: 'Star Performer', icon: 'fas fa-star', color: 'text-yellow-500' },
             { id: 'helping-hand', name: 'Helping Hand', icon: 'fas fa-hand-holding-heart', color: 'text-pink-500' },
@@ -1024,11 +1092,11 @@
         ];
 
         const languages = {
-            'en': 'English', 'hi': 'हिन्दी', 'as': 'অসমীয়া', 'bn': 'বাংলা', 'brx': 'बोड़ो',
-            'doi': 'डोगरी', 'gu': 'ગુજરાતી', 'kn': 'ಕನ್ನಡ', 'ks': 'कश्मीरी', 'kok': 'कोंकणी',
-            'mai': 'मैथिली', 'ml': 'മലയാളം', 'mni': 'মৈতৈলোন্', 'mr': 'मराठी', 'ne': 'नेपाली',
-            'or': 'ଓଡ଼ିଆ', 'pa': 'ਪੰਜਾਬੀ', 'sa': 'संस्कृतम्', 'sat': 'संताली', 'sd': 'सिन्धी',
-            'ta': 'தமிழ்', 'te': 'తెలుగు', 'ur': 'اردو'
+            'en': 'English', 'hi': 'Hindi', 'as': 'Assamese', 'bn': 'Bengali', 'brx': 'Bodo',
+            'doi': 'Dogri', 'gu': 'Gujaratri', 'kn': 'Kannada', 'ks': 'Kashmiri', 'kok': 'Konkani',
+            'mai': 'Maithili', 'ml': 'Malayalam', 'mni': 'Manipuri', 'mr': 'Marathi', 'ne': 'Nepali',
+            'or': 'Odiya', 'pa': 'Punjabi', 'sa': 'Sanskrit', 'sat': 'Santhali', 'sd': 'Sindhi',
+            'ta': 'Tamil', 'te': 'Telugu', 'ur': 'Urdu'
         };
         const ttsVoiceMap = {
             'en': 'Kore', 'hi': 'Algenib', 'as': 'Algenib', 'bn': 'Gacrux', 'brx': 'Kore',
@@ -1039,638 +1107,8 @@
         };
 
         // --- Internationalization (i18n) Data ---
-        const translations = {
-            en: {
-                login_title: 'Login with Phone',
-                request_otp: 'Request OTP',
-                verify_otp: 'Verify OTP',
-                otp_info: 'Enter the mock OTP to log in.',
-                role_modal_title: 'Select Your Role',
-                role_student: 'Student',
-                role_teacher: 'Teacher',
-                role_parent: 'Parent',
-                switch_role_button: 'Switch Role',
-                welcome_message: 'Hello, Priyanka!',
-                learning_message: "Let's learn something new today!",
-                level_text: 'Level',
-                daily_quests_title: 'Daily Quests',
-                leaderboard_title: 'Leaderboard',
-                badges_title: 'Achievement Badges',
-                progress_title: 'Module Progress',
-                generate_quest_button: '✨ Generate New Quest',
-                read_aloud_button: '✨ Read Aloud',
-                explain_concept_button: '✨ Explain Concept',
-                badge_star: 'Village Star',
-                badge_water: 'Water Warrior',
-                badge_bookworm: 'Bookworm',
-                badge_locked: 'Locked',
-                start_button_text: 'Start',
-                seeds_title: 'Learn About Seed Types',
-                seeds_desc: 'Watch a video on local crops and their seeds.',
-                water_conservation_title: 'Water Our Village Fields',
-                water_conservation_desc: 'Simulate watering crops to learn about conservation.',
-                math_quest_title: 'Math: The Field Calculator',
-                math_quest_desc: 'The Math module teaches you how to calculate crop yields, measure water usage, and manage your budget for farming.',
-                science_quest_title: 'Science: Our Water Sources',
-                science_quest_desc: 'In this Science module, you will learn about the water cycle, different types of water sources in your village, and how to keep them clean.',
-                history_quest_title: 'Local History: Our Village Elders',
-                history_quest_desc: 'The Local History module explores the stories and traditions passed down from your village elders.',
-                not_yet_earned: 'Not Yet Earned',
-                loading_quests: 'Generating new quest...',
-                loading_audio: 'Loading audio...',
-                loading_explanation: 'Generating explanation...',
-                loading_report: 'Generating class report...',
-                quest_generated_success: 'New quest generated!',
-                quest_already_generated: 'You can only generate one quest per day.',
-                no_text_to_read: 'No text to read.',
-                xp_gained: '+{xp} XP!',
-                no_quests: 'No quests available. Generate one to start!',
-                voice_question_label: 'Speak your question:',
-                teacher_dashboard_title: 'Teacher Dashboard',
-                student_progress_title: 'Student Progress',
-                view_label: 'View:',
-                view_option_summary: 'Class Summary',
-                view_option_all: 'All Students',
-                generate_report_button: 'Generate Report',
-                summary_title: 'Class Overall Performance',
-                summary_avg_xp: 'Average XP',
-                summary_avg_level: 'Average Level',
-                summary_total_students: 'Total Students',
-                class_leaderboard_title: 'Class Leaderboard',
-                reward_title: 'Reward & Recognition',
-                select_student_placeholder: 'Select a student',
-                award_badge_button: 'Award Badge',
-                assignment_title: 'Assignment Management',
-                module_title_label: 'Module Title',
-                description_label: 'Description',
-                assign_to_label: 'Assign to:',
-                assign_all: 'All Students',
-                assign_group_a: 'Group A',
-                assign_group_b: 'Group B',
-                create_assignment_button: 'Create Assignment',
-                notifications_title: 'Notifications & Alerts',
-                notification1: "New module 'Water Conservation' assigned to all students!",
-                notification2: "Rajesh achieved the 'Water Warrior' badge.",
-                notification3: "Meena has completed the 'Village Star' quest.",
-                parent_welcome: 'Welcome, Parent!',
-                parent_greeting_morning: 'Good morning, Parent!',
-                parent_greeting_afternoon: 'Good afternoon, Parent!',
-                parent_greeting_evening: 'Good evening, Parent!',
-                parent_greeting_night: 'Hope you had a great day!',
-                child_dashboard_label: "Priyanka's Dashboard",
-                overall_progress_title: 'Overall Progress',
-                learning_level_label: 'Learning Level',
-                points_earned_label: 'Points Earned',
-                badges_collected_label: 'Badges Collected',
-                subject_progress_title: 'Subject Progress',
-                lessons_label: 'Lessons',
-                subject_math: 'Mathematics',
-                subject_science: 'Science',
-                subject_english: 'English',
-                homework_title: 'Recent Homework',
-                due_label: 'Due',
-                due_yesterday: 'Yesterday',
-                due_tomorrow: 'Tomorrow',
-                due_2_days_ago: '2 days ago',
-                status_submitted: 'Submitted',
-                status_pending: 'Pending',
-                status_overdue: 'Overdue',
-                homework1_title: 'Math: Chapter 5 Problems',
-                homework2_title: 'Science: Plant Cell Diagram',
-                homework3_title: 'English: Essay on "My Village"',
-                attendance_title: 'Attendance',
-                present_month_label: 'Present (This Month)',
-                this_week_label: 'This Week',
-                day_mon: 'Mon',
-                day_tue: 'Tue',
-                day_wed: 'Wed',
-                day_thu: 'Thu',
-                day_fri: 'Fri',
-                footer_text: '© 2025 EduVaani. Empowering rural learning.',
-            }
-        };
-       
-        // Function to create translation objects with English fallback
-        const createTranslation = (base) => ({ ...translations['en'], ...base });
-
-        // All 22 Scheduled Languages
-        translations['hi'] = createTranslation({
-            login_title: 'फ़ोन से लॉगिन करें',
-            request_otp: 'ओटीपी का अनुरोध करें',
-            verify_otp: 'ओटीपी सत्यापित करें',
-            otp_info: 'लॉग इन करने के लिए मॉक ओटीपी दर्ज करें।',
-            role_modal_title: 'अपनी भूमिका चुनें',
-            role_student: 'छात्र',
-            role_teacher: 'शिक्षक',
-            role_parent: 'अभिभावक',
-            switch_role_button: 'भूमिका बदलें',
-            welcome_message: 'नमस्ते, प्रियंका!',
-            learning_message: 'आइए, आज कुछ नया सीखें!',
-            level_text: 'स्तर',
-            daily_quests_title: 'दैनिक कार्य',
-            leaderboard_title: 'लीडरबोर्ड',
-            badges_title: 'उपलब्धि बैज',
-            progress_title: 'मॉड्यूल प्रगति',
-            generate_quest_button: '✨ नया कार्य बनाएँ',
-            read_aloud_button: '✨ पढ़कर सुनाएं',
-            explain_concept_button: '✨ अवधारणा समझाएं',
-            badge_star: 'ग्राम सितारा',
-            badge_water: 'जल योद्धा',
-            badge_bookworm: 'किताबी कीड़ा',
-            badge_locked: 'बंद',
-            start_button_text: 'शुरू करें',
-            seeds_title: 'बीज के प्रकार के बारे में जानें',
-            seeds_desc: 'स्थानीय फसलों और उनके बीजों पर एक वीडियो देखें।',
-            water_conservation_title: 'हमारे गाँव के खेतों को पानी दें',
-            water_conservation_desc: 'संरक्षण के बारे में जानने के लिए फसलों को पानी देने का अनुकरण करें।',
-            math_quest_title: 'गणित: क्षेत्र कैलकुलेटर',
-            math_quest_desc: 'गणित मॉड्यूल आपको फसल की पैदावार की गणना करना, पानी का उपयोग मापना और खेती के लिए अपना बजट प्रबंधित करना सिखाता है।',
-            science_quest_title: 'विज्ञान: हमारे जल स्रोत',
-            science_quest_desc: 'इस विज्ञान मॉड्यूल में, आप जल चक्र, अपने गांव में विभिन्न प्रकार के जल स्रोतों और उन्हें कैसे साफ रखें, इसके बारे में जानेंगे।',
-            history_quest_title: 'स्थानीय इतिहास: हमारे ग्राम बुजुर्ग',
-            history_quest_desc: 'स्थानीय इतिहास मॉड्यूल आपके गांव के बुजुर्गों द्वारा बताई गई कहानियों और परंपराओं की पड़ताल करता है।',
-            not_yet_earned: 'अभी तक अर्जित नहीं किया गया',
-            loading_quests: 'नया कार्य बना रहा है...',
-            loading_audio: 'ऑडियो लोड हो रहा है...',
-            loading_explanation: 'व्याख्या उत्पन्न हो रही है...',
-            loading_report: 'कक्षा रिपोर्ट उत्पन्न हो रही है...',
-            quest_generated_success: 'नया कार्य बनाया गया!',
-            quest_already_generated: 'आप एक दिन में केवल एक ही कार्य बना सकते हैं।',
-            no_text_to_read: 'पढ़ने के लिए कोई पाठ नहीं है।',
-            xp_gained: '+{xp} XP!',
-            no_quests: 'कोई कार्य उपलब्ध नहीं है। शुरू करने के लिए एक बनाएं!',
-            voice_question_label: 'अपना प्रश्न बोलें:',
-            teacher_dashboard_title: 'शिक्षक डैशबोर्ड',
-            student_progress_title: 'छात्र प्रगति',
-            view_label: 'देखें:',
-            view_option_summary: 'कक्षा सारांश',
-            view_option_all: 'सभी छात्र',
-            generate_report_button: 'रिपोर्ट बनाएं',
-            summary_title: 'कक्षा का समग्र प्रदर्शन',
-            summary_avg_xp: 'औसत XP',
-            summary_avg_level: 'औसत स्तर',
-            summary_total_students: 'कुल छात्र',
-            class_leaderboard_title: 'कक्षा लीडरबोर्ड',
-            reward_title: 'पुरस्कार और मान्यता',
-            select_student_placeholder: 'एक छात्र चुनें',
-            award_badge_button: 'बैज प्रदान करें',
-            assignment_title: 'असाइनमेंट प्रबंधन',
-            module_title_label: 'मॉड्यूल शीर्षक',
-            description_label: 'विवरण',
-            assign_to_label: 'को सौंपें:',
-            assign_all: 'सभी छात्र',
-            assign_group_a: 'समूह ए',
-            assign_group_b: 'समूह बी',
-            create_assignment_button: 'असाइनमेंट बनाएं',
-            notifications_title: 'सूचनाएं और अलर्ट',
-            notification1: "नया मॉड्यूल 'जल संरक्षण' सभी छात्रों को सौंपा गया!",
-            notification2: "राजेश ने 'जल योद्धा' बैज हासिल किया।",
-            notification3: "मीना ने 'ग्राम सितारा' खोज पूरी कर ली है।",
-            parent_welcome: 'नमस्ते, अभिभावक!',
-            parent_greeting_morning: 'सुप्रभात, अभिभावक!',
-            parent_greeting_afternoon: 'शुभ दोपहर, अभिभावक!',
-            parent_greeting_evening: 'शुभ संध्या, अभिभावक!',
-            parent_greeting_night: 'आशा है आपका दिन शानदार रहा होगा!',
-            child_dashboard_label: "प्रियंका का डैशबोर्ड",
-            overall_progress_title: 'समग्र प्रगति',
-            learning_level_label: 'सीखने का स्तर',
-            points_earned_label: 'अंक अर्जित',
-            badges_collected_label: 'बैज एकत्र किए',
-            subject_progress_title: 'विषय प्रगति',
-            lessons_label: 'पाठ',
-            subject_math: 'गणित',
-            subject_science: 'विज्ञान',
-            subject_english: 'अंग्रेजी',
-            homework_title: 'हाल का होमवर्क',
-            due_label: 'देय',
-            due_yesterday: 'कल',
-            due_tomorrow: 'कल',
-            due_2_days_ago: '2 दिन पहले',
-            status_submitted: 'प्रस्तुत',
-            status_pending: 'लंबित',
-            status_overdue: 'अतिदेय',
-            homework1_title: 'गणित: अध्याय 5 की समस्याएं',
-            homework2_title: 'विज्ञान: पादप कोशिका आरेख',
-            homework3_title: 'अंग्रेजी: "मेरा गाँव" पर निबंध',
-            attendance_title: 'उपस्थिति',
-            present_month_label: 'उपस्थित (इस महीने)',
-            this_week_label: 'यह सप्ताह',
-            day_mon: 'सोम',
-            day_tue: 'मंगल',
-            day_wed: 'बुध',
-            day_thu: 'गुरु',
-            day_fri: 'शुक्र',
-            footer_text: '© २०२५ एडुवाणी। ग्रामीण शिक्षा को सशक्त बनाना।',
-        });
-        translations['as'] = createTranslation({
-            login_title: 'ফোনৰ সহায়ত লগইন কৰক',
-            request_otp: 'ওটিপি অনুৰোধ কৰক',
-            verify_otp: 'ওটিপি যাচাই কৰক',
-            otp_info: 'লগইন কৰিবলৈ মক ওটিপি প্ৰবিষ্ট কৰক।',
-            role_modal_title: 'আপোনাৰ ভূমিকা বাছনি কৰক',
-            role_student: 'ছাত্ৰ',
-            role_teacher: 'শিক্ষক',
-            role_parent: 'অভিভাৱক',
-            switch_role_button: 'ভূমিকা সলনি কৰক',
-            welcome_message: 'নমস্কাৰ, প্ৰিয়ংকা!',
-            learning_message: 'আজি নতুন কিবা এটা শিকোঁ আহক!',
-            level_text: 'স্তৰ',
-            daily_quests_title: 'দৈনন্দিন কৰ্মসূচী',
-            leaderboard_title: 'লিডাৰবোর্ড',
-            badges_title: 'উপলব্ধি বেজ',
-            progress_title: 'মডিউল অগ্ৰগতি',
-            generate_quest_button: '✨ নতুন কৰ্ম নিৰ্মাণ কৰক',
-            read_aloud_button: '✨ শব্দেৰে পঢ়ক',
-            explain_concept_button: '✨ ধাৰণাটো বুজাই দিয়ক',
-            badge_star: 'গ্ৰাম তাৰকা',
-            badge_water: 'পানি যোদ্ধা',
-            badge_bookworm: 'বইপ্ৰেমী',
-            badge_locked: 'লকড',
-            start_button_text: 'আৰম্ভ কৰক',
-
-            seeds_title: 'বীজৰ প্ৰকাৰবোৰ জানক',
-            seeds_desc: 'স্থানীয় শস্য আৰু বীজসমূহৰ ওপৰত এটা ভিডিঅ’ চাওক।',
-            water_conservation_title: 'আমাৰ গাঁৱৰ খেতিলৈ পানি যোগান কৰক',
-            water_conservation_desc: 'সংৰক্ষণ সম্পৰ্কে জানিবলৈ খেতিক পানি যোগানৰ অনুকৰণ কৰক।',
-
-            math_quest_title: 'গণিত: ক্ষেত্ৰফল গণক',
-            math_quest_desc: 'গণিত মডিউলত আপুনি শস্য উৎপাদন গণনা কৰা, পানিৰ ব্যৱহাৰ মাপি চোৱা আৰু খেতিৰ বাবে বাজেট পৰিচালনা কৰা শিকিব।',
-
-            science_quest_title: 'বিজ্ঞান: আমাৰ পানীৰ উৎস',
-            science_quest_desc: 'এই বিজ্ঞান মডিউলত, আপুনি পানীৰ চক্র, গাঁওৰ পানীৰ বিভিন্ন উৎস আৰু সিহঁতক কেনেকৈ পৰিষ্কাৰ ৰাখিব সেইবোৰ শিকিব।',
-
-            history_quest_title: 'স্থানীয় ইতিহাস: আমাৰ গাঁওৰ বয়োজ্যেষ্ঠসকল',
-            history_quest_desc: 'স্থানীয় ইতিহাস মডিউলত আপুনি গাঁওৰ বয়োজ্যেষ্ঠসকলে কোৱা কাহিনী আৰু পৰম্পৰাবোৰ জানিব।',
-
-            not_yet_earned: 'এতিয়াও লাভ হোৱা নাই',
-            loading_quests: 'নতুন কৰ্ম নিৰ্মাণ কৰা হৈছে...',
-            loading_audio: 'অডিঅ’ ল’ড কৰা হৈছে...',
-            loading_explanation: 'ব্যাখ্যা প্ৰস্তুত কৰা হৈছে...',
-            loading_report: 'ক্লাছ প্ৰতিবেদন প্ৰস্তুত কৰা হৈছে...',
-            quest_generated_success: 'নতুন কৰ্ম নিৰ্মাণ হৈছে!',
-            quest_already_generated: 'এদিনত কেৱল এটা কৰ্ম নিৰ্মাণ কৰিব পাৰিব।',
-            no_text_to_read: 'পঢ়িবলৈ কোনো পাঠ নাই।',
-            xp_gained: '+{xp} XP!',
-            no_quests: 'কোনো কৰ্ম উপলব্ধ নাই। আৰম্ভ কৰিবলৈ এটা নিৰ্মাণ কৰক!',
-            voice_question_label: 'আপোনাৰ প্ৰশ্নটো কওক:',
-
-            teacher_dashboard_title: 'শিক্ষক ড্যাশব’ৰ্ড',
-            student_progress_title: 'ছাত্ৰৰ অগ্ৰগতি',
-            view_label: 'চাওক:',
-            view_option_summary: 'ক্লাছ সাৰাংশ',
-            view_option_all: 'সকলো ছাত্ৰ',
-            generate_report_button: 'প্ৰতিবেদন নিৰ্মাণ কৰক',
-            summary_title: 'ক্লাছৰ সামগ্ৰিক কাৰ্যক্ষমতা',
-            summary_avg_xp: 'গড় XP',
-            summary_avg_level: 'গড় স্তৰ',
-            summary_total_students: 'মুঠ ছাত্ৰ',
-            class_leaderboard_title: 'ক্লাছ লিডাৰবোর্ড',
-
-            reward_title: 'পুৰস্কাৰ আৰু স্বীকৃতি',
-            select_student_placeholder: 'এজন ছাত্ৰ বাছনি কৰক',
-            award_badge_button: 'বেজ প্ৰদান কৰক',
-
-            assignment_title: 'অ্যাসাইনমেন্ট পৰিচালনা',
-            module_title_label: 'মডিউল শিৰোনাম',
-            description_label: 'বিৱৰণ',
-            assign_to_label: 'দিয়ক:',
-            assign_all: 'সকলো ছাত্ৰ',
-            assign_group_a: 'দল A',
-            assign_group_b: 'দল B',
-            create_assignment_button: 'অ্যাসাইনমেন্ট নিৰ্মাণ কৰক',
-
-            notifications_title: 'অধিসূচনা আৰু সতৰ্কবাৰ্তা',
-            notification1: "নতুন মডিউল 'পানি সংৰক্ষণ' সকলো ছাত্ৰলৈ প্ৰেৰণ কৰা হৈছে!",
-            notification2: "ৰাজেশে 'পানি যোদ্ধা' বেজ অৰ্জন কৰিছে।",
-            notification3: "মীণাই 'গ্ৰাম তাৰকা' কৰ্ম সম্পূৰ্ণ কৰিছে।",
-
-            parent_welcome: 'নমস্কাৰ, অভিভাৱক!',
-            parent_greeting_morning: 'সুপ্ৰভাত, অভিভাৱক!',
-            parent_greeting_afternoon: 'শুভ দুপুর, অভিভাৱক!',
-            parent_greeting_evening: 'শুভ সন্ধ্যা, অভিভাৱক!',
-            parent_greeting_night: 'আশা কৰোঁ আপোনাৰ দিনটো অসাধাৰণ হৈছিল!',
-
-            child_dashboard_label: 'প্ৰিয়ংকাৰ ড্যাশব’ৰ্ড',
-            overall_progress_title: 'সামগ্ৰিক অগ্ৰগতি',
-            learning_level_label: 'শিকাৰ স্তৰ',
-            points_earned_label: 'পইণ্ট অৰ্জন',
-            badges_collected_label: 'বেজ সংগ্ৰহ',
-            subject_progress_title: 'বিষয়ৰ অগ্ৰগতি',
-            lessons_label: 'পাঠ',
-            subject_math: 'গণিত',
-            subject_science: 'বিজ্ঞান',
-            subject_english: 'ইংৰাজী',
-
-            homework_title: 'শেহতীয়া গৃহকাৰ্য্য',
-            due_label: 'সময়সীমা',
-            due_yesterday: 'কালি',
-            due_tomorrow: 'আজি পিছত',
-            due_2_days_ago: '২ দিন আগতে',
-            status_submitted: 'জমা দিয়া হৈছে',
-            status_pending: 'অপেক্ষাৰত',
-            status_overdue: 'সময় অতিক্ৰম',
-
-            homework1_title: 'গণিত: অধ্যায় ৫ৰ প্ৰশ্নসমূহ',
-            homework2_title: 'বিজ্ঞান: উদ্ভিদ কোষৰ আখ্যা',
-            homework3_title: 'ইংৰাজী: "মোৰ গাঁও"ৰ ওপৰত প্ৰবন্ধ',
-
-            attendance_title: 'উপস্থিতি',
-            present_month_label: 'উপস্থিতি (এই মাহত)',
-            this_week_label: 'এই সপ্তাহ',
-            day_mon: 'সোম',
-            day_tue: 'মঙ্গল',
-            day_wed: 'বুধ',
-            day_thu: 'বৃহ',
-            day_fri: 'শুক্ৰ',
-
-            footer_text: '© ২০২৫ এডুভাণী। গ্ৰাম্য শিক্ষা শক্তিশালীকৰণ।'  
-        });
-        translations['bn'] = createTranslation({
-            login_title: 'ফোন দিয়ে লগইন করুন',
-            request_otp: 'OTP অনুরোধ করুন',
-            verify_otp: 'OTP যাচাই করুন',
-            otp_info: 'লগ ইন করতে মক ওটিপি লিখুন।',
-            role_modal_title: 'আপনার ভূমিকা নির্বাচন করুন',
-            role_student: 'ছাত্র',
-            role_teacher: 'শিক্ষক',
-            role_parent: 'অভিভাবক',
-            switch_role_button: 'ভূমিকা পরিবর্তন করুন',
-            welcome_message: 'নমস্কার, প্রিয়াঙ্কা!',
-            learning_message: 'আসুন, আজ নতুন কিছু শিখি!',
-            level_text: 'স্তর',
-            daily_quests_title: 'দৈনিক কাজ',
-            leaderboard_title: 'লিডারবোর্ড',
-            badges_title: 'কৃতিত্বের ব্যাজ',
-            progress_title: 'মডিউল অগ্রগতি',
-            generate_quest_button: '✨ নতুন কাজ তৈরি করুন',
-            read_aloud_button: '✨ জোরে পড়ুন',
-            explain_concept_button: '✨ ধারণাটি ব্যাখ্যা করুন',
-            badge_star: 'গ্রামের তারকা',
-            badge_water: 'জল যোদ্ধা',
-            badge_bookworm: 'বইপোকা',
-            badge_locked: 'লক করা',
-            start_button_text: 'শুরু করুন',
-            seeds_title: 'বীজের প্রকার সম্পর্কে জানুন',
-            seeds_desc: 'স্থানীয় ফসল এবং তাদের বীজ নিয়ে একটি ভিডিও দেখুন।',
-            water_conservation_title: 'আমাদের গ্রামের জমিতে জল দিন',
-            water_conservation_desc: 'সংরক্ষণ সম্পর্কে জানতে ফসলকে জল দেওয়ার অনুকরণ করুন।',
-            math_quest_title: 'গণিত: ক্ষেত্র ক্যালকুলেটর',
-            math_quest_desc: 'গণিত মডিউল আপনাকে ফসলের ফলন গণনা করতে, জলের ব্যবহার পরিমাপ করতে এবং চাষের জন্য আপনার বাজেট পরিচালনা করতে শেখায়।',
-            science_quest_title: 'বিজ্ঞান: আমাদের জলের উৎস',
-            science_quest_desc: 'এই বিজ্ঞান মডিউলে, আপনি জলচক্র, আপনার গ্রামের বিভিন্ন ধরণের জলের উৎস এবং সেগুলি কীভাবে পরিষ্কার রাখতে হয় সে সম্পর্কে জানবেন।',
-            history_quest_title: 'স্থানীয় ইতিহাস: আমাদের গ্রামের প্রবীণরা',
-            history_quest_desc: 'স্থানীয় ইতিহাস মডিউলটি আপনার গ্রামের প্রবীণদের কাছ থেকে প্রাপ্ত গল্প এবং ঐতিহ্যগুলি অন্বেষণ করে।',
-            not_yet_earned: 'এখনও অর্জিত হয়নি',
-            loading_quests: 'নতুন কাজ তৈরি হচ্ছে...',
-            loading_audio: 'অডিও লোড হচ্ছে...',
-            loading_explanation: 'ব্যাখ্যা তৈরি হচ্ছে...',
-            loading_report: 'ক্লাসের রিপোর্ট তৈরি হচ্ছে...',
-            quest_generated_success: 'নতুন কাজ তৈরি হয়েছে!',
-            quest_already_generated: 'আপনি দিনে শুধুমাত্র একটি কাজ তৈরি করতে পারেন।',
-            no_text_to_read: 'পড়ার জন্য কোন লেখা নেই।',
-            xp_gained: '+{xp} XP!',
-            no_quests: 'কোন কাজ উপলব্ধ নেই। শুরু করতে একটি তৈরি করুন!',
-            voice_question_label: 'আপনার প্রশ্ন বলুন:',
-            teacher_dashboard_title: 'শিক্ষকের ড্যাশবোর্ড',
-            student_progress_title: 'ছাত্রের অগ্রগতি',
-            view_label: 'দেখুন:',
-            view_option_summary: 'ক্লাসের সারাংশ',
-            view_option_all: 'সমস্ত ছাত্র',
-            generate_report_button: 'রিপোর্ট তৈরি করুন',
-            summary_title: 'ক্লাসের সামগ্রিক পারফরম্যান্স',
-            summary_avg_xp: 'গড় XP',
-            summary_avg_level: 'গড় স্তর',
-            summary_total_students: 'মোট ছাত্র',
-            class_leaderboard_title: 'ক্লাসের লিডারবোর্ড',
-            reward_title: 'পুরস্কার এবং স্বীকৃতি',
-            select_student_placeholder: 'একজন ছাত্র নির্বাচন করুন',
-            award_badge_button: 'ব্যাজ প্রদান করুন',
-            assignment_title: 'অ্যাসাইনমেন্ট ম্যানেজমেন্ট',
-            module_title_label: 'মডিউল শিরোনাম',
-            description_label: 'বিবরণ',
-            assign_to_label: 'এদেরকে দিন:',
-            assign_all: 'সমস্ত ছাত্র',
-            assign_group_a: 'গ্রুপ এ',
-            assign_group_b: 'গ্রুপ বি',
-            create_assignment_button: 'অ্যাসাইনমেন্ট তৈরি করুন',
-            notifications_title: 'বিজ্ঞপ্তি এবং সতর্কতা',
-            notification1: "নতুন মডিউল 'জল সংরক্ষণ' সমস্ত ছাত্রদের দেওয়া হয়েছে!",
-            notification2: "রাজেশ 'জল যোদ্ধা' ব্যাজ অর্জন করেছে।",
-            notification3: "মীনা 'গ্রামের তারকা' কোয়েস্ট সম্পন্ন করেছে।",
-            parent_welcome: 'নমস্কার, অভিভাবক!',
-            parent_greeting_morning: 'সুপ্রভাত, অভিভাবক!',
-            parent_greeting_afternoon: 'শুভ বিকাল, অভিভাবক!',
-            parent_greeting_evening: 'শুভ সন্ধ্যা, অভিভাবক!',
-            parent_greeting_night: 'আশা করি আপনার দিনটি ভালো কেটেছে!',
-            child_dashboard_label: "প্রিয়াঙ্কা ড্যাশবোর্ড",
-            overall_progress_title: 'সামগ্রিক অগ্রগতি',
-            learning_level_label: 'শেখার স্তর',
-            points_earned_label: 'অর্জিত পয়েন্ট',
-            badges_collected_label: 'সংগৃহীত ব্যাজ',
-            subject_progress_title: 'বিষয় অগ্রগতি',
-            lessons_label: 'পাঠ',
-            subject_math: 'গণিত',
-            subject_science: 'বিজ্ঞান',
-            subject_english: 'ইংরেজি',
-            homework_title: 'সাম্প্রতিক হোমওয়ার্ক',
-            due_label: 'দেয়',
-            due_yesterday: 'গতকাল',
-            due_tomorrow: 'আগামীকাল',
-            due_2_days_ago: '২ দিন আগে',
-            status_submitted: 'জমা দেওয়া হয়েছে',
-            status_pending: 'বিচারাধীন',
-            status_overdue: 'বিলম্বিত',
-            homework1_title: 'গণিত: অধ্যায় ৫ এর সমস্যা',
-            homework2_title: 'বিজ্ঞান: উদ্ভিদ কোষের চিত্র',
-            homework3_title: 'ইংরেজি: "আমার গ্রাম" উপর প্রবন্ধ',
-            attendance_title: 'উপস্থিতি',
-            present_month_label: 'উপস্থিত (এই মাসে)',
-            this_week_label: 'এই সপ্তাহ',
-            day_mon: 'সোম',
-            day_tue: 'মঙ্গল',
-            day_wed: 'বুধ',
-            day_thu: 'বৃহস্পতি',
-            day_fri: 'শুক্র',
-            footer_text: '© ২০২৫ এডুবাণী। গ্রামীণ শিক্ষাকে শক্তিশালী করা।',
-        });
-        translations['brx'] = createTranslation({
-            role_modal_title: 'नोंनि भुमिकाखौ सायख’', role_student: 'फरायसा', role_teacher: 'मास्टर', role_parent: 'अभिभावक', welcome_message: 'खुलुमबाय, प्रियंका!', footer_text: '© २०२५ एडुबाणी। गामिआरि सोलोंथाइखौ गोख्रों खालामनाय।', teacher_dashboard_title: 'मास्टरनि डेश्बर्ड', parent_welcome: 'खुलुमबाय, अभिभावक!', child_dashboard_label: "प्रियंका डेश्बर्ड",
-        });
-        translations['doi'] = createTranslation({
-            role_modal_title: 'अपनी भूमिका चुनो', role_student: 'विद्यार्थी', role_teacher: 'अध्यापक', role_parent: 'माਪिਓ', welcome_message: 'नमस्ते, प्रियंका!', footer_text: '© २०२५ एडुवाणी। ग्रामीण शिक्षा गी सशक्त बनाओआ।', teacher_dashboard_title: 'अध्यापक दा डैशबोर्ड', parent_welcome: 'नमस्ते, माँ-प्यो!', child_dashboard_label: "प्रियंका दा डैशबोर्ड",
-        });
-        translations['gu'] = createTranslation({
-            login_title: 'ફોન દ્વારા લૉગિન કરો',
-            request_otp: 'ઓટીપી માંગો',
-            verify_otp: 'ઓટીપી ચકાસો',
-            otp_info: 'લૉગિન કરવા માટે મૉક ઓટીપી દાખલ કરો.',
-            role_modal_title: 'તમારી ભૂમિકા પસંદ કરો',
-            role_student: 'વિદ્યાર્થી',
-            role_teacher: 'શિક્ષક',
-            role_parent: 'વાલી',
-            switch_role_button: 'ભૂમિકા બદલો',
-            welcome_message: 'નમસ્તે, પ્રિયંકા!',
-            learning_message: 'આવો, આજે કંઈક નવું શીખીએ!',
-            level_text: 'સ્તર',
-            daily_quests_title: 'દૈનિક કાર્ય',
-            leaderboard_title: 'લીડરબોર્ડ',
-            badges_title: 'સફળતા બેજ',
-            progress_title: 'મોડ્યુલ પ્રગતિ',
-            generate_quest_button: '✨ નવું કાર્ય બનાવો',
-            read_aloud_button: '✨ વાંચી બતાવો',
-            explain_concept_button: '✨ સમજાવો',
-            badge_star: 'ગામનો તારો',
-            badge_water: 'જળ યુદ્ધા',
-            badge_bookworm: 'પુસ્તકપ્રેમી',
-            badge_locked: 'લૉક કર્યું',
-            start_button_text: 'શરૂ કરો',
-
-            seeds_title: 'બીજના પ્રકારો જાણો',
-            seeds_desc: 'સ્થાનિક પાક અને તેમના બીજ પર વિડિયો જુઓ.',
-            water_conservation_title: 'અમારા ગામના ખેતરોને પાણી આપો',
-            water_conservation_desc: 'જળ સંરક્ષણ વિશે શીખવા માટે ખેતરને પાણી આપવાનો અનુભવ કરો.',
-
-            math_quest_title: 'ગણિત: વિસ્તાર કેલ્ક્યુલેટર',
-            math_quest_desc: 'ગણિત મોડ્યુલ તમને પાકનું ઉત્પાદન ગણવું, પાણીનો ઉપયોગ માપવું અને ખેતી માટે બજેટ સંચાલન શીખવે છે.',
-
-            science_quest_title: 'વિજ્ઞાન: આપણા જળસ્રોતો',
-            science_quest_desc: 'આ વિજ્ઞાન મોડ્યુલમાં, તમે પાણી ચક્ર, ગામના વિવિધ જળસ્રોતો અને તેમને કેવી રીતે સ્વચ્છ રાખવા તે વિશે શીખશો.',
-
-            history_quest_title: 'સ્થાનિક ઇતિહાસ: અમારા ગામના વડીલો',
-            history_quest_desc: 'સ્થાનિક ઇતિહાસ મોડ્યુલ તમારા ગામના વડીલો દ્વારા કહેવામાં આવેલી વાર્તાઓ અને પરંપરાઓને શોધે છે.',
-
-            not_yet_earned: 'હજુ સુધી પ્રાપ્ત નથી',
-            loading_quests: 'નવું કાર્ય બનાવી રહ્યું છે...',
-            loading_audio: 'ઑડિયો લોડ થઈ રહ્યું છે...',
-            loading_explanation: 'સમજાવટ તૈયાર થઈ રહી છે...',
-            loading_report: 'વર્ગ રિપોર્ટ તૈયાર થઈ રહ્યો છે...',
-            quest_generated_success: 'નવું કાર્ય બનાવાયું!',
-            quest_already_generated: 'તમે એક દિવસમાં ફક્ત એક કાર્ય બનાવી શકો છો.',
-            no_text_to_read: 'વાંચવા માટે કોઈ લખાણ નથી.',
-            xp_gained: '+{xp} XP!',
-            no_quests: 'કોઈ કાર્ય ઉપલબ્ધ નથી. શરૂ કરવા માટે કાર્ય બનાવો!',
-            voice_question_label: 'તમારો પ્રશ્ન બોલો:',
-
-            teacher_dashboard_title: 'શિક્ષક ડેશબોર્ડ',
-            student_progress_title: 'વિદ્યાર્થી પ્રગતિ',
-            view_label: 'જોવું:',
-            view_option_summary: 'વર્ગ સારાંશ',
-            view_option_all: 'બધા વિદ્યાર્થીઓ',
-            generate_report_button: 'રિપોર્ટ બનાવો',
-            summary_title: 'વર્ગની કુલ કામગીરી',
-            summary_avg_xp: 'સરેરાશ XP',
-            summary_avg_level: 'સરેરાશ સ્તર',
-            summary_total_students: 'કુલ વિદ્યાર્થીઓ',
-            class_leaderboard_title: 'વર્ગ લીડરબોર્ડ',
-
-            reward_title: 'ઇનામ અને માન્યતા',
-            select_student_placeholder: 'વિદ્યાર્થી પસંદ કરો',
-            award_badge_button: 'બેજ આપો',
-
-            assignment_title: 'સોંપણી વ્યવસ્થાપન',
-            module_title_label: 'મોડ્યુલ શીર્ષક',
-            description_label: 'વર્ણન',
-            assign_to_label: 'સોંપવું:',
-            assign_all: 'બધા વિદ્યાર્થીઓ',
-            assign_group_a: 'સમૂહ A',
-            assign_group_b: 'સમૂહ B',
-            create_assignment_button: 'સોંપણી બનાવો',
-
-            notifications_title: 'સૂચનાઓ અને ચેતવણીઓ',
-            notification1: "નવું મોડ્યુલ 'જળ સંરક્ષણ' બધા વિદ્યાર્થીઓને સોંપવામાં આવ્યું!",
-            notification2: "રાજેશે 'જળ યુદ્ધા' બેજ જીત્યો.",
-            notification3: "મીનાએ 'ગામનો તારો' કાર્ય પૂર્ણ કર્યું.",
-
-            parent_welcome: 'નમસ્તે, વાલી!',
-            parent_greeting_morning: 'સુપ્રભાત, વાલી!',
-            parent_greeting_afternoon: 'શુભ બપોર, વાલી!',
-            parent_greeting_evening: 'શુભ સાંજ, વાલી!',
-            parent_greeting_night: 'આશા છે કે તમારો દિવસ સુંદર ગયો હશે!',
-
-            child_dashboard_label: 'પ્રિયંકાનું ડેશબોર્ડ',
-            overall_progress_title: 'કુલ પ્રગતિ',
-            learning_level_label: 'શિક્ષણ સ્તર',
-            points_earned_label: 'અંક મેળવ્યા',
-            badges_collected_label: 'બેજ એકત્રિત કર્યા',
-            subject_progress_title: 'વિષય પ્રગતિ',
-            lessons_label: 'પાઠો',
-            subject_math: 'ગણિત',
-            subject_science: 'વિજ્ઞાન',
-            subject_english: 'અંગ્રેજી',
-
-            homework_title: 'તાજેતરનું હોમવર્ક',
-            due_label: 'સમયમર્યાદા',
-            due_yesterday: 'ગઈકાલે',
-            due_tomorrow: 'કાલે',
-            due_2_days_ago: '2 દિવસ પહેલા',
-            status_submitted: 'સબમિટ કર્યું',
-            status_pending: 'બાકી છે',
-            status_overdue: 'મિયાદ પૂરી થઈ',
-
-            homework1_title: 'ગણિત: અધ્યાય 5 ના પ્રશ્નો',
-            homework2_title: 'વિજ્ઞાન: છોડના કોષનું આલેખન',
-            homework3_title: 'અંગ્રેજી: "મારું ગામ" પર નિબંધ',
-
-            attendance_title: 'હાજરી',
-            present_month_label: 'હાજરી (આ મહિને)',
-            this_week_label: 'આ અઠવાડિયું',
-            day_mon: 'સોમ',
-            day_tue: 'મંગળ',
-            day_wed: 'બુધ',
-            day_thu: 'ગુરૂ',
-            day_fri: 'શુક્ર',
-
-            footer_text: '© ૨૦૨૫ એડુવાણી. ગ્રામ્ય શિક્ષણને સશક્ત બનાવવું.'
-        });
-        translations['kn'] = createTranslation({
-            role_modal_title: 'ನಿಮ್ಮ ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ', role_student: 'ವಿದ್ಯಾರ್ಥಿ', role_teacher: 'ಶಿಕ್ಷಕ', role_parent: 'ಪೋಷಕ', welcome_message: 'ನಮಸ್ಕಾರ, ಪ್ರಿಯಾಂಕಾ!', footer_text: '© ೨೦೨೫ ಎಡುವಾಣಿ. ಗ್ರಾಮೀಣ ಕಲಿಕೆಯನ್ನು ಸಶಕ್ತಗೊಳಿಸುವುದು.', teacher_dashboard_title: 'ಶಿಕ್ಷಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್', parent_welcome: 'ಸ್ವಾಗತ, ಪೋಷಕ!', child_dashboard_label: "ಪ್ರಿಯಾಂಕಾ ಅವರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
-        });
-        translations['ks'] = createTranslation({
-            role_modal_title: 'پنُن کردار ژارٕنؠ', role_student: 'طٲلبہِ عٔلِم', role_teacher: 'اُستاد', role_parent: 'مول موج', welcome_message: 'آدا̱ب , پرینکا!', footer_text: '© ۲۰۲۵ ایجوانی۔ ગ્રામیણ تٲلیٖم مضبوٗط بناوُن۔', teacher_dashboard_title: 'استاد سُنٛد ڈیش بورڈ', parent_welcome: 'خوش آمدید, والدین!', child_dashboard_label: "  روہن سُنٛد ڈیش بورڈ",
-        });
-        translations['kok'] = createTranslation({
-            role_modal_title: 'तुमची भूमिका निवडा', role_student: 'विद्यार्थी', role_teacher: 'शिक्षक', role_parent: 'पालक', welcome_message: 'नमस्कार, प्रियंका!', footer_text: '© २०२५ एडुवाणी. ग्रामीण शिक्षणाक सक्षमीकरण.', teacher_dashboard_title: 'शिक्षक डॅशबोर्ड', parent_welcome: 'येवकार, पालक!', child_dashboard_label: "रोहनचो डॅशबोर्ड",
-        });
-        translations['mai'] = createTranslation({
-            role_modal_title: 'अपन भूमिका चुनु', role_student: 'विद्यार्थी', role_teacher: 'शिक्षक', role_parent: 'अभिभावक', welcome_message: 'प्रणाम, प्रियंका!', footer_text: '© २०२५ एडुवाणी। ग्रामीण शिक्षा के सशक्तिकरण।', teacher_dashboard_title: 'शिक्षक डैशबोर्ड', parent_welcome: 'स्वागत अछि, अभिभावक!', child_dashboard_label: "प्रियंका डैशबोर्ड",
-        });
-        translations['ml'] = createTranslation({
-            role_modal_title: 'നിങ്ങളുടെ പങ്ക് തിരഞ്ഞെടുക്കുക', role_student: 'വിദ്യാർത്ഥി', role_teacher: 'അധ്യാപകൻ', role_parent: 'രക്ഷകർത്താവ്', welcome_message: 'നമസ്കാരം, പ്രിയങ്ക!', footer_text: '© 2025 എഡുവാണി. ഗ്രാമീണ പഠനത്തെ ശാക്തീകരിക്കുന്നു.', teacher_dashboard_title: 'അധ്യാപകന്റെ ഡാഷ്‌ബോർഡ്', parent_welcome: 'സ്വാഗതം, രക്ഷിതാവേ!', child_dashboard_label: "രോഹന്റെ ഡാഷ്‌ബോർഡ്",
-        });
-        translations['mni'] = createTranslation({
-            role_modal_title: 'নহাক্কী থৌদাং খনবীয়ু', role_student: 'মহৈরোই', role_teacher: 'ওজা', role_parent: 'মমা-মপা', welcome_message: 'খুরুমজরি, প্রিয়ঙ্কা!', footer_text: '© ২০২১ এদুৱানি। খুঙ্গংগী মহৈ-মশিংদা শক্তি পীব।', teacher_dashboard_title: 'ওজাশিংগী ডেশবোর্ড', parent_welcome: 'তরাম্না ওকচরি, মমা-মপা!', child_dashboard_label: "রোহনগী ডেশবোর্ড",
-        });
-        translations['mr'] = createTranslation({
-            role_modal_title: 'तुमची भूमिका निवडा', role_student: 'विद्यार्थी', role_teacher: 'शिक्षक', role_parent: 'पालक', welcome_message: 'नमस्कार, प्रियंका!', footer_text: '© २०२५ एडुवाणी. ग्रामीण शिक्षणाचे सक्षमीकरण.', teacher_dashboard_title: 'शिक्षक डॅशबोर्ड', parent_welcome: 'स्वागत आहे, पालक!', child_dashboard_label: "प्रियंकाचे डॅशबोर्ड",
-        });
-        translations['ne'] = createTranslation({
-            role_modal_title: 'आफ्नो भूमिका छान्नुहोस्', role_student: 'विद्यार्थी', role_teacher: 'शिक्षक', role_parent: 'अभिभावक', welcome_message: 'नमस्ते, प्रियंका!', footer_text: '© २०२५ एडुवाणी। ग्रामीण शिक्षालाई सशक्त बनाउँदै।', teacher_dashboard_title: 'शिक्षक ड्यासबोर्ड', parent_welcome: 'स्वागत छ, अभिभावक!', child_dashboard_label: "प्रियंकाको ड्यासबोर्ड",
-        });
-        translations['or'] = createTranslation({
-            role_modal_title: 'ଆପଣଙ୍କ ଭୂମିକା ବାଛନ୍ତୁ', role_student: 'ଛାତ୍ର', role_teacher: 'ଶିକ୍ଷକ', role_parent: 'ଅଭିଭାବକ', welcome_message: 'ନମସ୍କାର, ପ୍ରିୟଙ୍କା!', footer_text: '© ୨୦୨୫ ଏଡୁବାଣୀ। ଗ୍ରାମୀଣ ଶିକ୍ଷାକୁ ସଶକ୍ତ କରିବା।', teacher_dashboard_title: 'ଶିକ୍ଷକ ଡ୍ୟାସବୋର୍ଡ', parent_welcome: 'ସ୍ୱାଗତ, ଅଭିଭାବକ!', child_dashboard_label: "ରୋହନଙ୍କ ଡ୍ୟାସବୋର୍ଡ",
-        });
-        translations['pa'] = createTranslation({
-            role_modal_title: 'ਆਪਣੀ ਭੂਮਿਕਾ ਚੁਣੋ', role_student: 'ਵਿਦਿਆਰਥੀ', role_teacher: 'ਅਧਿਆਪਕ', role_parent: 'ਮਾਪੇ', welcome_message: 'ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ, ਪ੍ਰਿਅੰਕਾ!', footer_text: '© 2025 ਐਜੂਵਾਣੀ। ਪੇਂਡੂ ਸਿਖਲਾਈ ਨੂੰ ਸ਼ਕਤੀ ਪ੍ਰਦਾਨ ਕਰਨਾ।', teacher_dashboard_title: 'ਅਧਿਆਪਕ ਡੈਸ਼ਬੋਰਡ', parent_welcome: 'ਜੀ ਆਇਆਂ ਨੂੰ, ਮਾਪਿਓ!', child_dashboard_label: "ਰੋਹਨ ਦਾ ਡੈਸ਼ਬੋਰਡ",
-        });
-        translations['sa'] = createTranslation({
-            role_modal_title: 'स्वभूमिकां चिनोतु', role_student: 'छात्रः', role_teacher: 'शिक्षकः', role_parent: 'पालकः', welcome_message: 'नमस्ते, प्रियंका!', footer_text: '© २०२५ एडुवाणी। ग्रामीणशिक्षणस्य सशक्तीकरणम्।', teacher_dashboard_title: 'शिक्षकस्य सूचनाफलकम्', parent_welcome: 'स्वागतम्, पालक!', child_dashboard_label: "प्रियंकास्य सूचनाफलकम्",
-        });
-        translations['sat'] = createTranslation({
-            role_modal_title: 'ᱟᱢᱟᱜ ᱠᱟᱹᱢᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ', role_student: 'ᱯᱟᱹଠᱩᱣᱟᱹ', role_teacher: 'ᱢᱟᱪᱮᱫ', role_parent: 'ᱜᱚᱜᱚ-ᱵᱟᱵᱟ', welcome_message: 'ᱡᱚᱦᱟᱨ, ᱯᱨᱤᱭᱚᱝᱠᱟ!', footer_text: '© 2025 ᱮᱰᱩᱣᱟᱬᱤ᱿ ᱟᱹᱛᱩ ᱚᱱᱪᱚᱞ ᱨᱮᱱ ᱥᱮᱪᱮᱫ ᱫᱟᱲᱮ ᱮᱢᱚᱜ᱿', teacher_dashboard_title: 'माचेद डासबोर्ड', parent_welcome: 'जोहार, गोगो-बाबा!', child_dashboard_label: "प्रियंकाअः डासबोर्ड",
-        });
-        translations['sd'] = createTranslation({
-            role_modal_title: 'پنهنجو ڪردار چونڊيو', role_student: 'شاگرد', role_teacher: 'استاد', role_parent: 'والدين', welcome_message: 'नमस्कार, प्रियंका!', footer_text: '© 2025 ايڊوواڻي. ڳوٺاڻي سکيا کي با اختيار بڻائڻ.', teacher_dashboard_title: 'استاد ڊيش بورڊ', parent_welcome: 'ڀلي ڪري آيا، والدين!', child_dashboard_label: "روهن جو ڊيش بورڊ",
-        });
-        translations['ta'] = createTranslation({
-            role_modal_title: 'உங்கள் பங்கைத் தேர்ந்தெடுக்கவும்', role_student: 'மாணவர்', role_teacher: 'ஆசிரியர்', role_parent: 'பெற்றோர்', welcome_message: 'வணக்கம், பிரியங்கா!', footer_text: '© 2025 எடுவாணி. கிராமப்புற கற்றலை மேம்படுத்துதல்.', teacher_dashboard_title: 'ஆசிரியர் டாஷ்போர்டு', parent_welcome: 'வருக, பெற்றோர்!', child_dashboard_label: "ரோஹனின் டாஷ்போர்டு",
-        });
-        translations['te'] = createTranslation({
-            role_modal_title: 'మీ పాత్రను ఎంచుకోండి', role_student: 'విద్యార్థి', role_teacher: 'ఉపాధ్యాయుడు', role_parent: 'తల్లిదండ్రులు', welcome_message: 'నమస్കാരം, ప్రియాంక!', footer_text: '© 2025 எடுவானি. గ్రామీణ అభ్యాస సాధికారత.', teacher_dashboard_title: 'ఉపాధ్యాయ డ్యాష్‌బోర్డ్', parent_welcome: 'స్వాగతం, తల్లిదండ్రులారా!', child_dashboard_label: "రోహన్ డ్యాష్‌బోర్డ్",
-        });
-        translations['ur'] = createTranslation({
-            role_modal_title: 'اپنا کردار منتخب کریں', role_student: 'طالب علم', role_teacher: 'استاد', role_parent: 'والدین', welcome_message: 'آداب, پرینکا!', footer_text: '© 2025 ایڈیونی۔ دیہی تعلیم کو بااختیار بنانا۔', teacher_dashboard_title: 'استاد کا ڈیش بورڈ', parent_welcome: 'خوش آمدید، والدین!', child_dashboard_label: "روہن کا ڈیش بورڈ",
-        });
-
+        let translations = {};
+        
 
         // --- Message Box Utility ---
         function showMessage(text, type = 'success') {
@@ -1690,7 +1128,7 @@
                 container.style.opacity = '0';
             }, 3000);
         }
-       
+        
         // Helper function for Base64 to ArrayBuffer conversion
         function base64ToArrayBuffer(base64) {
             const binaryString = window.atob(base64);
@@ -1744,21 +1182,21 @@
             }
             quests.forEach(quest => {
                 const questHtml = `
-                    <div class="bg-gray-50 rounded-lg p-8 flex flex-col sm:flex-row items-center justify-between hover:bg-gray-100 transition-colors duration-200">
-                        <div>
-                            <div class="font-extrabold text-2xl text-gray-900 mb-2">${t[`${quest.id}_title`] || quest.id}</div>
-                            <p class="text-lg text-gray-600">${t[`${quest.id}_desc`] || ''}</p>
+                        <div class="bg-gray-50 rounded-lg p-8 flex flex-col sm:flex-row items-center justify-between hover:bg-gray-100 transition-colors duration-200">
+                            <div>
+                                <div class="font-extrabold text-2xl text-gray-900 mb-2">${t[`${quest.id}_title`] || quest.id}</div>
+                                <p class="text-lg text-gray-600">${t[`${quest.id}_desc`] || ''}</p>
+                            </div>
+                            <div class="mt-6 sm:mt-0 flex items-center space-x-4">
+                                <span class="text-yellow-600 font-bold text-2xl">+${quest.xp} XP</span>
+                                <button class="bg-blue-500 text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg explain-quest-btn" data-desc="${t[`${quest.id}_desc`] || ''}">
+                                    <span>${t.explain_concept_button}</span>
+                                </button>
+                                <button class="btn-start text-white text-lg px-8 py-4 rounded-full font-bold shadow-lg student-start-quest-btn" data-xp="${quest.xp}">
+                                    <span>${t.start_button_text}</span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="mt-6 sm:mt-0 flex items-center space-x-4">
-                            <span class="text-yellow-600 font-bold text-2xl">+${quest.xp} XP</span>
-                            <button class="bg-blue-500 text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg explain-quest-btn" data-desc="${t[`${quest.id}_desc`] || ''}">
-                                <span>${t.explain_concept_button}</span>
-                            </button>
-                            <button class="btn-start text-white text-lg px-8 py-4 rounded-full font-bold shadow-lg student-start-quest-btn" data-xp="${quest.xp}">
-                                <span>${t.start_button_text}</span>
-                            </button>
-                        </div>
-                    </div>
                 `;
                 questList.insertAdjacentHTML('beforeend', questHtml);
             });
@@ -1777,13 +1215,13 @@
                 const nameClass = 'text-gray-900';
                 const xpClass = isCurrentUser ? 'font-extrabold text-emerald-700 text-2xl' : 'font-semibold text-gray-600 text-xl';
                 const listItemHtml = `
-                    <li class="${itemClass}">
-                        <div class="flex items-center space-x-5">
-                            <span class="${rankClass}">#${index + 1}</span>
-                            <span class="${nameClass}">${user.name}</span>
-                        </div>
-                        <span class="${xpClass}">${user.xp} XP</span>
-                    </li>
+                        <li class="${itemClass}">
+                            <div class="flex items-center space-x-5">
+                                <span class="${rankClass}">#${index + 1}</span>
+                                <span class="${nameClass}">${user.name}</span>
+                            </div>
+                            <span class="${xpClass}">${user.xp} XP</span>
+                        </li>
                 `;
                 leaderboardList.insertAdjacentHTML('beforeend', listItemHtml);
             });
@@ -1802,12 +1240,12 @@
                 const nameKey = badge.id;
                 const name = t[`badge_${nameKey}`] || t[`badge_locked`];
                 const badgeHtml = `
-                    <div class="flex flex-col items-center transform transition-transform duration-200 hover:scale-110 group ${opacity}">
-                        <div class="w-24 h-24 rounded-full ${bgColor} flex items-center justify-center ${textColor} text-5xl ${ringColor} transition-all duration-200 shadow-lg">
-                            <i class="${icon}"></i>
+                        <div class="flex flex-col items-center transform transition-transform duration-200 hover:scale-110 group ${opacity}">
+                            <div class="w-24 h-24 rounded-full ${bgColor} flex items-center justify-center ${textColor} text-5xl ${ringColor} transition-all duration-200 shadow-lg">
+                                <i class="${icon}"></i>
+                            </div>
+                            <span class="mt-4 text-lg text-center font-semibold text-gray-700">${name}</span>
                         </div>
-                        <span class="mt-4 text-lg text-center font-semibold text-gray-700">${name}</span>
-                    </div>
                 `;
                 badgesGrid.insertAdjacentHTML('beforeend', badgeHtml);
             });
@@ -1819,23 +1257,23 @@
             const t = translations[lang] || translations['en'];
             modules.forEach(module => {
                 const moduleHtml = `
-                    <div id="module-${module.color}">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="font-bold text-2xl text-gray-900">${t[`${module.id}_quest_title`]}</span>
-                            <span class="text-lg text-gray-600">${module.progress}%</span>
+                        <div id="module-${module.color}">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-2xl text-gray-900">${t[`${module.id}_quest_title`]}</span>
+                                <span class="text-lg text-gray-600">${module.progress}%</span>
+                            </div>
+                            <div class="progress-bar mb-4">
+                                <div class="progress-fill bg-gradient-to-r from-${module.color}-500 to-${module.color}-500" style="width: ${module.progress}%;"></div>
+                            </div>
+                            <button class="read-aloud-btn bg-${module.color}-100 text-${module.color}-600 text-lg px-5 py-2 rounded-full font-semibold hover:bg-${module.color}-200 transition-colors duration-200" data-text="${t[`${module.id}_quest_desc`]}">
+                                <span>${t.read_aloud_button}</span>
+                            </button>
                         </div>
-                        <div class="progress-bar mb-4">
-                            <div class="progress-fill bg-gradient-to-r from-${module.color}-500 to-${module.color}-500" style="width: ${module.progress}%;"></div>
-                        </div>
-                        <button class="read-aloud-btn bg-${module.color}-100 text-${module.color}-600 text-lg px-5 py-2 rounded-full font-semibold hover:bg-${module.color}-200 transition-colors duration-200" data-text="${t[`${module.id}_quest_desc`]}">
-                            <span>${t.read_aloud_button}</span>
-                        </button>
-                    </div>
                 `;
                 moduleList.insertAdjacentHTML('beforeend', moduleHtml);
             });
         }
-       
+        
         function checkLevelUp() {
             while (studentData.xp >= studentData.nextLevelXp) {
                 studentData.level++;
@@ -1844,7 +1282,7 @@
                 showMessage(`Level Up! You are now Level ${studentData.level}!`, 'success');
             }
         }
-       
+        
         // --- API & Firestore Functions for Student Dashboard ---
         async function updateStudentLeaderboardData(user) {
             if (!db || !userId) {
@@ -2056,7 +1494,7 @@
             const lang = localStorage.getItem('userLanguage') || 'en';
             const t = translations[lang] || translations['en'];
             showMessage(t.loading_report);
-           
+            
             if (!isGeminiPlatform) {
                 document.getElementById('teacher-report-text').textContent = "This is a mock report generated for local development. The class is doing great, with top performers setting a good example. Let's focus on improving 'Local History' with more interactive lessons.";
                 showMessage('Mock report generated successfully!', 'success');
@@ -2065,7 +1503,7 @@
             }
 
             const prompt = `Based on the following student data, generate a concise, encouraging, and actionable class report for the teacher. Highlight the overall class performance, mention top-performing students, and identify a general area for improvement. The data is as follows: ${JSON.stringify(students)}.`;
-           
+            
             try {
                 const payload = {
                     contents: [{ parts: [{ text: prompt }] }],
@@ -2124,19 +1562,19 @@
                     const progressColor = student.progress >= 100 ? 'bg-green-500' : (student.progress > 0 ? 'bg-yellow-400' : 'bg-red-500');
                     const progressHtml = `<div class="progress-bar"><div class="progress-fill ${progressColor}" style="width: ${student.progress}%;"></div></div>`;
                     const studentHtml = `
-                        <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl">
-                            <div class="w-12 h-12 rounded-full bg-indigo-200 flex items-center justify-center font-bold text-indigo-700">
-                                ${student.name.charAt(0).toUpperCase()}
+                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl">
+                                <div class="w-12 h-12 rounded-full bg-indigo-200 flex items-center justify-center font-bold text-indigo-700">
+                                    ${student.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold">${student.name}</h3>
+                                    <p class="text-sm text-gray-500">Level: ${student.level}</p>
+                                </div>
+                                <div class="flex-1">
+                                    ${progressHtml}
+                                    <p class="text-sm text-right mt-1 font-semibold">${student.progress}%</p>
+                                </div>
                             </div>
-                            <div class="flex-1">
-                                <h3 class="text-lg font-bold">${student.name}</h3>
-                                <p class="text-sm text-gray-500">Level: ${student.level}</p>
-                            </div>
-                            <div class="flex-1">
-                                ${progressHtml}
-                                <p class="text-sm text-right mt-1 font-semibold">${student.progress}%</p>
-                            </div>
-                        </div>
                     `;
                     list.insertAdjacentHTML('beforeend', studentHtml);
                 });
@@ -2149,13 +1587,13 @@
             sortedStudents.forEach((student, index) => {
                 const rank = index + 1;
                 const itemHtml = `
-                    <li class="flex items-center justify-between p-4 rounded-xl bg-yellow-50 hover:bg-yellow-100 transition-colors">
-                        <div class="flex items-center space-x-4">
-                            <span class="text-xl font-bold text-yellow-600">#${rank}</span>
-                            <span class="text-lg font-semibold">${student.name}</span>
-                        </div>
-                        <span class="text-lg font-bold text-gray-700">${student.xp} XP</span>
-                    </li>
+                        <li class="flex items-center justify-between p-4 rounded-xl bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xl font-bold text-yellow-600">#${rank}</span>
+                                <span class="text-lg font-semibold">${student.name}</span>
+                            </div>
+                            <span class="text-lg font-bold text-gray-700">${student.xp} XP</span>
+                        </li>
                 `;
                 list.insertAdjacentHTML('beforeend', itemHtml);
             });
@@ -2165,10 +1603,10 @@
             grid.innerHTML = '';
             teacherBadges.forEach(badge => {
                 const badgeHtml = `
-                    <div class="flex flex-col items-center cursor-pointer p-2 rounded-xl hover:bg-white transition-colors" data-badge-id="${badge.id}">
-                        <i class="${badge.icon} ${badge.color} badge-icon"></i>
-                        <span class="text-xs font-semibold mt-1 text-center">${badge.name}</span>
-                    </div>
+                        <div class="flex flex-col items-center cursor-pointer p-2 rounded-xl hover:bg-white transition-colors" data-badge-id="${badge.id}">
+                            <i class="${badge.icon} ${badge.color} badge-icon"></i>
+                            <span class="text-xs font-semibold mt-1 text-center">${badge.name}</span>
+                        </div>
                 `;
                 grid.insertAdjacentHTML('beforeend', badgeHtml);
             });
@@ -2190,7 +1628,7 @@
             const lang = localStorage.getItem('userLanguage') || 'en';
             const t = translations[lang] || translations['en'];
             let message = t[messageKey] || messageKey;
-           
+            
             // Replace placeholders like {name} or {badge}
             Object.keys(context).forEach(key => {
                 message = message.replace(`{${key}}`, context[key]);
@@ -2218,7 +1656,7 @@
 
             // Show role switch button
             document.getElementById('role-switch-btn').classList.remove('hidden');
-           
+            
             if (role === 'student') {
                 document.getElementById('student-dashboard').classList.remove('hidden');
                 initStudentDashboard();
@@ -2239,7 +1677,7 @@
                 setRole('student');
             }
         }
-       
+        
         async function createMockStudents() {
             const mockStudents = [
                 { name: 'Ravi', level: 5, xp: 1200, progress: 85, badges: ['helping-hand'], id: 'ravi-1' },
@@ -2262,7 +1700,7 @@
                 }
             }
         }
-       
+        
         async function initStudentDashboard() {
             await fetchInitialStudentData();
             updateStudentUI(); // This will handle all translations and rendering for the student dashboard
@@ -2279,7 +1717,7 @@
                 renderStudentLeaderboard(defaultLeaderboard);
             });
         }
-       
+        
         async function initTeacherDashboard() {
             const lang = localStorage.getItem('userLanguage') || 'en';
             translateTeacherDashboard(lang); // Translate static elements first
@@ -2289,7 +1727,7 @@
             addNotification('notification1');
             addNotification('notification2');
             addNotification('notification3');
-           
+            
             if (!isGeminiPlatform) {
                 renderTeacherStudentProgress();
                 renderTeacherLeaderboard();
@@ -2336,16 +1774,24 @@
                 greetingMessage.textContent = t.parent_greeting_night;
             }
         }
-       
+        
         async function initializeAppAndAuth() {
-            try {
-                populateLanguageSelectors();
-               
-                if (!isGeminiPlatform) {
-                    console.warn("Not on Gemini platform. Using mock Firebase config.");
-                    document.getElementById('login-modal').classList.remove('hidden');
-                    return;
-                }
+        try {
+            // Nayi file se translations load karein
+            const response = await fetch('translations.json');
+            if (!response.ok) {
+                throw new Error('translations.json file not found');
+            }
+            translations = await response.json(); // Data ko 'translations' object mein daalein
+
+            // Ab baaki ka code chalayen
+            populateLanguageSelectors();
+            
+            if (!isGeminiPlatform) {
+                console.warn("Not on Gemini platform. Using mock Firebase config.");
+                document.getElementById('login-modal').classList.remove('hidden');
+                return;
+            }
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
@@ -2353,7 +1799,7 @@
                     if (user) {
                         userId = user.uid;
                         document.getElementById('login-modal').classList.add('hidden');
-                       
+                        
                         const savedLang = localStorage.getItem('userLanguage') || 'en';
                         translateAllPages(savedLang);
 
@@ -2375,13 +1821,15 @@
 
         async function handleLogin() {
             const phoneNumber = document.getElementById('phone-number').value;
-            if (phoneNumber) {
+            // Check if the phone number is exactly 10 digits
+                if (phoneNumber.length === 10 && /^\d+$/.test(phoneNumber)) {
                 showMessage("A mock OTP has been sent. Please enter '123456'", 'success');
                 document.getElementById('login-form').classList.add('hidden');
                 document.getElementById('otp-section').classList.remove('hidden');
-            } else {
-                showMessage("Please enter a valid phone number.", 'error');
-            }
+                } else {
+                    // Show an error message if the number is not 10 digits
+                    showMessage("Wrong number. Please enter a 10-digit phone number.", 'error');
+                }
         }
 
         async function handleOtpVerification() {
@@ -2453,7 +1901,7 @@
                 if (el) el.textContent = text;
             });
         };
-       
+        
         function translateStudentDashboard(lang) {
             const t = translations[lang] || translations['en'];
             safeSetText('student-welcome-message', t.welcome_message);
@@ -2464,7 +1912,29 @@
             safeSetText('student-progress-title', t.progress_title);
             safeSetText('student-generate-quest-btn-text', t.generate_quest_button);
             safeSetText('student-voice-label', t.voice_question_label);
+
+            // --- YAHAN NAYI LINES ADD KAREIN ---
+            safeSetText('attendance-title', t.attendance_title);
+            safeSetText('mark-attendance-btn-text', t.mark_attendance_button);
+            safeSetText('homework-title', t.homework_title);
+            
+            // homework status (sabko ek saath update karein)
+            document.querySelectorAll('.homework-status-text').forEach(el => {
+                const currentStatus = el.textContent.trim().toLowerCase();
+                if (currentStatus === 'pending' || currentStatus === 'लंबित') {
+                    el.textContent = t.status_pending;
+                } else if (currentStatus === 'completed' || currentStatus === 'पूर्ण') {
+                    el.textContent = t.status_completed;
+                } else if (currentStatus === 'overdue' || currentStatus === 'अतिदेय') {
+                    el.textContent = t.status_overdue;
+                }
+            });
+
+            // buttons (sabko ek saath update karein)
+            safeSetAllByQuery('.upload-btn-text', t.upload_button);
+            safeSetAllByQuery('.get-help-btn-text', t.get_help_button);
         }
+
 
         function translateTeacherDashboard(lang) {
             const t = translations[lang] || translations['en'];
@@ -2571,9 +2041,11 @@
                 initParentDashboard();
             }
         }
-       
+        
         // --- Added from second document ---
         let currentAudio = null;
+
+        const API_KEY = "AIzaSyDCp6dAI6S88vmyoOHaOnOO1_zYhi6Buzw";
         const textApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${""}`;
         const ttsApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${""}`;
         const imageApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${""}`;
@@ -2690,7 +2162,7 @@
         document.getElementById('verify-otp-btn').addEventListener('click', handleOtpVerification);
         document.getElementById('mic-btn').addEventListener('click', handleVoiceInput);
 
-       
+        
         document.getElementById('teacher-progress-view').addEventListener('change', renderTeacherStudentProgress);
         document.getElementById('generate-report-btn').addEventListener('click', generateClassReport);
         document.getElementById('teacher-reward-student-selector').addEventListener('change', (e) => {
@@ -2762,9 +2234,34 @@
                 showMessage("Failed to create assignment. Please try again.", "error");
             }
         });
-       
+        // Curious Corner chatbot integration
+        document.getElementById("ask-curious-question-btn").addEventListener("click", async () => {
+            const questionInput = document.getElementById("curious-question-input");
+            const answerBox = document.getElementById("curious-answer");
+            const question = questionInput.value.trim();
+            if (!question) return;
+            // Show loading
+            answerBox.innerHTML = "🤔 Thinking...";
+            answerBox.classList.remove("hidden");
+            try {
+                // 🔹 Send question to your chatbot backend
+                const response = await fetch("https://first-ai-chatbot-tau.vercel.app/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: question })
+                });
+                const data = await response.json();
+                // 🔹 Show chatbot reply
+                answerBox.innerHTML = "✨ " + (data.reply || "Sorry, I couldn’t find an answer.");
+            } catch (err) {
+                console.error(err);
+                answerBox.innerHTML = "⚠️ Error: Couldn’t connect to chatbot.";
+            }
+        });
+
+        
         // --- Math Bullseye Game Integration ---
-       
+        
         // Game configuration
         const WIDTH = 900;
         const HEIGHT = 720;
@@ -2774,7 +2271,7 @@
         const OPTION_RADIUS = 40;
         const TARGET_CENTER = { x: WIDTH / 2, y: HEIGHT / 2 + 30 };
         const RING_RADII = [170, 120, 80, 40];
-       
+        
         // Colors
         const RING_COLORS = ['#dc143c', '#ff8c00', '#ffd700', '#228b22'];
         const RING_BORDER = '#282828';
@@ -2783,7 +2280,7 @@
         const HOVER_BORDER = '#ffffff';
         const FEEDBACK_POS_COLOR = '#1ec878';
         const FEEDBACK_NEG_COLOR = '#dc3232';
-       
+        
         // Audio
         let audioContext = null;
         let clickOscillator, winOscillator;
@@ -2884,7 +2381,7 @@
             ctx.clearRect(0, 0, WIDTH, HEIGHT);
             ctx.fillStyle = '#121212';
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
-           
+            
             const { x, y } = TARGET_CENTER;
             RING_RADII.forEach((r, i) => {
                 ctx.beginPath();
@@ -2911,7 +2408,7 @@
 
             const qText = `${a} ${op} ${b} = ?`;
             const opts = [ans];
-           
+            
             while (opts.length < 3) {
                 const delta = Math.floor(Math.random() * 6) + 1;
                 const sign = Math.random() < 0.5 ? 1 : -1;
@@ -2932,7 +2429,7 @@
                 const y = TARGET_CENTER.y + r * Math.sin(angle);
                 positions.push({ x: x, y: y });
             }
-           
+            
             return {
                 qText,
                 answer: ans,
@@ -3007,7 +2504,7 @@
             ctx.beginPath();
             ctx.roundRect(barX, barY, barW, barH, 8);
             ctx.stroke();
-           
+            
             return timeLeft;
         }
 
@@ -3019,24 +2516,24 @@
                 ctx.fillStyle = game.feedbackColor;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-               
+                
                 // Draw shadow
                 ctx.globalAlpha = 0.5;
                 ctx.fillStyle = 'black';
                 ctx.fillText(game.feedbackText, WIDTH / 2 + 3, 160 + 3);
-               
+                
                 // Draw text
                 ctx.globalAlpha = 1.0;
                 ctx.fillStyle = game.feedbackColor;
                 ctx.fillText(game.feedbackText, WIDTH / 2, 160);
             }
         }
-       
+        
         function showGameOverScreen() {
             loadTopScores();
-           
+            
             finalScoreText.textContent = `Your Score: ${game.score}`;
-           
+            
             leaderboardList.innerHTML = '';
             leaderboard.forEach((score, index) => {
                 const li = document.createElement('li');
@@ -3077,7 +2574,7 @@
                         option.flashTimer = Math.max(0, option.flashTimer - dt);
                     }
                 });
-               
+                
                 if (game.feedbackTimer > 0) {
                     game.feedbackTimer = Math.max(0, game.feedbackTimer - dt);
                 }
@@ -3097,7 +2594,7 @@
                     }
                 }
             }
-           
+            
             requestAnimationFrame(gameLoop);
         }
 
@@ -3149,14 +2646,14 @@
             document.getElementById('student-dashboard').classList.remove('hidden');
             initStudentDashboard(); // Re-render the dashboard state
         });
-       
+        
         // Game interaction listeners
         canvas.addEventListener('mousemove', (event) => {
             if (!running || game.state !== 'playing' || game.pendingNext) return;
             const rect = canvas.getBoundingClientRect();
             mousePos.x = event.clientX - rect.left;
             mousePos.y = event.clientY - rect.top;
-           
+            
             game.options.forEach(option => {
                 option.isHover = circlePointCollision(
                     { x: option.pos.x, y: option.pos.y, radius: option.radius },
@@ -3167,11 +2664,11 @@
 
         canvas.addEventListener('click', (event) => {
             if (game.state !== 'playing' || game.pendingNext) return;
-           
+            
             for (const option of game.options) {
                 if (circlePointCollision({ x: option.pos.x, y: option.pos.y, radius: option.radius }, mousePos)) {
                     playClickSound();
-                   
+                    
                     if (option.value === game.question.answer) {
                         game.score++;
                         option.flashTimer = 0.6;
@@ -3194,7 +2691,7 @@
                 }
             }
         });
-       
+        
         // --- Puzzle Mania Game Integration ---
         const puzzleManiaModal = document.getElementById('puzzle-mania-modal');
         const puzzleManiaCard = document.getElementById('puzzle-mania-card');
@@ -3222,23 +2719,23 @@
             gameBoard.innerHTML = '';
             const emojis = ['🍉', '🥭', '🚜', '🌱', '💧', '☀️', '🐄', '🏡', '🌾', '🌸'];
             const gameEmojis = shuffle(emojis.slice(0, 6).concat(emojis.slice(0, 6)));
-           
+            
             gameEmojis.forEach((emoji, index) => {
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.dataset.emoji = emoji;
                 card.dataset.index = index;
                 card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front"></div>
-                        <div class="card-back">${emoji}</div>
-                    </div>
+                        <div class="card-inner">
+                            <div class="card-front"></div>
+                            <div class="card-back">${emoji}</div>
+                        </div>
                 `;
                 card.addEventListener('click', flipCard);
                 gameBoard.appendChild(card);
             });
         }
-       
+        
         function flipCard() {
             if (lockBoard || this === flippedCards[0] || this.classList.contains('flipped')) return;
 
@@ -3319,7 +2816,7 @@
             document.getElementById('student-dashboard').classList.remove('hidden');
             initStudentDashboard(); // Re-render the dashboard state
         });
-       
+        
         // Event listeners and logic for the newly added student dashboard sections
         document.addEventListener('DOMContentLoaded', () => {
             const markAttendanceBtn = document.getElementById('markAttendanceBtn');
@@ -3467,7 +2964,7 @@
                     if (visualizeStoryBtn) visualizeStoryBtn.classList.add('hidden');
                     if (storyImageResult) storyImageResult.innerHTML = '';
                     if (storyResult) storyResult.innerHTML = '<div class="flex justify-center items-center"><div class="loader-book">📖</div></div>';
-                   
+                    
                     const prompt = `You are a creative storyteller for a child in India (ages 6-14). Write a short, imaginative story starter (2-3 paragraphs) based on this single word: "${word}". Make it interesting and end it in a way that makes the reader wonder what happens next.`;
                     const response = await callGeminiText(prompt);
                     if (storyResult) storyResult.innerHTML = response.replace(/\n/g, '<br>');
@@ -3516,5 +3013,61 @@
             }
         });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const spotterCard = document.getElementById('state-spotter-card');
+        if (spotterCard) {
+            spotterCard.addEventListener('click', () => window.open('state_spotter.html', '_blank'));
+        }
+
+        const shapeSorterCard = document.getElementById('shape-sorter-card');
+        if (shapeSorterCard) {
+            shapeSorterCard.addEventListener('click', () => window.open('shape_sorter.html', '_blank'));
+        }
+
+        const grammarGalaxyCard = document.getElementById('grammar-galaxy-card');
+        if (grammarGalaxyCard) {
+            grammarGalaxyCard.addEventListener('click', () => window.open('grammar_galaxy.html', '_blank'));
+        }
+        const historyTimelineCard = document.getElementById('history-timeline-card');
+        if (historyTimelineCard) {
+            historyTimelineCard.addEventListener('click', () => window.open('history_timeline.html', '_blank'));
+        }
+        const mathBullseyeCard = document.getElementById('math-bullseye-card');
+        if (mathBullseyeCard) {
+            mathBullseyeCard.addEventListener('click', () => window.open('maths_bullseye.html', '_blank'));
+        }
+        const scienceLabCard = document.getElementById('science-lab-card');
+        if (scienceLabCard) {
+            scienceLabCard.addEventListener('click', () => window.open('science_lab.html', '_blank'));
+        }
+        const physicsNexusCard = document.getElementById('physics-nexus-card');
+        if (physicsNexusCard) {
+            physicsNexusCard.addEventListener('click', () => window.open('phy_game.html', '_blank'));
+}
+
+    });
+    document.querySelectorAll('.homework-upload').forEach(input => {
+        input.addEventListener('change', e => {
+            const container = e.target.closest('div');
+            const status = container.querySelector('span.text-sm');
+            const marksBox = container.querySelector('.homework-marks');
+            let marks = 10;
+            if (status.textContent.toLowerCase().includes('overdue')) {
+                marks = 5;
+            }
+            status.textContent = 'Submitted';
+            status.classList.remove('text-red-500');
+            status.classList.add('text-green-500');
+
+            marksBox.classList.remove('hidden');
+            marksBox.querySelector('span').textContent = marks;
+        });
+    });
+
+
+</script>
+
+
 </body>
 </html>
