@@ -390,6 +390,62 @@
         #puzzle-mania-modal #start-button:hover, #puzzle-mania-modal #quit-game-btn:hover {
             background-color: #2980b9;
         }
+
+        #chat-toggle-button {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #4f46e5; /* Indigo to match theme */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+
+        #chat-toggle-button:hover {
+            transform: scale(1.1);
+        }
+
+        #chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            z-index: 999;
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        #chat-window.open {
+            display: flex;
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        #chatbot-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
     </style>
 </head>
 <body class="p-4 md:p-10">
@@ -3048,7 +3104,30 @@
         });
     </script>
     <script>
+    </script>
+
+    <button id="chat-toggle-button">
+        🤖
+    </button>
+    
+    <div id="chat-window">
+        <iframe 
+            id="chatbot-iframe" 
+            src="https://first-ai-chatbot-tau.vercel.app/" 
+            title="AI Chatbot">
+        </iframe>
+    </div>
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const chatToggleButton = document.getElementById('chat-toggle-button');
+            const chatWindow = document.getElementById('chat-window');
+
+            if (chatToggleButton && chatWindow) {
+                 chatToggleButton.addEventListener('click', () => {
+                    // This will add or remove the 'open' class to show/hide the window
+                    chatWindow.classList.toggle('open');
+                });
+            }
         const spotterCard = document.getElementById('state-spotter-card');
         if (spotterCard) {
             spotterCard.addEventListener('click', () => window.open('state_spotter.html', '_blank'));
