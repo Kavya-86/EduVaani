@@ -506,7 +506,7 @@
                     <div id="student-quest-list" class="space-y-8">
                         </div>
                     <div class="mt-10 text-center">
-                        <button id="student-generate-quest-btn" class="btn-generate text-green px-10 py-5 rounded-full font-bold text-xl shadow-xl">
+                        <button id="student-generate-quest-btn" class="btn-generate text-green px-10 py-5 rounded-full font-bold text-xl shadow-xl bg-gradient-to-b from-blue-400 to-blue-600 text-white">
                             <div class="flex items-center justify-center space-x-2">
                                 <span id="student-generate-quest-btn-text">✨ Generate New Quest</span>
                                 <span id="student-generate-loading" class="hidden loading-spinner"></span>
@@ -1226,7 +1226,7 @@
                                 <button class="bg-blue-500 text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg explain-quest-btn" data-desc="${t[`${quest.id}_desc`] || ''}">
                                     <span>${t.explain_concept_button}</span>
                                 </button>
-                                <button class="btn-start text-black text-lg px-8 py-4 rounded-full font-bold shadow-lg student-start-quest-btn" data-xp="${quest.xp}">
+                                <button class="btn-start text-white text-lg px-8 py-4 rounded-full font-bold shadow-lg student-start-quest-btn bg-gradient-to-b from-blue-400 to-blue-600" data-xp="${quest.xp}">
                                     <span>${t.start_button_text}</span>
                                 </button>
                             </div>
