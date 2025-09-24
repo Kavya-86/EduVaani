@@ -8,23 +8,225 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- Vibrant Animated Kids Theme for Student Dashboard --- */
-.student-bg-animated {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    z-index: -1;
-    background: linear-gradient(135deg, #ffe53b 0%, #ff2525 100%);
-    overflow: hidden;
+        /* --- Base, Fonts, Resets & NEW Color Palette --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap');
+
+:root {
+    --bg-color: #021028;
+    --primary-surface: rgba(27, 39, 57, 0.6); /* Semi-transparent for glass effect */
+    --secondary-surface: rgba(13, 17, 23, 0.7);
+    --primary-border: #30363d;
+    --hover-border: #58a6ff;
+    --primary-text: #ffffff;
+    --secondary-text: #ffffff;
+    --accent-glow: rgba(88, 166, 255, 0.5);
+    --accent-glow-deep: rgba(88, 166, 255, 0.3);
+    
+    /* THE GRADIENTS! */
+    --accent-gradient: linear-gradient(90deg, #58a6ff, #8f5fe4, #f778ba, #58a6ff);
+    --progress-gradient: linear-gradient(90deg, #58a6ff, #388bfd, #a371f7);
+    --aurora-gradient: radial-gradient(ellipse at 20% 15%, rgba(71, 57, 223, 0.3) 0%, rgba(88, 166, 255, 0) 40%),
+                       radial-gradient(ellipse at 80% 25%, rgba(233, 34, 173, 0.695) 0%, rgba(163, 113, 247, 0) 40%),
+                       radial-gradient(ellipse at 50% 90%, rgba(211, 88, 152, 0.649) 0%, rgba(247, 120, 186, 0) 40%);
+
+    /* NEW: Variables for mouse position (for spotlight effect) */
+    --mouse-x: 50%;
+    --mouse-y: 50%;
 }
 
-/* Floating emoji animation */
-@keyframes emoji-float {
-    0% { transform: translateY(120vh) scale(0.9) rotate(-12deg); opacity: 0.7; }
-    50% { opacity: 1; }
-    100% { transform: translateY(-120vh) scale(1.15) rotate(20deg); opacity: 0.7; }
+html {
+    scroll-behavior: smooth;
 }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--primary-text);
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* --- Multi-Layered Animated Background --- */
+
+/* Layer 1: The Aurora */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: var(--aurora-gradient);
+    background-size: 200% 200%;
+    z-index: -2;
+    animation: aurora-flow 30s ease-in-out infinite;
+}
+
+/* Layer 2: The Grid */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-image:
+        linear-gradient(to right, rgba(88, 166, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(88, 166, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: -1;
+    animation: pan-grid 90s linear infinite;
+}
+
+/* --- Themed Scrollbar (NEW) --- */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--primary-border);
+    border-radius: 10px;
+    border: 2px solid var(--bg-color);
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--hover-border);
+}
+
+/* --- Keyframe Animations --- */
+@keyframes fall-down {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes go-up {
+    from {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-100vh) rotate(-360deg);
+        opacity: 0;
+    }
+}
+
+.animate-fall {
+    animation: fall-down 2s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+}
+
+.animate-rise {
+    animation: go-up 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes aurora-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pan-grid {
+    0% { background-position: 0 0; }
+    100% { background-position: 500px 500px; }
+}
+
+@keyframes gradient-text-flow {
+    to { background-position: 200% center; }
+}
+
+@keyframes dramatic-entry {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+        filter: blur(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+.animate-dramatic-entry {
+    animation: dramatic-entry 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+/* NEW: Staggered animation for lists */
+.stagger-in > * {
+    animation: dramatic-entry 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+@keyframes breathing-glow {
+    0%, 100% { box-shadow: 0 0 25px var(--accent-glow-deep); }
+    50% { box-shadow: 0 0 40px var(--accent-glow-deep); }
+}
+
+/* --- Typography & Links --- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    color: var(--primary-text);
+}
+
+header > h1.text-5xl, #teacher-dashboard header h1, #parent-dashboard header h1 {
+    background: var(--accent-gradient);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-text-flow 5s linear infinite;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.card h2, section h2, .dashboard-card h2 {
+    color: var(--hover-border);
+    border-bottom: 1px solid var(--primary-border);
+    padding-bottom: 0.75rem;
+}
+
+/* NEW: Themed link styling */
+a {
+    color: var(--hover-border);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background: var(--accent-gradient);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+a:hover {
+    color: var(--primary-text);
+}
+a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+/* General text color overrides */
+p, span, label, li, option, div { color: var(--primary-text); }
+.text-gray-900, .text-gray-800, .text-gray-700, .themed-header { color: var(--primary-text) !important; }
+.text-gray-600, .text-gray-500, .themed-text, .text-sm.text-gray-1000 { color: var(--secondary-text) !important; }
+
+/* --- Glassmorphism Card Style (ENHANCED with Spotlight) --- */
+
 .bg-emoji {
     position: absolute;
     font-size: 3.2rem;
@@ -43,409 +245,290 @@
 .bg-emoji:nth-child(9) { left: 55vw; animation-delay: 10s; font-size: 3.8rem;}
 .bg-emoji:nth-child(10) { left: 22vw; animation-delay: 6s; font-size: 4.6rem; }
 
-/* Sparkle Animation */
-@keyframes sparkle {
-    0%, 100% { opacity: 0.45; transform: scale(1);}
-    50% { opacity: 1; transform: scale(1.25);}
+/* Floating emoji animation */
+@keyframes emoji-float {
+    0% { transform: translateY(120vh) scale(0.9) rotate(-12deg); opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-120vh) scale(1.15) rotate(20deg); opacity: 0.7; }
 }
-.sparkle {
+.bg-emoji {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 14px;
-    height: 14px;
-    background: radial-gradient(circle, #fff7ad 55%, #ffe53b 80%, transparent 100%);
-    border-radius: 50%;
-    opacity: 0.45;
-    animation: sparkle 3s infinite;
+    font-size: 3.2rem;
+    pointer-events: none;
+    opacity: 0.85;
+    animation: emoji-float 12s linear infinite;
+    will-change: transform;
 }
-.sparkle:nth-child(11) { top: 10vh; left: 25vw; animation-delay: 1.5s; }
-.sparkle:nth-child(12) { top: 70vh; left: 55vw; animation-delay: 2.5s; }
-.sparkle:nth-child(13) { top: 40vh; left: 15vw; animation-delay: 0.7s; }
-.sparkle:nth-child(14) { top: 80vh; left: 85vw; animation-delay: 3.2s; }
-.sparkle:nth-child(15) { top: 60vh; left: 42vw; animation-delay: 2.8s; }
 
-/* Responsive fix for content */
-#student-dashboard {
+.card, .dashboard-card, section[id$="-section"], #gaming-section > div > div, .stat-card, #mission-CET-card, #teacher-resolve-card {
+    background-color: var(--primary-surface) !important;
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border-radius: 16px !important;
+    border: 1px solid var(--primary-border) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 25px var(--accent-glow-deep) !important;
+    animation: breathing-glow 8s ease-in-out infinite;
     position: relative;
-    z-index: 10;
+    overflow: hidden;
 }
 
+/* NEW: Spotlight effect on hover */
+.card::before, .dashboard-card::before, .stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(88, 166, 255, 0.15), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
 
-        /* --- Parent Dashboard Specific Styles --- */
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-        .parent-dashboard-bg {
-            background: linear-gradient(135deg, #f0f9ff 0%, #eef2f7 100%);
-            color: #334155;
-        }
-        .parent-dashboard-bg .themed-header { color: #1e293b; }
-        .parent-dashboard-bg .themed-text { color: #475569; }
-        
-        .dashboard-card {
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
-        }
-        @keyframes slide-in-up {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-slide-in-up {
-            animation: slide-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-            opacity: 0;
-        }
+.card:hover, .dashboard-card:hover, section[id$="-section"]:hover, #gaming-section > div > div:hover, .stat-card:hover, #mission-CET-card:hover, #teacher-resolve-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 0 40px var(--accent-glow) !important;
+    border-color: var(--hover-border) !important;
+}
+.card:hover::before, .dashboard-card:hover::before, .stat-card:hover::before {
+    opacity: 1; /* Show spotlight on hover */
+}
 
-        /* NEW Parent Animations */
-        @keyframes fill-progress {
-            from { width: 0%; }
-        }
-        .progress-bar-animated > div {
-            animation: fill-progress 1.5s ease-out forwards;
-        }
-        .stat-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        @keyframes pulse-avatar {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(49, 196, 141, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(49, 196, 141, 0); }
-        }
-        .avatar-pulse {
-            animation: pulse-avatar 2.5s infinite;
-        }
-        
-        /* --- Styles for the added student dashboard sections --- */
-        .spinner {
-            border-top-color: #3498db;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        /* Style for the audio icon button */
-        .audio-btn-playing svg {
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        
-        /* --- Monkey Animation Styles --- */
-        @keyframes fall-down {
-            from { transform: translateY(-100vh) rotate(-60deg); }
-            to { transform: translateY(0) rotate(0deg); }
-        }
-        @keyframes go-up {
-            from { transform: translateY(0) rotate(0deg); }
-            to { transform: translateY(-100vh) rotate(60deg); }
-        }
-        .animate-fall {
-            animation: fall-down 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards; /* EaseInBack curve */
-        }
-        .animate-rise {
-            animation: go-up 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards; /* EaseOutBack curve with a slight delay */
-        }
+/* Override light backgrounds from Tailwind */
+.bg-white, .bg-gray-50, .bg-gray-100, .bg-teal-50, .bg-amber-50, .bg-indigo-50 {
+    background-color: transparent !important;
+}
 
-        /* --- New Engagement Animations --- */
-        @keyframes jiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-3deg); }
-            75% { transform: rotate(3deg); }
-        }
-        .group:hover .jiggle-on-hover {
-            animation: jiggle 0.4s;
-        }
+/* --- Buttons & Inputs (ENHANCED) --- */
+button, input[type="submit"] {
+    background-color: var(--secondary-surface) !important;
+    color: var(--primary-text) !important;
+    border: 1px solid var(--primary-border) !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    background-image: none !important;
+    cursor: pointer;
+}
 
-        /* Pulsing glow for AI feature buttons */
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 8px rgba(168, 85, 247, 0.5); }
-            50% { box-shadow: 0 0 16px rgba(168, 85, 247, 0.9); }
-        }
-        .ai-glow {
-            animation: glow 2s infinite ease-in-out;
-        }
+button:hover, input[type="submit"]:hover {
+    border-color: var(--hover-border) !important;
+    color: var(--hover-border) !important;
+    transform: scale(1.05);
+}
 
-        /* Engaging Loading Animations */
-        @keyframes thinking {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .loader-thinking {
-            font-size: 2.5rem;
-            animation: thinking 1.5s infinite ease-in-out;
-        }
-        
-        @keyframes page-turn {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(360deg); }
-        }
-        .loader-book {
-              font-size: 2.5rem;
-              animation: page-turn 2s infinite linear;
-        }
-        
-        /* Styles for Math Bullseye game */
-        #math-game-modal #game-container {
-            background-color: #121212;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #math-game-modal canvas {
-            background-color: transparent;
-            touch-action: none;
-            display: block;
-        }
-        #math-game-modal #ui-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            box-sizing: border-box;
-            pointer-events: none;
-        }
-        #math-game-modal #game-over-screen {
-            pointer-events: auto;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            background-color: rgba(10, 10, 30, 0.95);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            max-width: 90%;
-            color: #f3f4f6;
-        }
-        #math-game-modal #game-over-screen h1 {
-            font-weight: 700;
-            font-size: 2.5rem;
-            color: #ffc400;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        #math-game-modal .score-display {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #f3f4f6;
-            margin-top: 20px;
-        }
-        #math-game-modal .button {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            margin: 0 10px;
-        }
-        #math-game-modal .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        #math-game-modal #play-again-btn {
-            background-color: #404080;
-            color: white;
-        }
-        #math-game-modal #play-again-btn:hover {
-            background-color: #7070a0;
-        }
-        #math-game-modal #quit-btn {
-            background-color: #404080;
-            color: white;
-        }
-        #math-game-modal #quit-btn:hover {
-            background-color: #7070a0;
-        }
-        #math-game-modal .leaderboard {
-            width: 100%;
-            max-width: 300px;
-            margin-top: 30px;
-        }
-        #math-game-modal .leaderboard h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #e6e6cc;
-        }
-        #math-game-modal .leaderboard ol {
-            list-style-type: none;
-            padding: 0;
-        }
-        #math-game-modal .leaderboard li {
-            font-size: 1rem;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: #f3f4f6;
-        }
-        #math-game-modal .leaderboard li:last-child {
-            border-bottom: none;
-        }
-        #math-game-modal .leaderboard .top-3 {
-            color: #ffc400;
-        }
-        #math-game-modal .leaderboard .top-3:nth-child(2) {
-            color: #c0c0c0;
-        }
-        #math-game-modal .leaderboard .top-3:nth-child(3) {
-            color: #cd7f32;
-        }
+/* NEW: Active/click state for feedback */
+button:active, input[type="submit"]:active {
+    transform: scale(0.98);
+    transition-duration: 0.1s;
+}
 
-        /* Puzzle Mania Modal styles */
-        #puzzle-mania-modal #game-container {
-            background-color: #2c3e50;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            max-width: 600px;
-            width: 95%;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #puzzle-mania-modal .game-board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            width: 100%;
-            max-width: 400px;
-        }
-        #puzzle-mania-modal .card {
-            background-color: #34495e;
-            color: white;
-            padding: 1rem;
-            font-size: 2rem;
-            text-align: center;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-            position: relative;
-        }
-        #puzzle-mania-modal .card-inner {
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            position: relative;
-        }
-        #puzzle-mania-modal .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-        #puzzle-mania-modal .card-front,
-        #puzzle-mania-modal .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem;
-        }
-        #puzzle-mania-modal .card-front {
-            background-color: #e74c3c;
-            transform: rotateY(180deg);
-        }
-        #puzzle-mania-modal .card-back {
-            background-color: #95a5a6;
-        }
-        #puzzle-mania-modal .card.matched .card-front {
-            background-color: #2ecc71;
-        }
-        #puzzle-mania-modal #game-info {
-            width: 100%;
-            max-width: 400px;
-        }
-        #puzzle-mania-modal #start-button, #puzzle-mania-modal #quit-game-btn {
-            background-color: #3498db;
-            color: white;
-            font-size: 1.25rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #puzzle-mania-modal #start-button:hover, #puzzle-mania-modal #quit-game-btn:hover {
-            background-color: #2980b9;
-        }
+/* Primary Action Buttons with Animated Gradient */
+#student-generate-quest-btn, .student-start-quest-btn, #request-otp-btn, #verify-otp-btn, .homework-help-btn, #teacher-create-assignment-btn, #ask-curious-question-btn, #start-parent-game-btn, #generate-report-btn {
+    background: var(--accent-gradient) !important;
+    background-size: 200% auto !important;
+    border: none !important;
+    color: white !important;
+    transition: all 0.4s ease;
+}
 
-        #chat-toggle-button {
-            position: fixed;
-            bottom: 90px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background-color: #4f46e5; /* Indigo to match theme */
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            transition: transform 0.2s ease;
-        }
+#student-generate-quest-btn:hover, .student-start-quest-btn:hover, #request-otp-btn:hover, #verify-otp-btn:hover, .homework-help-btn:hover, #teacher-create-assignment-btn:hover, #ask-curious-question-btn:hover, #start-parent-game-btn:hover, #generate-report-btn:hover {
+    background-position: right center !important;
+    color: white !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(88, 166, 255, 0.5);
+}
 
-        #chat-toggle-button:hover {
-            transform: scale(1.1);
-        }
+/* Inputs, Textareas, and Selects */
+input[type="text"], input[type="tel"], input[type="email"], input[type="password"], textarea, select {
+    background-color: var(--secondary-surface) !important;
+    border: 1px solid var(--primary-border) !important;
+    color: var(--primary-text) !important;
+    border-radius: 8px !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-        #chat-window {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 350px;
-            height: 500px;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            z-index: 999;
-            transform-origin: bottom right;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-            transform: scale(0);
-            opacity: 0;
-        }
+input[type="text"]:focus, input[type="tel"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
+    outline: none !important;
+    border-color: var(--hover-border) !important;
+    box-shadow: 0 0 0 4px var(--accent-glow-deep) !important;
+}
 
-        #chat-window.open {
-            display: flex;
-            transform: scale(1);
-            opacity: 1;
-        }
+/* NEW: Themed placeholder text */
+::placeholder {
+    color: var(--secondary-text) !important;
+    opacity: 0.8;
+}
 
-        #chatbot-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
+/* --- Component Specific Styling --- */
+
+/* Profile Avatar */
+.w-32.h-32.rounded-full, .avatar-pulse {
+    border: 4px solid var(--hover-border) !important;
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* Progress Bars */
+.progress-bar {
+    background-color: var(--primary-border) !important;
+    border-radius: 9999px; height: 1.25rem; overflow: absolute; padding: 3px;
+}
+.progress-fill {
+    background-image: var(--progress-gradient) !important;
+    background-size: 200% 200% !important;
+    animation: aurora-flow 5s ease-in-out infinite;
+    border-radius: 9999px;
+}
+
+/* Leaderboard Entries */
+#student-leaderboard-list li, #teacher-leaderboard-list li {
+    background-color: var(--secondary-surface) !important;
+    border-radius: 8px !important;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+#student-leaderboard-list li:hover, #teacher-leaderboard-list li:hover {
+    transform: translateX(10px);
+    border-color: var(--hover-border);
+}
+
+/* Modals */
+#login-modal > div, #role-selection-modal > div, #messageBox > div {
+    background-color: var(--primary-surface) !important;
+    border: 1px solid var(--primary-border);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+#login-modal h2, #role-selection-modal h2 { color: var(--hover-border) !important; }
+
+/* Status Tags & Attendance Icons */
+.bg-green-200 { background-color: rgba(46, 160, 67, 0.2) !important; }
+.text-green-800 { color: #2ea043 !important; }
+.bg-amber-200 { background-color: rgba(247, 182, 36, 0.2) !important; }
+.text-amber-800 { color: #f7b624 !important; }
+.bg-red-200 { background-color: rgba(218, 55, 68, 0.2) !important; }
+.text-red-800 { color: #da3744 !important; }
+.bg-green-100 { background-color: rgba(46, 160, 67, 0.2) !important; }
+.text-green-600 { color: #2ea043 !important; }
+.bg-red-100 { background-color: rgba(218, 55, 68, 0.2) !important; }
+.text-red-600 { color: #da3744 !important; }
+.bg-gray-200 { background-color: #30363d !important; }
+
+/* --- Styling for New Dashboard Sections --- */
+
+/* Homework & Announcement List Items */
+#homework-section .bg-gray-50, 
+#parent-dashboard .bg-white\/60 {
+    background-color: var(--secondary-surface) !important;
+    border: 1px solid var(--primary-border) !important;
+    border-radius: 12px !important;
+    transition: background-color 0.3s ease;
+}
+
+#homework-section .bg-gray-50:hover,
+#parent-dashboard .bg-white\/60:hover {
+    background-color: rgba(33, 38, 45, 0.8) !important; /* Slightly lighter on hover */
+}
+
+/* Custom style for "Upload" button (label) */
+.upload-btn-text {
+    background-color: #238636 !important;
+    transition: background-color 0.3s ease;
+}
+.upload-btn-text:hover {
+    background-color: #2ea043 !important;
+}
+
+/* Curious Corner Answer Box */
+#curious-answer {
+    background-color: #7b0440 !important; /* Extra dark for contrast */
+    border: 1px solid var(--primary-border) !important;
+    border-radius: 8px;
+    min-height: 120px;
+    padding: 1rem;
+    font-family: 'Courier New', Courier, monospace; /* Monospace font for a techy feel */
+}
+
+/* Gaming Section Icons (Emojis) */
+#gaming-section .text-5xl {
+    transition: transform 0.3s ease;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+#gaming-section > div > div:hover .text-5xl {
+    transform: scale(1.2) rotate(-5deg);
+}
+
+/* Ensure section top borders match the theme */
+section[id$="-section"] {
+    border-top: none !important; /* Remove old border */
+    border-left: 3px solid transparent; /* Prepare for gradient border */
+    border-image: var(--accent-gradient) 1;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to bottom, #58a6ff, #a371f7, transparent);
+    padding-left: 20px;
+}
+
+/* --- CHATBOT WIDGET STYLES (Dark Theme) --- */
+#chat-toggle-button {
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-surface);
+    border: 1px solid var(--primary-border);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+#chat-toggle-button:hover {
+    transform: scale(1.1);
+    border-color: var(--hover-border);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+#chat-window {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 350px;
+    height: 500px;
+    background-color: var(--primary-surface);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid var(--primary-border);
+    box-shadow: 0 0 25px var(--accent-glow-deep);
+    overflow: hidden;
+    display: none; /* Default mein hide rakhein */
+    flex-direction: column;
+    z-index: 999;
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    transform: scale(0);
+    opacity: 0;
+}
+
+#chat-window.open {
+    display: flex;
+    transform: scale(1);
+    opacity: 1;
+}
+
+#chatbot-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 16px; /* Match parent */
+}
+}
+
     </style>
 </head>
 <body class="p-4 md:p-10">
@@ -470,11 +553,11 @@
             </div>
         </div>
     </div>
-    
+   
     <button id="role-switch-btn" class="fixed bottom-5 right-5 z-40 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-700 transition-colors hidden">
         Switch Role
     </button>
-    
+   
     <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
         <div class="bg-white p-10 rounded-3xl shadow-2xl text-center w-full max-w-md">
             <h2 id="login-modal-title" class="text-3xl font-bold mb-6 text-indigo-800">Login with Phone</h2>
@@ -489,7 +572,7 @@
             </div>
         </div>
     </div>
-    
+   
    <div class="student-bg-animated">
     <div class="bg-emoji" style="top:80vh;">🦄</div>
     <div class="bg-emoji" style="top:65vh;">🚀</div>
@@ -512,21 +595,21 @@
 
         <div class="w-full">
             <header class="text-center animate-slide-in-up pt-4" style="animation-delay: 100ms;">
-                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
-                    Student Dashboard
+                <h1 class="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
+                    🌟EduVaani🌟
                 </h1>
-                <p class="mt-2 text-lg text-gray-600">
+                <p class="mt-4 text-lg text-gray-600">
                     Your one-stop place for everything academic.
                 </p>
             </header>
         </div>
-        
+       
         <div class="container mx-auto p-4 md:p-10">
             <div class="flex justify-end mb-4">
                 <select id="language-selector" class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </select>
             </div>
-            
+           
             <div class="card bg-white p-10 mb-10 flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-16">
                 <div class="flex items-center space-x-8">
                     <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center overflow-hidden shadow-xl">
@@ -537,7 +620,7 @@
                         <p id="student-learning-message" class="text-xl text-gray-600 font-medium"></p>
                     </div>
                 </div>
-                
+               
                 <div class="flex-grow flex flex-col md:flex-row items-end md:items-center space-y-5 md:space-y-0 md:space-x-8">
                     <div class="flex items-center space-x-4 bg-yellow-200 px-8 py-4 rounded-full shadow-inner">
                         <i class="fas fa-star text-yellow-600 text-3xl"></i>
@@ -551,9 +634,9 @@
                     </div>
                 </div>
             </div>
-            
+           
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                
+               
                 <div class="lg:col-span-2 card bg-white p-8">
                     <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-emerald-600">
                         <i class="fas fa-tasks text-emerald-600 text-3xl"></i>
@@ -570,7 +653,7 @@
                         </button>
                     </div>
                 </div>
-                
+               
                 <div class="card bg-white p-8">
                     <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-amber-500">
                         <i class="fas fa-trophy text-amber-500 text-3xl"></i>
@@ -581,7 +664,7 @@
                     </ul>
                 </div>
             </div>
-            
+           
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 mt-10">
     <div class="lg:col-span-2">
         <div class="card bg-white p-8 mb-10">
@@ -625,13 +708,10 @@
     </div>
 </div>
         </div>
-        
+       
         <div id="star-container"></div>
-    
-        
-
-
-            <section id="attendance-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500 opacity-0 animate-slide-in-up" style="animation-delay: 200ms;">
+   
+            <section id="attendance-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500 opacity-500 animate-slide-in-up" style="animation-delay: 200ms;">
                 <div class="flex flex-col sm:flex-row justify-between items-center">
                     <h2 id="attendance-title" class="text-xl sm:text-2xl font-bold text-gray-800">Attendance</h2>
                     <button id="markAttendanceBtn" class="mt-4 sm:mt-0 px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105 shadow-md disabled:bg-gray-400 disabled:scale-100">
@@ -643,10 +723,10 @@
                 </p>
             </section>
 
-            <section id="homework-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500 opacity-0 animate-slide-in-up" style="animation-delay: 300ms;">
+            <section id="homework-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500 opacity-500 animate-slide-in-up" style="animation-delay: 100ms;">
                 <h2 id="homework-title" class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Homework</h2>
                 <div class="space-y-4">
-                    
+                   
                     <div class="bg-gray-50 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <div class="flex-grow">
                             <h3 class="font-semibold text-gray-700">Math: Algebra Chapter 3</h3>
@@ -689,7 +769,7 @@
             </section>
 
 
-            <section id="curious-corner" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-yellow-500 opacity-0 animate-slide-in-up" style="animation-delay: 400ms;">
+            <section id="curious-corner" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-yellow-500 opacity-500 animate-slide-in-up" style="animation-delay: 100ms;">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Curious Corner ✨</h2>
                 <p class="text-gray-600 mb-4">Have a question about anything in the world? Ask me!</p>
                 <div class="flex flex-col sm:flex-row gap-2">
@@ -701,7 +781,7 @@
 
 
 
-            <section id="gaming-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-purple-500 opacity-0 animate-slide-in-up" style="animation-delay: 500ms;">
+            <section id="gaming-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500 opacity-500 animate-slide-in-up" style="animation-delay: 200ms;">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Learning Games</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div id="puzzle-mania-card" class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">👾</div><h3 class="font-semibold text-gray-800">Puzzle Mania</h3><p class="text-sm text-gray-500">Brain-teasers for fun!</p></div>
@@ -773,7 +853,7 @@
 
 
     <div id="teacher-dashboard" class="hidden">
-        
+       
         <header class="text-center mb-10 flex justify-between items-center">
             <div>
                 <h1 class="text-5xl font-extrabold text-indigo-800">EduVaani</h1>
@@ -782,9 +862,9 @@
             <select id="teacher-language-selector" class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </select>
         </header>
-        
+       
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
+           
             <section class="lg:col-span-2 card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-indigo-700">
                     <i class="fas fa-users"></i>
@@ -810,9 +890,9 @@
                 <div id="teacher-student-progress-list" class="space-y-6">
 
                 </div>
-                
+               
             </section>
-            
+           
             <section class="card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-amber-600">
                     <i class="fas fa-trophy"></i>
@@ -821,11 +901,11 @@
                 <ul id="teacher-leaderboard-list" class="space-y-4">
                     </ul>
             </section>
-            
+           
         </div>
-        
+       
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-            
+           
             <section class="card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-emerald-600">
                     <i class="fas fa-award"></i>
@@ -840,7 +920,7 @@
                     <button id="teacher-award-badge-btn" class="w-full bg-emerald-500 text-white py-3 rounded-xl font-bold hover:bg-emerald-600 transition-colors duration-200" disabled>Award Badge</button>
                 </div>
             </section>
-            
+           
             <section class="card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-red-500">
                     <i class="fas fa-paper-plane"></i>
@@ -868,7 +948,7 @@
                     </button>
                 </form>
             </section>
-            
+           
             <section class="lg:col-span-1 card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-cyan-600">
                     <i class="fas fa-bell"></i>
@@ -889,17 +969,17 @@
                         <p class="text-sm text-gray-1000">The Classroom Challenge!</p>
                 </div>
             </section>
-            
+           
         </div>
     </div>
 
-    
+   
     <div id="parent-dashboard" class="hidden">
         <div class="container mx-auto p-4 md:p-6 max-w-4xl">
-    
+   
             <header class="flex justify-between items-center mb-6 animate-slide-in-up" style="animation-delay: 100ms;">
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-teal-600">EduVaani</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold text-teal-600">EduVaani</h1>
                     <p id="greeting-message" class="themed-text text-sm md:text-base">Welcome, Parent!</p>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -909,13 +989,21 @@
                     <img src="https://placehold.co/60x60/31C48D/FFFFFF?text=P" alt="Priyanka's Profile Picture" class="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-teal-500 avatar-pulse">
                 </div>
             </header>
-    
+   
             <main class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
+               
                 <div class="md:col-span-2 space-y-6">
-                    
+                   
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 200ms;">
-                        <h2 id="parent-overall-progress-title" class="text-xl font-bold mb-4 themed-header">Overall Progress</h2>
+                        <h2 id="parent-overall-progress-title" class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-blue-500">
+                            <!-- Chart Line Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M4 15l4-4 4 4 8-8" />
+                            </svg>
+                            <span>Overall Progress</span>
+                        </h2>
+
+
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                             <div class="bg-teal-50 p-4 rounded-lg stat-card">
                                 <i class="fas fa-rocket text-3xl text-teal-500 mb-2"></i>
@@ -934,9 +1022,15 @@
                             </div>
                         </div>
                     </div>
-    
+   
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 300ms;">
-                        <h2 id="parent-subject-progress-title" class="text-xl font-bold mb-4 themed-header">Subject Progress</h2>
+                        <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-green-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"stroke="currentColor" class="w-7 h-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6" />
+                            </svg>
+                            <span>Subject Progress</span>
+                        </h2>
+
                         <div class="space-y-5">
                             <div>
                                 <div class="flex justify-between items-center mb-1">
@@ -967,9 +1061,15 @@
                             </div>
                         </div>
                     </div>
-    
+   
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 400ms;">
-                        <h2 id="parent-homework-title" class="text-xl font-bold mb-4 themed-header">Recent Homework</h2>
+                        <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-purple-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"stroke="currentColor" class="w-7 h-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"d="M9 12h6m-6 4h6M5 8h14M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Recent Homework</span>
+                        </h2>
+
                         <div class="space-y-3">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white/60 rounded-lg">
                                 <div>
@@ -994,12 +1094,18 @@
                             </div>
                         </div>
                     </div>
-    
+   
                 </div>
-                
+               
                 <div class="space-y-6">
                     <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 500ms;">
-                        <h2 id="parent-attendance-title" class="text-xl font-bold mb-4 themed-header">Attendance</h2>
+                        <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-orange-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"stroke="currentColor" class="w-7 h-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 002-2V7H3v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>Attendance</span>
+                        </h2>
+
                         <div class="text-center bg-teal-500 text-white p-4 rounded-lg mb-4">
                             <p class="text-3xl font-bold">92%</p>
                             <p id="parent-attendance-month-label" class="text-sm">Present (This Month)</p>
@@ -1026,19 +1132,65 @@
                                 <span class="text-xs font-bold themed-text parent-day-fri">Fri</span>
                                 <span class="w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-500 rounded-full"><i class="fas fa-hourglass-start"></i></span>
                             </div>
+                           
                         </div>
                     </div>
+                <div class="dashboard-card p-6 animate-slide-in-up" style="animation-delay: 600ms;">
+                    <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center space-x-3 text-red-500">
+                        <!-- Announcement / Bell Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-7 h-7">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11
+                            a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341
+                            C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595
+                            1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span>Recent Announcements</span>
+                    </h2>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 p-3 bg-white/60 rounded-lg">
+                            <i class="fas fa-bullhorn text-teal-500 text-lg mt-1"></i>
+                            <div>
+                                <p id="parent-announcement1-title" class="font-semibold text-gray-800">Parent-Teacher Meeting</p>
+                                <p class="text-sm text-gray-600"><span class="parent-announcement-date1">September 30, 2025</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 p-3 bg-white/60 rounded-lg">
+                            <i class="fas fa-calendar-alt text-blue-500 text-lg mt-1"></i>
+                            <div>
+                                <p id="parent-announcement2-title" class="font-semibold text-gray-800">Science Fair Submissions</p>
+                                <p class="text-sm text-gray-600"><span class="parent-announcement-date2">Due by October 5, 2025</span></p>
+                            </div>
+                        </div>
+                    </div>
+                   
                 </div>
-    
+                <div class="dashboard-card p-6 text-center animate-slide-in-up" style="animation-delay: 700ms;">
+                    <h2 id="parent-development-title"class="text-lg md:text-xl font-bold mb-4 flex items-center space-x-3 text-pink-500">
+                        <!-- Game Controller Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg"fill="none" viewBox="0 0 24 24" stroke="currentColor"class="w-7 h-7">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"d="M9 19V6h6v13m-6 0h6m-6 0a3 3 0 11-6 0m12 0a3 3 0 106 0" />
+                        </svg>
+                        <span>Parent's Corner</span>
+                    </h2>
+
+                    <p id="parent-development-desc" class="themed-text mb-5">Play a game to learn helpful tips for you and your child's growth and education.</p>
+                    <button id="start-parent-game-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Parents Development Game</span>
+                    </button>
+                </div>
+            </div>
+   
             </main>
-    
+   
             <footer class="text-center mt-8 text-sm themed-text animate-slide-in-up" style="animation-delay: 600ms;">
                 <p id="parent-footer-text">&copy; 2025 EduVaani. Empowering rural learning.</p>
             </footer>
-    
+   
         </div>
     </div>
-    
+   
     <div id="messageBox" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50">
         <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-95">
             <h3 class="text-xl font-bold text-gray-800" id="messageBoxTitle"></h3>
@@ -1082,7 +1234,7 @@
             <p id="monkeyMessage" class="absolute -bottom-12 w-max left-1/2 -translate-x-1/2 mt-4 text-xl font-bold text-white bg-green-500 rounded-full px-6 py-2 opacity-0 transition-opacity duration-300">Attendance Marked!</p>
         </div>
     </div>
-    
+   
     <div id="math-game-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
         <div id="game-container" class="relative bg-black rounded-lg shadow-xl overflow-hidden p-6">
             <canvas id="gameCanvas"></canvas>
@@ -1172,7 +1324,7 @@
             { id: 'science', progress: 50, color: 'blue' },
             { id: 'history', progress: 20, color: 'emerald' }
         ];
-        
+       
         const teacherBadges = [
             { id: 'star-performer', name: 'Star Performer', icon: 'fas fa-star', color: 'text-yellow-500' },
             { id: 'helping-hand', name: 'Helping Hand', icon: 'fas fa-hand-holding-heart', color: 'text-pink-500' },
@@ -1198,7 +1350,7 @@
 
         // --- Internationalization (i18n) Data ---
         let translations = {};
-        
+       
 
         // --- Message Box Utility ---
         function showMessage(text, type = 'success') {
@@ -1218,7 +1370,7 @@
                 container.style.opacity = '0';
             }, 3000);
         }
-        
+       
         // Helper function for Base64 to ArrayBuffer conversion
         function base64ToArrayBuffer(base64) {
             const binaryString = window.atob(base64);
@@ -1363,7 +1515,7 @@
                 moduleList.insertAdjacentHTML('beforeend', moduleHtml);
             });
         }
-        
+       
         function checkLevelUp() {
             while (studentData.xp >= studentData.nextLevelXp) {
                 studentData.level++;
@@ -1372,7 +1524,7 @@
                 showMessage(`Level Up! You are now Level ${studentData.level}!`, 'success');
             }
         }
-        
+       
         // --- API & Firestore Functions for Student Dashboard ---
         async function updateStudentLeaderboardData(user) {
             if (!db || !userId) {
@@ -1584,7 +1736,7 @@
             const lang = localStorage.getItem('userLanguage') || 'en';
             const t = translations[lang] || translations['en'];
             showMessage(t.loading_report);
-            
+           
             if (!isGeminiPlatform) {
                 document.getElementById('teacher-report-text').textContent = "This is a mock report generated for local development. The class is doing great, with top performers setting a good example. Let's focus on improving 'Local History' with more interactive lessons.";
                 showMessage('Mock report generated successfully!', 'success');
@@ -1593,7 +1745,7 @@
             }
 
             const prompt = `Based on the following student data, generate a concise, encouraging, and actionable class report for the teacher. Highlight the overall class performance, mention top-performing students, and identify a general area for improvement. The data is as follows: ${JSON.stringify(students)}.`;
-            
+           
             try {
                 const payload = {
                     contents: [{ parts: [{ text: prompt }] }],
@@ -1718,7 +1870,7 @@
             const lang = localStorage.getItem('userLanguage') || 'en';
             const t = translations[lang] || translations['en'];
             let message = t[messageKey] || messageKey;
-            
+           
             // Replace placeholders like {name} or {badge}
             Object.keys(context).forEach(key => {
                 message = message.replace(`{${key}}`, context[key]);
@@ -1746,7 +1898,7 @@
 
             // Show role switch button
             document.getElementById('role-switch-btn').classList.remove('hidden');
-            
+           
             if (role === 'student') {
                 document.getElementById('student-dashboard').classList.remove('hidden');
                 initStudentDashboard();
@@ -1767,7 +1919,7 @@
                 setRole('student');
             }
         }
-        
+       
         async function createMockStudents() {
             const mockStudents = [
                 { name: 'Ravi', level: 5, xp: 1200, progress: 85, badges: ['helping-hand'], id: 'ravi-1' },
@@ -1790,7 +1942,7 @@
                 }
             }
         }
-        
+       
         async function initStudentDashboard() {
             await fetchInitialStudentData();
             updateStudentUI(); // This will handle all translations and rendering for the student dashboard
@@ -1807,7 +1959,7 @@
                 renderStudentLeaderboard(defaultLeaderboard);
             });
         }
-        
+       
         async function initTeacherDashboard() {
             const lang = localStorage.getItem('userLanguage') || 'en';
             translateTeacherDashboard(lang); // Translate static elements first
@@ -1817,7 +1969,7 @@
             addNotification('notification1');
             addNotification('notification2');
             addNotification('notification3');
-            
+           
             if (!isGeminiPlatform) {
                 renderTeacherStudentProgress();
                 renderTeacherLeaderboard();
@@ -1864,7 +2016,7 @@
                 greetingMessage.textContent = t.parent_greeting_night;
             }
         }
-        
+       
         async function initializeAppAndAuth() {
         try {
             // Nayi file se translations load karein
@@ -1876,7 +2028,7 @@
 
             // Ab baaki ka code chalayen
             populateLanguageSelectors();
-            
+           
             if (!isGeminiPlatform) {
                 console.warn("Not on Gemini platform. Using mock Firebase config.");
                 document.getElementById('login-modal').classList.remove('hidden');
@@ -1889,7 +2041,7 @@
                     if (user) {
                         userId = user.uid;
                         document.getElementById('login-modal').classList.add('hidden');
-                        
+                       
                         const savedLang = localStorage.getItem('userLanguage') || 'en';
                         translateAllPages(savedLang);
 
@@ -1991,7 +2143,7 @@
                 if (el) el.textContent = text;
             });
         };
-        
+       
         function translateStudentDashboard(lang) {
             const t = translations[lang] || translations['en'];
             safeSetText('student-welcome-message', t.welcome_message);
@@ -2007,7 +2159,7 @@
             safeSetText('attendance-title', t.attendance_title);
             safeSetText('mark-attendance-btn-text', t.mark_attendance_button);
             safeSetText('homework-title', t.homework_title);
-            
+           
             // homework status (sabko ek saath update karein)
             document.querySelectorAll('.homework-status-text').forEach(el => {
                 const currentStatus = el.textContent.trim().toLowerCase();
@@ -2131,7 +2283,7 @@
                 initParentDashboard();
             }
         }
-        
+       
         // --- Added from second document ---
         let currentAudio = null;
 
@@ -2252,7 +2404,7 @@
         document.getElementById('verify-otp-btn').addEventListener('click', handleOtpVerification);
         document.getElementById('mic-btn').addEventListener('click', handleVoiceInput);
 
-        
+       
         document.getElementById('teacher-progress-view').addEventListener('change', renderTeacherStudentProgress);
         document.getElementById('generate-report-btn').addEventListener('click', generateClassReport);
         document.getElementById('teacher-reward-student-selector').addEventListener('change', (e) => {
@@ -2349,564 +2501,9 @@
             }
         });
 
+       
         
-        // --- Math Bullseye Game Integration ---
-        
-        // Game configuration
-        const WIDTH = 900;
-        const HEIGHT = 720;
-        const FPS = 60;
-        const TIME_LIMIT = 45; // seconds
-        const LIVES_START = 3;
-        const OPTION_RADIUS = 40;
-        const TARGET_CENTER = { x: WIDTH / 2, y: HEIGHT / 2 + 30 };
-        const RING_RADII = [170, 120, 80, 40];
-        
-        // Colors
-        const RING_COLORS = ['#dc143c', '#ff8c00', '#ffd700', '#228b22'];
-        const RING_BORDER = '#282828';
-        const OPTION_FILL = '#2064c8';
-        const OPTION_BORDER = '#f5c83c';
-        const HOVER_BORDER = '#ffffff';
-        const FEEDBACK_POS_COLOR = '#1ec878';
-        const FEEDBACK_NEG_COLOR = '#dc3232';
-        
-        // Audio
-        let audioContext = null;
-        let clickOscillator, winOscillator;
-
-        // Initialize canvas and context
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = WIDTH;
-        canvas.height = HEIGHT;
-
-        // Game state
-        let game = {};
-        let lastTime = 0;
-        let running = false;
-        let mousePos = { x: 0, y: 0 };
-        let leaderboard = [];
-
-        // Game UI elements
-        const gameOverScreen = document.getElementById('game-over-screen');
-        const finalScoreText = document.getElementById('final-score');
-        const leaderboardList = document.getElementById('leaderboard-list');
-
-        function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            // Simple audio synthesis to avoid external files
-            clickOscillator = audioContext.createOscillator();
-            clickOscillator.type = 'sine';
-            clickOscillator.frequency.value = 250;
-            clickOscillator.start();
-
-            winOscillator = audioContext.createOscillator();
-            winOscillator.type = 'sine';
-            winOscillator.frequency.value = 520;
-            winOscillator.start();
-        }
-
-        function playClickSound() {
-            if (!audioContext) return;
-            const gainNode = audioContext.createGain();
-            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
-            clickOscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            setTimeout(() => {
-                gainNode.disconnect();
-                clickOscillator.disconnect();
-                initAudio();
-            }, 100);
-        }
-
-        function playWinSound() {
-            if (!audioContext) return;
-            const gainNode = audioContext.createGain();
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
-            winOscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            setTimeout(() => {
-                gainNode.disconnect();
-                winOscillator.disconnect();
-                initAudio();
-            }, 500);
-        }
-
-        // Utility functions
-        function saveScore(score) {
-            try {
-                let scores = JSON.parse(localStorage.getItem('mathBullseyeScores')) || [];
-                scores.push(score);
-                scores.sort((a, b) => b - a);
-                localStorage.setItem('mathBullseyeScores', JSON.stringify(scores));
-            } catch (e) {
-                console.error("Could not save score to localStorage:", e);
-            }
-        }
-
-        function loadTopScores(n = 5) {
-            try {
-                let scores = JSON.parse(localStorage.getItem('mathBullseyeScores')) || [];
-                scores.sort((a, b) => b - a);
-                leaderboard = scores.slice(0, n);
-            } catch (e) {
-                console.error("Could not load scores from localStorage:", e);
-                leaderboard = [];
-            }
-        }
-
-        function circlePointCollision(circle, point) {
-            const dx = point.x - circle.x;
-            const dy = point.y - circle.y;
-            return Math.sqrt(dx * dx + dy * dy) < circle.radius;
-        }
-
-        // Game drawing
-        function drawTarget() {
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
-            ctx.fillStyle = '#121212';
-            ctx.fillRect(0, 0, WIDTH, HEIGHT);
-            
-            const { x, y } = TARGET_CENTER;
-            RING_RADII.forEach((r, i) => {
-                ctx.beginPath();
-                ctx.arc(x, y, r, 0, 2 * Math.PI);
-                ctx.fillStyle = RING_COLORS[i];
-                ctx.fill();
-                ctx.strokeStyle = RING_BORDER;
-                ctx.lineWidth = 4;
-                ctx.stroke();
-                ctx.closePath();
-            });
-        }
-
-        function generateQuestion() {
-            const a = Math.floor(Math.random() * 12) + 1;
-            const b = Math.floor(Math.random() * 12) + 1;
-            const ops = ['+', '-', '*'];
-            const op = ops[Math.floor(Math.random() * ops.length)];
-            let ans;
-
-            if (op === '+') ans = a + b;
-            else if (op === '-') ans = a - b;
-            else ans = a * b;
-
-            const qText = `${a} ${op} ${b} = ?`;
-            const opts = [ans];
-            
-            while (opts.length < 3) {
-                const delta = Math.floor(Math.random() * 6) + 1;
-                const sign = Math.random() < 0.5 ? 1 : -1;
-                const candidate = ans + sign * delta;
-                if (!opts.includes(candidate) && candidate > -100 && candidate < 100) {
-                    opts.push(candidate);
-                }
-            }
-            opts.sort(() => Math.random() - 0.5);
-
-            const chosenRadii = [RING_RADII[0], RING_RADII[1], RING_RADII[2]];
-            const baseAngle = Math.random() * 2 * Math.PI;
-            const positions = [];
-            for (let i = 0; i < chosenRadii.length; i++) {
-                const angle = baseAngle + i * (2 * Math.PI / 3);
-                const r = chosenRadii[i] + 40; // Position options outside the bullseye
-                const x = TARGET_CENTER.x + r * Math.cos(angle);
-                const y = TARGET_CENTER.y + r * Math.sin(angle);
-                positions.push({ x: x, y: y });
-            }
-            
-            return {
-                qText,
-                answer: ans,
-                options: opts.map((value, i) => ({
-                    value,
-                    pos: positions[i],
-                    radius: OPTION_RADIUS,
-                    isHover: false,
-                    flashTimer: 0,
-                    flashColor: null
-                }))
-            };
-        }
-
-        function drawOptions() {
-            game.options.forEach(option => {
-                ctx.beginPath();
-                ctx.arc(option.pos.x, option.pos.y, option.radius, 0, 2 * Math.PI);
-                ctx.fillStyle = OPTION_FILL;
-                ctx.fill();
-                ctx.strokeStyle = option.isHover ? HOVER_BORDER : OPTION_BORDER;
-                ctx.lineWidth = option.isHover ? 6 : 4;
-                if (option.flashTimer > 0) {
-                    ctx.strokeStyle = option.flashColor;
-                    ctx.lineWidth = 6;
-                }
-                ctx.stroke();
-                ctx.closePath();
-
-                ctx.font = '700 44px Inter, sans-serif';
-                ctx.fillStyle = 'white';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(option.value, option.pos.x, option.pos.y);
-            });
-        }
-
-        function drawUI() {
-            // Question
-            ctx.font = '700 44px Inter, sans-serif';
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            ctx.fillText(game.question.qText, WIDTH / 2, 30);
-
-            // Status
-            ctx.font = '700 26px Inter, sans-serif';
-            ctx.textAlign = 'left';
-            ctx.fillText(`Score: ${game.score}`, 20, 18);
-            ctx.fillText(`Lives: ${game.lives}`, 20, 48);
-
-            // Timer
-            const elapsed = (Date.now() - game.startTime) / 1000;
-            const timeLeft = Math.max(0, TIME_LIMIT - elapsed);
-            ctx.textAlign = 'right';
-            ctx.fillText(`Time: ${Math.round(timeLeft)}s`, WIDTH - 20, 18);
-
-            const barW = WIDTH - 240;
-            const barH = 16;
-            const barX = 120;
-            const barY = 100;
-            ctx.fillStyle = '#f0f0f0';
-            ctx.beginPath();
-            ctx.roundRect(barX, barY, barW, barH, 8);
-            ctx.fill();
-            ctx.fillStyle = '#3cb371';
-            ctx.beginPath();
-            ctx.roundRect(barX, barY, barW * (timeLeft / TIME_LIMIT), barH, 8);
-            ctx.fill();
-            ctx.strokeStyle = '#505050';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.roundRect(barX, barY, barW, barH, 8);
-            ctx.stroke();
-            
-            return timeLeft;
-        }
-
-        function drawFeedback() {
-            if (game.feedbackTimer > 0) {
-                const scale = 1.0 + 0.6 * (game.feedbackTimer / 0.9);
-                const fontSize = 36 * scale;
-                ctx.font = `700 ${fontSize}px Inter, sans-serif`;
-                ctx.fillStyle = game.feedbackColor;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                // Draw shadow
-                ctx.globalAlpha = 0.5;
-                ctx.fillStyle = 'black';
-                ctx.fillText(game.feedbackText, WIDTH / 2 + 3, 160 + 3);
-                
-                // Draw text
-                ctx.globalAlpha = 1.0;
-                ctx.fillStyle = game.feedbackColor;
-                ctx.fillText(game.feedbackText, WIDTH / 2, 160);
-            }
-        }
-        
-        function showGameOverScreen() {
-            loadTopScores();
-            
-            finalScoreText.textContent = `Your Score: ${game.score}`;
-            
-            leaderboardList.innerHTML = '';
-            leaderboard.forEach((score, index) => {
-                const li = document.createElement('li');
-                li.textContent = `${index + 1}. ${score}`;
-                li.classList.add('flex', 'justify-between');
-                if (index < 3) {
-                    li.classList.add('top-3');
-                    if (index === 0) li.style.color = '#ffc400';
-                    if (index === 1) li.style.color = '#c0c0c0';
-                    if (index === 2) li.style.color = '#cd7f32';
-                }
-                leaderboardList.appendChild(li);
-            });
-
-            gameOverScreen.style.display = 'flex';
-        }
-
-        function hideGameOverScreen() {
-            gameOverScreen.style.display = 'none';
-        }
-
-        // Main game loop
-        function gameLoop(timestamp) {
-            if (!running) return;
-
-            const dt = (timestamp - lastTime) / 1000;
-            lastTime = timestamp;
-
-            if (game.state === 'playing') {
-                drawTarget();
-                drawOptions();
-                drawUI();
-                drawFeedback();
-
-                // Update timers
-                game.options.forEach(option => {
-                    if (option.flashTimer > 0) {
-                        option.flashTimer = Math.max(0, option.flashTimer - dt);
-                    }
-                });
-                
-                if (game.feedbackTimer > 0) {
-                    game.feedbackTimer = Math.max(0, game.feedbackTimer - dt);
-                }
-
-                if (game.pendingNext) {
-                    game.pendingTimer = Math.max(0, game.pendingTimer - dt);
-                    if (game.pendingTimer <= 0) {
-                        const timeLeft = TIME_LIMIT - (Date.now() - game.startTime) / 1000;
-                        if (game.lives <= 0 || timeLeft <= 0) {
-                            game.state = 'game_over';
-                            saveScore(game.score);
-                            showGameOverScreen();
-                        } else {
-                            resetQuestion();
-                        }
-                        game.pendingNext = false;
-                    }
-                }
-            }
-            
-            requestAnimationFrame(gameLoop);
-        }
-
-        function resetQuestion() {
-            const { qText, answer, options } = generateQuestion();
-            game.question = { qText, answer };
-            game.options = options;
-            game.feedbackText = '';
-            game.feedbackTimer = 0;
-            game.pendingNext = false;
-            game.pendingTimer = 0; // Reset this too
-        }
-
-        function resetGame() {
-            game = {
-                score: 0,
-                lives: LIVES_START,
-                startTime: Date.now(),
-                state: 'playing',
-                feedbackText: '',
-                feedbackTimer: 0,
-                feedbackColor: null,
-                pendingNext: false,
-                pendingTimer: 0
-            };
-            resetQuestion();
-            hideGameOverScreen();
-            running = true;
-        }
-
-        // Event listeners for game start and quit
-        document.getElementById('math-bullseye-card').addEventListener('click', () => {
-            document.getElementById('student-dashboard').classList.add('hidden');
-            document.getElementById('math-game-modal').classList.remove('hidden');
-            document.getElementById('math-game-modal').classList.add('flex');
-            initAudio();
-            resetGame();
-            requestAnimationFrame(gameLoop);
-        });
-
-        document.getElementById('play-again-btn').addEventListener('click', () => {
-            resetGame();
-        });
-
-        document.getElementById('quit-btn').addEventListener('click', () => {
-            running = false;
-            document.getElementById('math-game-modal').classList.remove('flex');
-            document.getElementById('math-game-modal').classList.add('hidden');
-            document.getElementById('student-dashboard').classList.remove('hidden');
-            initStudentDashboard(); // Re-render the dashboard state
-        });
-        
-        // Game interaction listeners
-        canvas.addEventListener('mousemove', (event) => {
-            if (!running || game.state !== 'playing' || game.pendingNext) return;
-            const rect = canvas.getBoundingClientRect();
-            mousePos.x = event.clientX - rect.left;
-            mousePos.y = event.clientY - rect.top;
-            
-            game.options.forEach(option => {
-                option.isHover = circlePointCollision(
-                    { x: option.pos.x, y: option.pos.y, radius: option.radius },
-                    mousePos
-                );
-            });
-        });
-
-        canvas.addEventListener('click', (event) => {
-            if (game.state !== 'playing' || game.pendingNext) return;
-            
-            for (const option of game.options) {
-                if (circlePointCollision({ x: option.pos.x, y: option.pos.y, radius: option.radius }, mousePos)) {
-                    playClickSound();
-                    
-                    if (option.value === game.question.answer) {
-                        game.score++;
-                        option.flashTimer = 0.6;
-                        option.flashColor = FEEDBACK_POS_COLOR;
-                        game.feedbackText = 'Correct!';
-                        game.feedbackColor = FEEDBACK_POS_COLOR;
-                        game.feedbackTimer = 0.9;
-                        playWinSound();
-                    } else {
-                        game.lives--;
-                        option.flashTimer = 0.6;
-                        option.flashColor = FEEDBACK_NEG_COLOR;
-                        game.feedbackText = 'Wrong! -1 Life';
-                        game.feedbackColor = FEEDBACK_NEG_COLOR;
-                        game.feedbackTimer = 0.9;
-                    }
-                    game.pendingNext = true;
-                    game.pendingTimer = 0.55;
-                    break;
-                }
-            }
-        });
-        
-        // --- Puzzle Mania Game Integration ---
-        const puzzleManiaModal = document.getElementById('puzzle-mania-modal');
-        const puzzleManiaCard = document.getElementById('puzzle-mania-card');
-        const gameBoard = document.getElementById('game-board');
-        const startButton = document.getElementById('start-button');
-        const quitGameButton = document.getElementById('quit-game-btn');
-        const gameStatus = document.getElementById('game-status');
-        const movesCounter = document.getElementById('moves-counter');
-
-        let cards = [];
-        let flippedCards = [];
-        let matchedPairs = 0;
-        let moves = 0;
-        let lockBoard = false;
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function createBoard() {
-            gameBoard.innerHTML = '';
-            const emojis = ['🍉', '🥭', '🚜', '🌱', '💧', '☀️', '🐄', '🏡', '🌾', '🌸'];
-            const gameEmojis = shuffle(emojis.slice(0, 6).concat(emojis.slice(0, 6)));
-            
-            gameEmojis.forEach((emoji, index) => {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                card.dataset.emoji = emoji;
-                card.dataset.index = index;
-                card.innerHTML = `
-                        <div class="card-inner">
-                            <div class="card-front"></div>
-                            <div class="card-back">${emoji}</div>
-                        </div>
-                `;
-                card.addEventListener('click', flipCard);
-                gameBoard.appendChild(card);
-            });
-        }
-        
-        function flipCard() {
-            if (lockBoard || this === flippedCards[0] || this.classList.contains('flipped')) return;
-
-            this.classList.add('flipped');
-            flippedCards.push(this);
-            moves++;
-            movesCounter.textContent = `Moves: ${moves}`;
-
-            if (flippedCards.length === 2) {
-                lockBoard = true;
-                checkForMatch();
-            }
-        }
-
-        function checkForMatch() {
-            const [firstCard, secondCard] = flippedCards;
-            const isMatch = firstCard.dataset.emoji === secondCard.dataset.emoji;
-
-            if (isMatch) {
-                disableCards(firstCard, secondCard);
-                matchedPairs++;
-                if (matchedPairs === 6) {
-                    setTimeout(() => {
-                        gameStatus.textContent = 'You won! 🎉';
-                        quitGameButton.classList.remove('hidden');
-                        // Add XP logic here
-                        showMessage(`Congratulations! You earned 50 XP!`, 'success');
-                    }, 1000);
-                }
-            } else {
-                unflipCards();
-            }
-        }
-
-        function disableCards(card1, card2) {
-            card1.removeEventListener('click', flipCard);
-            card2.removeEventListener('click', flipCard);
-            card1.classList.add('matched');
-            card2.classList.add('matched');
-            resetBoard();
-        }
-
-        function unflipCards() {
-            setTimeout(() => {
-                flippedCards[0].classList.remove('flipped');
-                flippedCards[1].classList.remove('flipped');
-                resetBoard();
-            }, 1000);
-        }
-
-        function resetBoard() {
-            [flippedCards, lockBoard] = [[], false];
-        }
-
-        function startGame() {
-            moves = 0;
-            matchedPairs = 0;
-            movesCounter.textContent = 'Moves: 0';
-            gameStatus.textContent = 'Find the matching pairs!';
-            quitGameButton.classList.add('hidden');
-            createBoard();
-        }
-
-        puzzleManiaCard.addEventListener('click', () => {
-            document.getElementById('student-dashboard').classList.add('hidden');
-            puzzleManiaModal.classList.remove('hidden');
-            puzzleManiaModal.classList.add('flex');
-            startGame();
-        });
-
-        startButton.addEventListener('click', () => {
-            startGame();
-        });
-
-        quitGameButton.addEventListener('click', () => {
-            puzzleManiaModal.classList.add('hidden');
-            puzzleManiaModal.classList.remove('flex');
-            document.getElementById('student-dashboard').classList.remove('hidden');
-            initStudentDashboard(); // Re-render the dashboard state
-        });
-        
+       
         // Event listeners and logic for the newly added student dashboard sections
         document.addEventListener('DOMContentLoaded', () => {
             const markAttendanceBtn = document.getElementById('markAttendanceBtn');
@@ -2949,7 +2546,7 @@
                     if (event.animationName === 'fall-down') {
                         monkeyMessage.classList.remove('opacity-0');
                         setTimeout(() => {
-                            monkeyMessage.classList.add('opacity-0');
+                            monkeyMessage.classList.add('opacity-100');
                             animatedMonkey.classList.remove('animate-fall');
                             animatedMonkey.classList.add('animate-rise');
                         }, 1500);
@@ -3054,7 +2651,7 @@
                     if (visualizeStoryBtn) visualizeStoryBtn.classList.add('hidden');
                     if (storyImageResult) storyImageResult.innerHTML = '';
                     if (storyResult) storyResult.innerHTML = '<div class="flex justify-center items-center"><div class="loader-book">📖</div></div>';
-                    
+                   
                     const prompt = `You are a creative storyteller for a child in India (ages 6-14). Write a short, imaginative story starter (2-3 paragraphs) based on this single word: "${word}". Make it interesting and end it in a way that makes the reader wonder what happens next.`;
                     const response = await callGeminiText(prompt);
                     if (storyResult) storyResult.innerHTML = response.replace(/\n/g, '<br>');
@@ -3117,7 +2714,7 @@
             title="AI Chatbot">
         </iframe>
     </div>
-    <script>
+   <script>
     document.addEventListener('DOMContentLoaded', () => {
         const chatToggleButton = document.getElementById('chat-toggle-button');
             const chatWindow = document.getElementById('chat-window');
@@ -3174,7 +2771,10 @@
         if (missionCETcard) {
             missionCETcard.addEventListener('click', () => window.open('mission_CET.html', '_blank'));
         }
-
+        const parentGameBtn = document.getElementById('start-parent-game-btn');
+        if (parentGameBtn) {
+            parentGameBtn.addEventListener('click', () => window.open('parent_game.html', '_blank'));
+        }
     });
     document.querySelectorAll('.homework-upload').forEach(input => {
         input.addEventListener('change', e => {
@@ -3194,9 +2794,6 @@
         });
     });
 
-
 </script>
-
-
 </body>
 </html>
