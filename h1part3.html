@@ -390,6 +390,62 @@
         #puzzle-mania-modal #start-button:hover, #puzzle-mania-modal #quit-game-btn:hover {
             background-color: #2980b9;
         }
+
+        #chat-toggle-button {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #4f46e5; /* Indigo to match theme */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+
+        #chat-toggle-button:hover {
+            transform: scale(1.1);
+        }
+
+        #chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            z-index: 999;
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        #chat-window.open {
+            display: flex;
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        #chatbot-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
     </style>
 </head>
 <body class="p-4 md:p-10">
@@ -506,7 +562,7 @@
                     <div id="student-quest-list" class="space-y-8">
                         </div>
                     <div class="mt-10 text-center">
-                        <button id="student-generate-quest-btn" class="btn-generate text-white px-10 py-5 rounded-full font-bold text-xl shadow-xl">
+                        <button id="student-generate-quest-btn" class="btn-generate text-green px-10 py-5 rounded-full font-bold text-xl shadow-xl bg-gradient-to-b from-blue-400 to-blue-600 text-white">
                             <div class="flex items-center justify-center space-x-2">
                                 <span id="student-generate-quest-btn-text">✨ Generate New Quest</span>
                                 <span id="student-generate-loading" class="hidden loading-spinner"></span>
@@ -526,34 +582,48 @@
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-10">
-                <div class="card bg-white p-8">
-                    <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-indigo-500">
-                        <i class="fas fa-certificate text-indigo-500 text-3xl"></i>
-                        <span id="student-badges-title">Achievement Badges</span>
-                    </h2>
-                    <div id="student-badges-grid" class="grid grid-cols-3 md:grid-cols-4 gap-8">
-                        </div>
-                </div>
-                
-                <div class="card bg-white p-8">
-                    <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-purple-600">
-                        <i class="fas fa-chart-line text-purple-600 text-3xl"></i>
-                        <span id="student-progress-title">Module Progress</span>
-                    </h2>
-                    <div id="student-module-progress-list" class="space-y-8">
-                        </div>
-                    <div class="mt-8">
-                        <label for="voice-input" id="student-voice-label" class="block font-bold text-gray-800 mb-2">Speak your question:</label>
-                        <div class="flex space-x-4">
-                            <input type="text" id="voice-input" class="flex-grow p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="Click mic to speak...">
-                            <button id="mic-btn" class="bg-purple-500 text-white px-5 py-2 rounded-full font-bold hover:bg-purple-600 transition-colors">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 mt-10">
+    <div class="lg:col-span-2">
+        <div class="card bg-white p-8 mb-10">
+            <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-indigo-500">
+                <i class="fas fa-certificate text-indigo-500 text-3xl"></i>
+                <span id="student-badges-title">Achievement Badges</span>
+            </h2>
+            <div id="student-badges-grid" class="grid grid-cols-3 md:grid-cols-4 gap-8">
             </div>
+        </div>
+        <div class="card bg-white p-4 h-1/2">
+            <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-indigo-500">
+                <i class="fas fa-graduation-cap text-indigo-500 text-3xl"></i>
+                <span id="career-readiness-quest-title">Career Readiness Quests</span>
+            </h2>
+            <div id="career-readiness-quest-grid" class="grid grid-cols-3 md:grid-cols-4 gap-8">
+            </div>
+        <div id="mission-CET-card"class="bg-gray-100 p-8 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+            <div class="text-5xl mb-2 jiggle-on-hover">📝</div>
+            <h3 class="font-semibold text-gray-2000">CET Tactics !🎯 Game</h3>
+            <p class="text-sm text-gray-1000">Test Your Knowledge!</p>
+        </div>
+        </div>
+    </div>
+    <div class="card bg-white p-8 lg:col-span-2">
+        <h2 class="text-3xl font-bold mb-8 flex items-center space-x-4 text-purple-600">
+            <i class="fas fa-chart-line text-purple-600 text-3xl"></i>
+            <span id="student-progress-title">Module Progress</span>
+        </h2>
+        <div id="student-module-progress-list" class="space-y-8">
+        </div>
+        <div class="mt-8">
+            <label for="voice-input" id="student-voice-label" class="block font-bold text-gray-800 mb-2">Speak your question:</label>
+            <div class="flex space-x-4">
+                <input type="text" id="voice-input" class="flex-grow p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="Click mic to speak...">
+                <button id="mic-btn" class="bg-purple-500 text-white px-5 py-2 rounded-full font-bold hover:bg-purple-600 transition-colors">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
         
         <div id="star-container"></div>
@@ -575,7 +645,7 @@
 
             <section id="homework-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500 opacity-0 animate-slide-in-up" style="animation-delay: 300ms;">
                 <h2 id="homework-title" class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Homework</h2>
-                <div id="homework-list" class="space-y-4">
+                <div class="space-y-4">
                     
                     <div class="bg-gray-50 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <div class="flex-grow">
@@ -620,11 +690,11 @@
 
 
             <section id="curious-corner" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-yellow-500 opacity-0 animate-slide-in-up" style="animation-delay: 400ms;">
-                <h2 id="curious-corner-title" class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Curious Corner ✨</h2>
-                <p id="curious-corner-desc" class="text-gray-600 mb-4">Have a question about anything in the world? Ask me!</p>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Curious Corner ✨</h2>
+                <p class="text-gray-600 mb-4">Have a question about anything in the world? Ask me!</p>
                 <div class="flex flex-col sm:flex-row gap-2">
                     <input type="text" id="curious-question-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 flex-grow" placeholder="e.g., Why is the sky blue?">
-                    <button id="ask-curious-question-btn" class="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors duration-300"><span id="ask-question-btn-text">Ask Question</span></button>
+                    <button id="ask-curious-question-btn" class="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors duration-300">Ask Question</button>
                 </div>
                 <div id="curious-answer" class="mt-4 text-gray-700 p-4 bg-gray-50 rounded-lg min-h-[100px] hidden"></div>
             </section>
@@ -632,19 +702,19 @@
 
 
             <section id="gaming-section" class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-purple-500 opacity-0 animate-slide-in-up" style="animation-delay: 500ms;">
-                <h2 id="learning-games-title" class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Learning Games</h2>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Learning Games</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div id="puzzle-mania-card" class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">👾</div><h3 id="game-title-puzzle" class="font-semibold text-gray-800">Puzzle Mania</h3><p id="game-desc-puzzle" class="text-sm text-gray-500">Brain-teasers for fun!</p></div>
+                    <div id="puzzle-mania-card" class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">👾</div><h3 class="font-semibold text-gray-800">Puzzle Mania</h3><p class="text-sm text-gray-500">Brain-teasers for fun!</p></div>
                     <div id="physics-nexus-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
                         <div class="text-5xl mb-2 jiggle-on-hover">⚛️</div>
-                        <h3 id="game-title-nexus" class="font-semibold text-gray-800">Newton’s Nexus</h3>
-                        <p id="game-desc-nexus" class="text-sm text-gray-500">Solve physics numericals!</p>
+                        <h3 class="font-semibold text-gray-800">Newton’s Nexus</h3>
+                        <p class="text-sm text-gray-500">Solve physics numericals!</p>
                     </div>
 
                     <div id="math-bullseye-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
                         <div class="text-5xl mb-2 jiggle-on-hover">🎯</div>
-                        <h3 id="game-title-bullseye" class="font-semibold text-gray-800">Math Bullseye</h3>
-                        <p id="game-desc-bullseye" class="text-sm text-gray-500">Hit the number target!</p>
+                        <h3 class="font-semibold text-gray-800">Math Bullseye</h3>
+                        <p class="text-sm text-gray-500">Hit the number target!</p>
                     </div>
 
                     <div id="grammar-galaxy-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
@@ -659,7 +729,11 @@
                         <p class="text-sm text-gray-500">Find the Indian states!</p>
                     </div>
 
-                    <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🦁</div><h3 class="font-semibold text-gray-800">Animal Kingdom</h3><p class="text-sm text-gray-500">Match animals & sounds.</p></div>
+                    <div id="village-quest-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">🏡</div>
+                        <h3 class="font-semibold text-gray-800">Village Quest</h3>
+                        <p class="text-sm text-gray-500">Answer & Ascend!</p>
+                    </div>
                     <div id="history-timeline-card"class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
                         <div class="text-5xl mb-2 jiggle-on-hover">⏳</div>
                         <h3 class="font-semibold text-gray-800">History Timeline</h3>
@@ -674,7 +748,11 @@
 
                     <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🌾</div><h3 class="font-semibold text-gray-800">Farming Fun</h3><p class="text-sm text-gray-500">Learn about crops!</p></div>
                     <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">💧</div><h3 class="font-semibold text-gray-800">Clean Village</h3><p class="text-sm text-gray-500">A game on hygiene.</p></div>
-                    <div class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group"><div class="text-5xl mb-2 jiggle-on-hover">🛒</div><h3 class="font-semibold text-gray-800">Market Math</h3><p class="text-sm text-gray-500">Simple money calculations.</p></div>
+                    <div id="hindi-card" class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-5xl mb-2 jiggle-on-hover">✍️</div>
+                        <h3 class="font-semibold text-gray-800">हिंदी ज्ञान यात्रा</h3>
+                        <p class="text-sm text-gray-500">भाषा से ज्ञान तक</p>
+                    </div>
                     <div id="storyMaker" class="bg-gray-100 p-4 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
                         <div class="text-5xl mb-2 jiggle-on-hover">📖</div>
                         <h3 class="font-semibold text-gray-800">Story Maker ✨</h3>
@@ -791,13 +869,25 @@
                 </form>
             </section>
             
-            <section class="lg:col-span-2 card bg-white p-6 md:p-8">
+            <section class="lg:col-span-1 card bg-white p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-cyan-600">
                     <i class="fas fa-bell"></i>
                     <span id="teacher-notifications-title">Notifications & Alerts</span>
                 </h2>
                 <div id="teacher-notification-list" class="space-y-4">
                     </div>
+            </section>
+
+            <section class="card bg-white p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center space-x-3 text-emerald-600">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span id="teacher-puzzle-title">Teacher Development</span>
+                </h2>
+                <div id="teacher-resolve-card"class="bg-gray-100 p-10 rounded-xl text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+                        <div class="text-7xl mb-2 jiggle-on-hover">📈</div>
+                        <h3 class="font-semibold text-gray-2000">Teacher Resolve</h3>
+                        <p class="text-sm text-gray-1000">The Classroom Challenge!</p>
+                </div>
             </section>
             
         </div>
@@ -1189,10 +1279,10 @@
                             </div>
                             <div class="mt-6 sm:mt-0 flex items-center space-x-4">
                                 <span class="text-yellow-600 font-bold text-2xl">+${quest.xp} XP</span>
-                                <button class="bg-blue-500 text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg explain-quest-btn" data-desc="${t[`${quest.id}_desc`] || ''}">
+                                <button class="bg-blue-500 text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg explain-quest-btn bg-gradient-to-b from-blue-400 to-blue-600" data-desc="${t[`${quest.id}_desc`] || ''}">
                                     <span>${t.explain_concept_button}</span>
                                 </button>
-                                <button class="btn-start text-white text-lg px-8 py-4 rounded-full font-bold shadow-lg student-start-quest-btn" data-xp="${quest.xp}">
+                                <button class="btn-start text-white text-lg px-8 py-4 rounded-full font-bold shadow-lg student-start-quest-btn bg-gradient-to-b from-blue-400 to-blue-600" data-xp="${quest.xp}">
                                     <span>${t.start_button_text}</span>
                                 </button>
                             </div>
@@ -1933,22 +2023,6 @@
             // buttons (sabko ek saath update karein)
             safeSetAllByQuery('.upload-btn-text', t.upload_button);
             safeSetAllByQuery('.get-help-btn-text', t.get_help_button);
-            safeSetText('curious-corner-title', t.curious_corner_title);
-            safeSetText('curious-corner-desc', t.curious_corner_desc);
-            safeSetText('ask-question-btn-text', t.ask_question_btn_text);
-            safeSetText('learning-games-title', t.learning_games_title);
-            safeSetText('game-title-puzzle', t['game-title-puzzle']);
-            safeSetText('game-desc-puzzle', t['game-desc-puzzle']);
-            safeSetText('game-title-nexus', t['game-title-nexus']);
-            safeSetText('game-desc-nexus', t['game-desc-nexus']);
-            safeSetText('game-title-bullseye', t['game-title-bullseye']);
-            safeSetText('game-desc-bullseye', t['game-desc-bullseye']);
-        
-            // Placeholder ke liye special handling
-            const questionInput = document.getElementById('curious-question-input');
-            if (questionInput) {
-                questionInput.placeholder = t.curious_question_placeholder;
-            }
         }
 
 
@@ -2060,6 +2134,8 @@
         
         // --- Added from second document ---
         let currentAudio = null;
+
+        const API_KEY = "AIzaSyDCp6dAI6S88vmyoOHaOnOO1_zYhi6Buzw";
         const textApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${""}`;
         const ttsApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${""}`;
         const imageApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${""}`;
@@ -3028,7 +3104,30 @@
         });
     </script>
     <script>
+    </script>
+
+    <button id="chat-toggle-button">
+        🤖
+    </button>
+    
+    <div id="chat-window">
+        <iframe 
+            id="chatbot-iframe" 
+            src="https://first-ai-chatbot-tau.vercel.app/" 
+            title="AI Chatbot">
+        </iframe>
+    </div>
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const chatToggleButton = document.getElementById('chat-toggle-button');
+            const chatWindow = document.getElementById('chat-window');
+
+            if (chatToggleButton && chatWindow) {
+                 chatToggleButton.addEventListener('click', () => {
+                    // This will add or remove the 'open' class to show/hide the window
+                    chatWindow.classList.toggle('open');
+                });
+            }
         const spotterCard = document.getElementById('state-spotter-card');
         if (spotterCard) {
             spotterCard.addEventListener('click', () => window.open('state_spotter.html', '_blank'));
@@ -3058,7 +3157,23 @@
         const physicsNexusCard = document.getElementById('physics-nexus-card');
         if (physicsNexusCard) {
             physicsNexusCard.addEventListener('click', () => window.open('phy_game.html', '_blank'));
-}
+        }
+        const villagequestcard = document.getElementById('village-quest-card');
+        if (villagequestcard ) {
+            villagequestcard.addEventListener('click', () => window.open('village_quest.html', '_blank'));
+        }
+        const teacherresolvecard = document.getElementById('teacher-resolve-card');
+        if (teacherresolvecard) {
+            teacherresolvecard.addEventListener('click', () => window.open('teacher_resolve.html', '_blank'));
+        }
+        const hindicard = document.getElementById('hindi-card');
+        if (hindicard) {
+            hindicard.addEventListener('click', () => window.open('hindi.html', '_blank'));
+        }
+        const missionCETcard = document.getElementById('mission-CET-card');
+        if (missionCETcard) {
+            missionCETcard.addEventListener('click', () => window.open('mission_CET.html', '_blank'));
+        }
 
     });
     document.querySelectorAll('.homework-upload').forEach(input => {
